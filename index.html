@@ -6,6 +6,7 @@
 <title>AIMade — Show the world what you built with AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --bg:#0a0c10; --bg2:#0f1218; --card:#141824; --card2:#1a1f2e;
@@ -48,6 +49,8 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.82);backdrop-fil
 .btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text)}
 .btn-ghost:hover{border-color:var(--accent);background:rgba(109,124,255,.06)}
 .btn-lg{padding:14px 30px;font-size:15px;border-radius:12px}
+.user-chip{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:5px 13px;font-size:13px;color:var(--muted)}
+.user-chip b{color:var(--teal);font-weight:700}
 
 /* ===== HERO ===== */
 .hero{position:relative;text-align:center;padding:104px 28px 72px;overflow:hidden}
@@ -84,10 +87,11 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.82);backdrop-fil
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s;cursor:pointer}
 .card:hover{transform:translateY(-5px);border-color:var(--border2);box-shadow:var(--shadow)}
-.thumb{height:168px;display:flex;align-items:center;justify-content:center;font-size:54px;position:relative}
+.thumb{height:168px;display:flex;align-items:center;justify-content:center;font-size:54px;position:relative;background-size:cover;background-position:center}
 .thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,12,16,.5))}
 .badge{position:absolute;top:12px;left:12px;background:rgba(8,10,14,.62);backdrop-filter:blur(6px);padding:4px 11px;border-radius:8px;font-size:11px;font-weight:600;z-index:2;letter-spacing:.02em}
 .badge.featured{background:var(--gold);color:#141414}
+.badge.demo{background:rgba(8,10,14,.62);color:var(--muted)}
 .card-body{padding:18px}
 .card-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;color:#0a0c10;flex-shrink:0}
@@ -95,12 +99,14 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.82);backdrop-fil
 .card-top .by{color:var(--faint);font-size:12.5px}
 .card-meta{display:flex;gap:14px;color:var(--faint);font-size:12.5px;margin-bottom:14px}
 .card-meta .star{color:var(--gold)}
+.card-desc{color:var(--muted);font-size:13px;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card-foot{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--border)}
 .price{font-weight:700;font-size:15px}
 .price.free{color:var(--teal);font-size:13px;font-weight:600}
 .card-actions{display:flex;gap:8px}
 .icon-btn{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12.5px;color:var(--muted);font-weight:500;transition:.15s}
 .icon-btn:hover{border-color:var(--accent);color:var(--text)}
+.icon-btn.liked{border-color:var(--accent);color:var(--accent)}
 
 /* ===== HOW ===== */
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
@@ -176,9 +182,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.82);backdrop-fil
 .field label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:var(--muted)}
 .field input,.field select,.field textarea{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 15px;color:var(--text);font-size:14px;font-family:inherit;transition:.15s}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(109,124,255,.14)}
-.dropzone{border:1.5px dashed var(--border2);border-radius:13px;padding:42px;text-align:center;color:var(--muted);cursor:pointer;margin-bottom:24px;transition:.15s;font-size:14px}
-.dropzone:hover{border-color:var(--accent);background:rgba(109,124,255,.04)}
-.dropzone .big{font-size:30px;display:block;margin-bottom:8px}
+.field input[type=file]{padding:9px}
 .pricing-row{display:flex;gap:14px}
 .pricing-row .field{flex:1}
 .side-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:22px}
@@ -187,6 +191,17 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.82);backdrop-fil
 .side-card ul{list-style:none}
 .side-card ul li{padding:6px 0;display:flex;gap:9px}
 .side-card ul li::before{content:"·";color:var(--accent);font-weight:800}
+
+/* ===== MODAL ===== */
+.modal-bg{position:fixed;inset:0;background:rgba(6,8,12,.7);backdrop-filter:blur(6px);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.on{display:flex}
+.modal{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:38px;max-width:420px;width:100%;position:relative}
+.modal h3{font-size:20px;font-weight:800;margin-bottom:8px}
+.modal p{color:var(--muted);font-size:14px;margin-bottom:22px}
+.modal .close{position:absolute;top:16px;right:18px;background:none;border:none;color:var(--faint);font-size:22px;cursor:pointer}
+.modal input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:13px 15px;color:var(--text);font-size:14px;font-family:inherit;margin-bottom:14px}
+.modal input:focus{outline:none;border-color:var(--accent)}
+.modal .status{font-size:13px;color:var(--teal);min-height:20px;margin-top:12px}
 
 /* ===== FOOTER ===== */
 footer{border-top:1px solid var(--border);margin-top:60px;background:var(--bg2)}
@@ -202,7 +217,7 @@ footer{border-top:1px solid var(--border);margin-top:60px;background:var(--bg2)}
 .page.show{display:block}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .55s,transform .55s}
 .reveal.in{opacity:1;transform:none}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--card2);border:1px solid var(--accent);color:var(--text);padding:13px 26px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:200;box-shadow:var(--shadow)}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--card2);border:1px solid var(--accent);color:var(--text);padding:13px 26px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:400;box-shadow:var(--shadow)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(max-width:900px){.fee-wrap,.upload-grid,.foot-grid{grid-template-columns:1fr}.hero h1{font-size:38px}.nav-links{display:none}}
 </style>
@@ -223,8 +238,7 @@ footer{border-top:1px solid var(--border);margin-top:60px;background:var(--bg2)}
     </div>
     <div class="nav-right">
       <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
-      <button class="btn btn-ghost" data-i18n="signin" onclick="toast(t('demo_msg'))"></button>
-      <button class="btn btn-primary" data-i18n="join" onclick="go('upload')"></button>
+      <span id="authArea"></span>
     </div>
   </div>
 </nav>
@@ -240,9 +254,9 @@ footer{border-top:1px solid var(--border);margin-top:60px;background:var(--bg2)}
       <button class="btn btn-ghost btn-lg" data-i18n="cta_explore" onclick="go('explore')"></button>
     </div>
     <div class="stats">
-      <div class="stat"><b>12,480</b><span data-i18n="stat_projects"></span></div>
-      <div class="stat"><b>3,842</b><span data-i18n="stat_creators"></span></div>
-      <div class="stat"><b>2.4M</b><span data-i18n="stat_views"></span></div>
+      <div class="stat"><b id="statWorks">—</b><span data-i18n="stat_projects"></span></div>
+      <div class="stat"><b id="statCreators">—</b><span data-i18n="stat_creators"></span></div>
+      <div class="stat"><b id="statLikes">—</b><span data-i18n="stat_likes"></span></div>
     </div>
     <div class="trusted" data-i18n="trusted"></div>
     <div class="trusted-logos"><span>Claude</span><span>Midjourney</span><span>GPT</span><span>Runway</span><span>Suno</span><span>Cursor</span></div>
@@ -344,8 +358,8 @@ footer{border-top:1px solid var(--border);margin-top:60px;background:var(--bg2)}
     <div class="toolbar">
       <div class="search"><input type="text" id="searchBox" oninput="renderExplore()" data-i18n-ph="search_ph"></div>
       <div class="sort"><select id="sortSel" onchange="renderExplore()">
-        <option value="pop" data-i18n="sort_pop"></option>
         <option value="new" data-i18n="sort_new"></option>
+        <option value="pop" data-i18n="sort_pop"></option>
         <option value="price" data-i18n="sort_price"></option>
       </select></div>
     </div>
@@ -361,25 +375,28 @@ footer{border-top:1px solid var(--border);margin-top:60px;background:var(--bg2)}
       <div class="upload-box">
         <h2 data-i18n="up_title"></h2>
         <div class="sub" data-i18n="up_sub"></div>
-        <div class="dropzone" onclick="toast(t('demo_msg'))"><span class="big">📁</span><span data-i18n="up_drop"></span></div>
-        <div class="field"><label data-i18n="up_name"></label><input type="text" id="upName"></div>
+        <div class="field"><label data-i18n="up_name"></label><input type="text" id="upName" maxlength="120"></div>
         <div class="field"><label data-i18n="up_cat"></label>
           <select id="upCat">
-            <option data-i18n="cat_app"></option><option data-i18n="cat_image"></option>
-            <option data-i18n="cat_video"></option><option data-i18n="cat_prompt"></option>
-            <option data-i18n="cat_tool"></option>
+            <option value="app" data-i18n="cat_app"></option>
+            <option value="image" data-i18n="cat_image"></option>
+            <option value="video" data-i18n="cat_video"></option>
+            <option value="prompt" data-i18n="cat_prompt"></option>
+            <option value="tool" data-i18n="cat_tool"></option>
           </select>
         </div>
-        <div class="field"><label data-i18n="up_desc"></label><textarea rows="3" id="upDesc"></textarea></div>
+        <div class="field"><label data-i18n="up_desc"></label><textarea rows="3" id="upDesc" maxlength="2000"></textarea></div>
+        <div class="field"><label data-i18n="up_link"></label><input type="url" id="upLink" placeholder="https://"></div>
+        <div class="field"><label data-i18n="up_cover"></label><input type="file" id="upCover" accept="image/*"></div>
         <div class="pricing-row">
           <div class="field"><label data-i18n="up_price"></label>
-            <select id="upPrice"><option data-i18n="up_free"></option><option>US$5</option><option>US$10</option><option>US$25</option><option data-i18n="up_custom"></option></select>
+            <select id="upPrice"><option value="0" data-i18n="up_free"></option><option value="5">US$5</option><option value="10">US$10</option><option value="25">US$25</option></select>
           </div>
           <div class="field"><label data-i18n="up_tips"></label>
-            <select><option data-i18n="yes"></option><option data-i18n="no"></option></select>
+            <select id="upTips"><option value="true" data-i18n="yes"></option><option value="false" data-i18n="no"></option></select>
           </div>
         </div>
-        <button class="btn btn-primary btn-lg" style="width:100%" data-i18n="up_submit" onclick="submitUpload()"></button>
+        <button class="btn btn-primary btn-lg" style="width:100%" id="publishBtn" data-i18n="up_submit" onclick="submitUpload()"></button>
       </div>
       <div>
         <div class="side-card">
@@ -414,7 +431,7 @@ footer{border-top:1px solid var(--border);margin-top:60px;background:var(--bg2)}
         <div class="amount">US$0<small data-i18n="per_month"></small></div>
         <span class="keep" data-i18n="pl1_keep"></span>
         <ul><li data-i18n="pl1_a"></li><li data-i18n="pl1_b"></li><li data-i18n="pl1_c"></li><li data-i18n="pl1_d"></li></ul>
-        <button class="btn btn-ghost" data-i18n="start_free" onclick="toast(t('demo_msg'))"></button>
+        <button class="btn btn-ghost" data-i18n="start_free" onclick="go('upload')"></button>
       </div>
       <div class="plan hot">
         <div class="tag" data-i18n="popular"></div>
@@ -423,7 +440,7 @@ footer{border-top:1px solid var(--border);margin-top:60px;background:var(--bg2)}
         <div class="amount">US$9<small data-i18n="per_month"></small></div>
         <span class="keep" data-i18n="pl2_keep"></span>
         <ul><li data-i18n="pl2_a"></li><li data-i18n="pl2_b"></li><li data-i18n="pl2_c"></li><li data-i18n="pl2_d"></li></ul>
-        <button class="btn btn-primary" data-i18n="go_pro" onclick="toast(t('demo_msg'))"></button>
+        <button class="btn btn-primary" data-i18n="go_pro" onclick="toast(t('coming_soon'))"></button>
       </div>
       <div class="plan">
         <h3 data-i18n="pl3_t"></h3>
@@ -431,7 +448,7 @@ footer{border-top:1px solid var(--border);margin-top:60px;background:var(--bg2)}
         <div class="amount">US$29<small data-i18n="per_month"></small></div>
         <span class="keep" data-i18n="pl3_keep"></span>
         <ul><li data-i18n="pl3_a"></li><li data-i18n="pl3_b"></li><li data-i18n="pl3_c"></li><li data-i18n="pl3_d"></li></ul>
-        <button class="btn btn-ghost" data-i18n="contact" onclick="toast(t('demo_msg'))"></button>
+        <button class="btn btn-ghost" data-i18n="contact" onclick="toast(t('coming_soon'))"></button>
       </div>
     </div>
 
@@ -462,38 +479,58 @@ footer{border-top:1px solid var(--border);margin-top:60px;background:var(--bg2)}
         <a onclick="go('pricing')" data-i18n="nav_pricing"></a>
       </div>
       <div class="foot-col"><h5 data-i18n="fc2"></h5>
-        <a data-i18n="fc2_a" onclick="toast(t('demo_msg'))"></a>
-        <a data-i18n="fc2_b" onclick="toast(t('demo_msg'))"></a>
-        <a data-i18n="fc2_c" onclick="toast(t('demo_msg'))"></a>
+        <a data-i18n="fc2_a" onclick="toast(t('coming_soon'))"></a>
+        <a data-i18n="fc2_b" onclick="go('pricing')"></a>
+        <a data-i18n="fc2_c" onclick="toast(t('coming_soon'))"></a>
       </div>
       <div class="foot-col"><h5 data-i18n="fc3"></h5>
-        <a data-i18n="fc3_a" onclick="toast(t('demo_msg'))"></a>
-        <a data-i18n="fc3_b" onclick="toast(t('demo_msg'))"></a>
-        <a data-i18n="fc3_c" onclick="toast(t('demo_msg'))"></a>
+        <a data-i18n="fc3_a" onclick="toast(t('coming_soon'))"></a>
+        <a data-i18n="fc3_b" onclick="toast(t('coming_soon'))"></a>
+        <a data-i18n="fc3_c" onclick="toast(t('coming_soon'))"></a>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 AIMade Inc. · <span data-i18n="foot_rights"></span></span>
+      <span>© 2026 AIMade · <span data-i18n="foot_rights"></span></span>
       <div class="pay-logos"><span>VISA</span><span>Mastercard</span><span>Stripe</span><span>PayPal</span><span>Alipay</span></div>
     </div>
   </div>
 </footer>
 
+<!-- LOGIN MODAL -->
+<div class="modal-bg" id="loginModal">
+  <div class="modal">
+    <button class="close" onclick="closeLogin()">×</button>
+    <h3 data-i18n="lg_title"></h3>
+    <p data-i18n="lg_sub"></p>
+    <input type="email" id="lgEmail" placeholder="you@email.com">
+    <button class="btn btn-primary" style="width:100%" id="lgBtn" data-i18n="lg_send" onclick="sendMagicLink()"></button>
+    <div class="status" id="lgStatus"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
+/* ============ Supabase ============ */
+const SB_URL = "https://ulntmokjyvbxmkdejagt.supabase.co";
+const SB_KEY = "sb_publishable_xmQTDQxS8vOUP0q8OTHFOQ_ymHOihp2";
+const sb = window.supabase.createClient(SB_URL, SB_KEY);
+let currentUser = null;
+let realWorks = [];
+let myLikes = new Set();
+
 /* ============ i18n ============ */
 const I = {
  zh:{
   nav_home:"首頁",nav_explore:"探索",nav_upload:"上載作品",nav_pricing:"收費方案",
-  signin:"登入",join:"免費開始",
-  pill:"全球 3,800+ AI 創作者已加入",
+  signin:"登入",signout:"登出",
+  pill:"全球 AI 創作者分享社群 — 而家開放",
   hero_1:"你用 AI 做嘅嘢,",hero_2:"值得畀全世界睇到",
   hero_sub:"AIMade 係全球 AI 創作者嘅分享社群 — 上載你嘅網頁、App、圖片、影片、Prompt 同工具,免費展示畀全世界。鍾意嘅話,仲可以定價出售或者收打賞。",
   cta_upload:"上載我嘅成品",cta_explore:"探索作品",
-  stat_projects:"已發佈作品",stat_creators:"創作者",stat_views:"作品瀏覽次數",
+  stat_projects:"已發佈作品",stat_creators:"創作者",stat_likes:"總讚好",
   trusted:"創作者用緊嘅工具",
-  featured_eye:"熱門作品",featured_title:"社群自然升上嚟嘅好嘢",featured_sub:"冇編輯把關 — 排名由社群嘅讚好、打賞同銷量自動決定,好作品自然升上嚟。",
+  featured_eye:"熱門作品",featured_title:"社群自然升上嚟嘅好嘢",featured_sub:"冇編輯把關 — 排名由社群嘅讚好自動決定,好作品自然升上嚟。",
   see_all:"睇全部作品 →",
   how_eye:"點樣運作",how_title:"四步同全世界分享",
   how1_t:"上載成品",how1_p:"任何用 AI 做嘅嘢都得:網頁、App、圖片、影片、Prompt、自動化工具。",
@@ -503,7 +540,7 @@ const I = {
   fee_eye:"透明收費",fee_title:"如果你想賣,分成好簡單",fee_sub:"賣唔賣完全由你 — 免費分享永遠免費。決定出售嘅話,我哋只喺你賺到錢嘅時候先賺錢。",
   fee_l_t:"手續費一覽",fee_l_s:"按流量來源收費:平台幫你搵到客,先至收多少少。",
   fee_own:"自己帶客(用你嘅分享連結)",fee_own_v:"只收 5%",
-  fee_mkt:"平台引流(探索頁 / 精選發現)",fee_mkt_v:"15%",
+  fee_mkt:"平台引流(探索頁 / 熱門發現)",fee_mkt_v:"15%",
   fee_tip:"打賞",fee_tip_v:"10%",
   fee_first:"新創作者首 US$100 銷售額",
   fee_r_t:"15% 包咗啲乜?",fee_r_s:"以平台引流交易為例,你收 85%,其餘 15% 用途如下:",
@@ -515,14 +552,15 @@ const I = {
   q3:"「分享影片模板識咗一班同路人,大家互相打賞支持,每月仲有啲被動收入。」",q3_who:"影像創作者 · 里斯本",
   cta_t:"你嘅 AI 成品,值得畀全世界睇到",cta_p:"三分鐘上載,免費展示,唔使審批。",
   explore_eye:"作品市集",explore_title:"探索所有作品",
-  search_ph:"搜尋作品或創作者…",sort_pop:"最受歡迎",sort_new:"最新上架",sort_price:"價錢:低至高",
+  search_ph:"搜尋作品或創作者…",sort_pop:"最多讚好",sort_new:"最新上架",sort_price:"價錢:低至高",
   cat_all:"全部",cat_app:"網頁 / App",cat_image:"AI 圖片",cat_video:"AI 影片",cat_prompt:"Prompt",cat_tool:"工具 / 自動化",
   up_title:"上載你嘅 AI 成品",up_sub:"自己揀分類、自己定價,發佈即刻上架,唔使等審批。",
-  up_drop:"拖放檔案或者貼上連結",
   up_name:"作品名稱",up_cat:"分類",up_desc:"簡介(講下你用咗咩 AI 工具做)",
-  up_price:"價錢",up_free:"免費",up_custom:"自訂…",up_tips:"接受打賞?",yes:"接受",no:"唔接受",
-  up_submit:"發佈作品",up_done:"作品已發佈!(示範模式)",up_need_name:"請輸入作品名稱",
-  side1_t:"上載小貼士",side1_a:"加返 demo 連結或者截圖,轉化率高 3 倍",side1_b:"寫低你用咗邊啲 AI 工具,買家好想知",side1_c:"定價 US$5–25 係最好賣嘅區間",
+  up_link:"作品連結(demo / 下載 / 網站)",up_cover:"封面圖片(可選)",
+  up_price:"價錢",up_free:"免費",up_tips:"接受打賞?",yes:"接受",no:"唔接受",
+  up_submit:"發佈作品",up_need_name:"請輸入作品名稱",up_need_login:"要先登入先可以發佈",
+  up_publishing:"發佈緊…",up_done:"發佈成功!你嘅作品已經上咗架 🎉",up_fail:"發佈失敗,再試一次",
+  side1_t:"上載小貼士",side1_a:"加返 demo 連結或者封面圖,轉化率高 3 倍",side1_b:"寫低你用咗邊啲 AI 工具,大家好想知",side1_c:"定價 US$5–25 係最好賣嘅區間",
   side2_t:"你收幾多?",side2_p:"自己帶客嚟只收 5%;平台幫你搵到客收 15%(已包 Stripe 手續費、全球匯款、稅務發票)。新創作者首 US$100 銷售額完全免手續費。",
   pr_eye:"收費方案",pr_title:"簡單透明嘅定價",pr_sub:"睇免費,分享免費。想賺多啲、曝光多啲,先至升級。",
   per_month:"/月",popular:"最多人揀",
@@ -534,29 +572,31 @@ const I = {
   pl3_a:"5 個團隊成員",pl3_b:"首頁推廣位(每月 2 次)",pl3_c:"API 上架同白標嵌入",pl3_d:"專屬客戶經理",
   start_free:"免費開始",go_pro:"升級 Pro",contact:"聯絡我哋",
   faq_title:"常見問題",
-  f1_q:"點解自己帶客同平台引流收費唔同?",f1_a:"因為公道。你自己喺社交平台分享連結帶嚟嘅客,平台冇出過力,所以只收 5% 基本手續費(主要係支付成本)。經探索頁或者精選發現嘅客,係平台幫你搵返嚟,先至收 15%。",
+  f1_q:"點解自己帶客同平台引流收費唔同?",f1_a:"因為公道。你自己喺社交平台分享連結帶嚟嘅客,平台冇出過力,所以只收 5% 基本手續費(主要係支付成本)。經探索頁或者熱門發現嘅客,係平台幫你搵返嚟,先至收 15%。",
   f2_q:"幾時收到錢?",f2_a:"每月 1 號自動結算上個月收入,經 Stripe 匯去你嘅銀行戶口或者借記卡,支援 100+ 個國家同地區。最低提款額 US$10。",
   f3_q:"我嘅作品版權屬於邊個?",f3_a:"永遠屬於你。AIMade 只攞展示同銷售所需嘅授權,你隨時可以下架。買家攞到嘅係你設定嘅使用授權。",
   f4_q:"乜嘢類型嘅 AI 成品都收?",f4_a:"網頁、App、圖片、影片、音樂、Prompt、自動化工具都得。你自己揀分類,發佈即刻上架;侵權或者違規內容會經自動偵測同社群舉報處理下架。",
-  cta_t2:"準備好未?",
   foot_tag:"全球 AI 創作者嘅分享社群。畀全世界睇到你用 AI 做嘅嘢。",
   fc1:"平台",fc2:"創作者",fc3:"公司",
   fc2_a:"創作者指南",fc2_b:"收費說明",fc2_c:"成功案例",
   fc3_a:"關於我哋",fc3_b:"服務條款",fc3_c:"私隱政策",
   foot_rights:"版權所有",
-  demo_msg:"示範模式 — 呢個功能需要接後端先用得",
-  by:"作者",tip:"打賞",view:"睇下",free:"免費",sales:"銷量",trending:"熱門",
+  coming_soon:"快將推出 — 而家先免費用住 😊",
+  lg_title:"登入 / 註冊",lg_sub:"入你嘅電郵,我哋會寄一條登入連結畀你 — 唔使密碼。",
+  lg_send:"寄登入連結",lg_sent:"寄咗喇!去你電郵撳條連結(可能喺垃圾郵件)",lg_bad:"電郵格式唔啱",lg_fail:"寄唔到,一陣再試",
+  by:"作者",tip:"打賞",view:"睇下",free:"免費",demo:"示範",del:"刪除",del_confirm:"確定刪除呢個作品?",del_done:"刪除咗",
+  need_login_like:"登入先可以讚好",trending:"熱門",no_works:"仲未有作品 — 做第一個上載嘅人!",
  },
  en:{
   nav_home:"Home",nav_explore:"Explore",nav_upload:"Upload",nav_pricing:"Pricing",
-  signin:"Sign in",join:"Start free",
-  pill:"3,800+ AI creators worldwide have joined",
+  signin:"Sign in",signout:"Sign out",
+  pill:"The global community for AI creators — now open",
   hero_1:"What you built with AI",hero_2:"deserves to be seen by the world",
   hero_sub:"AIMade is the global community for sharing AI-made work. Upload your web apps, images, videos, prompts and tools — showcase for free, forever. And if you like, sell it or accept tips.",
   cta_upload:"Upload my work",cta_explore:"Explore creations",
-  stat_projects:"Projects published",stat_creators:"Creators",stat_views:"Total views",
+  stat_projects:"Projects published",stat_creators:"Creators",stat_likes:"Total likes",
   trusted:"Built with the tools creators love",
-  featured_eye:"Trending now",featured_title:"Rising straight from the community",featured_sub:"No editors, no gatekeeping — ranking is driven purely by community likes, tips and sales.",
+  featured_eye:"Trending now",featured_title:"Rising straight from the community",featured_sub:"No editors, no gatekeeping — ranking is driven purely by community likes.",
   see_all:"See all creations →",
   how_eye:"How it works",how_title:"Share with the world in four steps",
   how1_t:"Upload your creation",how1_p:"Anything made with AI: web apps, images, videos, prompts, automation tools.",
@@ -566,7 +606,7 @@ const I = {
   fee_eye:"Transparent fees",fee_title:"If you decide to sell, the split is simple",fee_sub:"Selling is entirely optional — sharing stays free forever. If you do sell, we only earn when you earn.",
   fee_l_t:"Fee schedule",fee_l_s:"Fees depend on who brought the buyer — we only charge more when we did the work.",
   fee_own:"Your own traffic (via your share link)",fee_own_v:"just 5%",
-  fee_mkt:"Marketplace traffic (Explore / Featured)",fee_mkt_v:"15%",
+  fee_mkt:"Marketplace traffic (Explore / Trending)",fee_mkt_v:"15%",
   fee_tip:"Tips",fee_tip_v:"10%",
   fee_first:"First US$100 in sales for new creators",
   fee_r_t:"What's inside the 15%?",fee_r_s:"For a marketplace-driven sale, you keep 85%. The remaining 15% covers:",
@@ -578,14 +618,15 @@ const I = {
   q3:"“Sharing my video templates connected me with people like me. Tips and sales are a nice bonus every month.”",q3_who:"Video creator · Lisbon",
   cta_t:"Your AI work deserves a global audience",cta_p:"Upload in three minutes. Free to showcase, no approval queue.",
   explore_eye:"Marketplace",explore_title:"Explore all creations",
-  search_ph:"Search works or creators…",sort_pop:"Most popular",sort_new:"Newest",sort_price:"Price: low to high",
+  search_ph:"Search works or creators…",sort_pop:"Most liked",sort_new:"Newest",sort_price:"Price: low to high",
   cat_all:"All",cat_app:"Web / App",cat_image:"AI Images",cat_video:"AI Video",cat_prompt:"Prompts",cat_tool:"Tools / Automation",
   up_title:"Upload your AI creation",up_sub:"Pick your own category, set your own price — live instantly, no approval queue.",
-  up_drop:"Drop files or paste a link",
   up_name:"Title",up_cat:"Category",up_desc:"Description (mention which AI tools you used)",
-  up_price:"Price",up_free:"Free",up_custom:"Custom…",up_tips:"Accept tips?",yes:"Yes",no:"No",
-  up_submit:"Publish",up_done:"Published! (demo mode)",up_need_name:"Please enter a title",
-  side1_t:"Tips for a great listing",side1_a:"Add a demo link or screenshots — 3× higher conversion",side1_b:"List the AI tools you used; buyers love to know",side1_c:"US$5–25 is the best-selling price range",
+  up_link:"Link (demo / download / website)",up_cover:"Cover image (optional)",
+  up_price:"Price",up_free:"Free",up_tips:"Accept tips?",yes:"Yes",no:"No",
+  up_submit:"Publish",up_need_name:"Please enter a title",up_need_login:"Sign in first to publish",
+  up_publishing:"Publishing…",up_done:"Published! Your work is live 🎉",up_fail:"Failed to publish, try again",
+  side1_t:"Tips for a great listing",side1_a:"Add a demo link or cover image — 3× higher conversion",side1_b:"List the AI tools you used; people love to know",side1_c:"US$5–25 is the best-selling price range",
   side2_t:"How much do you keep?",side2_p:"Just 5% when you bring your own buyers; 15% when the marketplace finds them for you (Stripe fees, global payouts and tax invoicing included). New creators pay 0% on their first US$100 in sales.",
   pr_eye:"Pricing",pr_title:"Simple, transparent pricing",pr_sub:"Browsing and sharing are free. Upgrade to earn more and get seen more.",
   per_month:"/mo",popular:"Most popular",
@@ -597,86 +638,206 @@ const I = {
   pl3_a:"5 team seats",pl3_b:"Homepage promo slot (2×/mo)",pl3_c:"API listing & white-label embeds",pl3_d:"Dedicated account manager",
   start_free:"Start free",go_pro:"Go Pro",contact:"Contact us",
   faq_title:"Frequently asked questions",
-  f1_q:"Why do fees differ by traffic source?",f1_a:"Because it's fair. When a buyer comes through your own share link, we did no work — so you pay just 5% (mostly payment costs). When the buyer found you through Explore or Featured, the marketplace earned its 15%.",
+  f1_q:"Why do fees differ by traffic source?",f1_a:"Because it's fair. When a buyer comes through your own share link, we did no work — so you pay just 5% (mostly payment costs). When the buyer found you through Explore or Trending, the marketplace earned its 15%.",
   f2_q:"When do I get paid?",f2_a:"Payouts run automatically on the 1st of each month via Stripe to your bank account or debit card, in 100+ countries. Minimum payout US$10.",
   f3_q:"Who owns the rights to my work?",f3_a:"You do, always. AIMade only takes the licence needed to display and sell it, and you can delist anytime. Buyers receive the usage licence you define.",
   f4_q:"What kinds of AI work can I upload?",f4_a:"Web apps, images, video, music, prompts, and automation tools. You choose your own category and go live instantly; infringing or prohibited content is removed via automated checks and community reports.",
-  cta_t2:"Ready?",
   foot_tag:"The global community for sharing AI-made work. Show the world what you built.",
   fc1:"Platform",fc2:"Creators",fc3:"Company",
   fc2_a:"Creator guide",fc2_b:"Fees explained",fc2_c:"Success stories",
   fc3_a:"About us",fc3_b:"Terms of service",fc3_c:"Privacy policy",
   foot_rights:"All rights reserved",
-  demo_msg:"Demo mode — this needs a backend to work",
-  by:"by",tip:"Tip",view:"View",free:"Free",sales:"sales",trending:"Trending",
+  coming_soon:"Coming soon — everything is free for now 😊",
+  lg_title:"Sign in / Sign up",lg_sub:"Enter your email and we'll send you a sign-in link — no password needed.",
+  lg_send:"Send magic link",lg_sent:"Sent! Check your email and click the link (check spam too)",lg_bad:"Invalid email format",lg_fail:"Could not send, try again later",
+  by:"by",tip:"Tip",view:"View",free:"Free",demo:"Demo",del:"Delete",del_confirm:"Delete this work?",del_done:"Deleted",
+  need_login_like:"Sign in to like",trending:"Trending",no_works:"No works yet — be the first to upload!",
  }
 };
 let lang = "zh";
 const t = k => I[lang][k] || k;
 
-/* ============ Sample data ============ */
-const CATS = ["cat_app","cat_image","cat_video","cat_prompt","cat_tool"];
-const WORKS = [
- {n:{zh:"一鍵履歷生成器",en:"One-click Resume Builder"},by:"Kenji T.",cat:"cat_app",e:"📄",g:"linear-gradient(135deg,#4a3aff,#7c5cff)",price:5,feat:1,rate:4.9,sales:412,d:9},
- {n:{zh:"賽博朋克城市插畫集",en:"Cyberpunk City Art Pack"},by:"Luna W.",cat:"cat_image",e:"🌆",g:"linear-gradient(135deg,#ff5c8a,#f5b94e)",price:12,feat:1,rate:4.8,sales:356,d:14},
- {n:{zh:"30 秒產品宣傳片模板",en:"30s Product Promo Template"},by:"Maria S.",cat:"cat_video",e:"🎬",g:"linear-gradient(135deg,#2dd4a7,#38b6ff)",price:25,feat:1,rate:5.0,sales:298,d:6},
- {n:{zh:"小店老闆營銷 Prompt 包",en:"Marketing Prompts for Small Biz"},by:"PromptLab",cat:"cat_prompt",e:"✨",g:"linear-gradient(135deg,#7c5cff,#2dd4a7)",price:8,feat:0,rate:4.7,sales:521,d:22},
- {n:{zh:"Excel 自動報表工具",en:"Excel Auto-report Tool"},by:"SheetsGuru",cat:"cat_tool",e:"📊",g:"linear-gradient(135deg,#f5b94e,#ff6b6b)",price:0,feat:0,rate:4.6,sales:1204,d:31},
- {n:{zh:"AI 食譜推薦 App",en:"AI Recipe Finder App"},by:"Foodie AI",cat:"cat_app",e:"🍜",g:"linear-gradient(135deg,#38b6ff,#7c5cff)",price:0,feat:0,rate:4.5,sales:876,d:12},
- {n:{zh:"水墨風動物頭像生成",en:"Ink-style Animal Avatars"},by:"MoShui",cat:"cat_image",e:"🐼",g:"linear-gradient(135deg,#2b3a55,#2dd4a7)",price:6,feat:0,rate:4.8,sales:189,d:4},
- {n:{zh:"日程自動排程助手",en:"Auto Scheduling Assistant"},by:"ZenFlow",cat:"cat_tool",e:"🗓️",g:"linear-gradient(135deg,#ff5c8a,#7c5cff)",price:15,feat:0,rate:4.9,sales:243,d:18},
- {n:{zh:"兒童故事影片系列",en:"Kids Story Video Series"},by:"StoryTime",cat:"cat_video",e:"🧸",g:"linear-gradient(135deg,#2dd4a7,#f5b94e)",price:0,feat:0,rate:4.7,sales:654,d:27}
+/* ============ Demo seed data (shown alongside real works) ============ */
+const DEMO = [
+ {demo:1,title:{zh:"一鍵履歷生成器",en:"One-click Resume Builder"},owner_name:"Kenji T.",category:"app",likeCount:41,price:5},
+ {demo:1,title:{zh:"賽博朋克城市插畫集",en:"Cyberpunk City Art Pack"},owner_name:"Luna W.",category:"image",likeCount:35,price:12},
+ {demo:1,title:{zh:"30 秒產品宣傳片模板",en:"30s Product Promo Template"},owner_name:"Maria S.",category:"video",likeCount:29,price:25},
+ {demo:1,title:{zh:"小店老闆營銷 Prompt 包",en:"Marketing Prompts for Small Biz"},owner_name:"PromptLab",category:"prompt",likeCount:52,price:8},
+ {demo:1,title:{zh:"Excel 自動報表工具",en:"Excel Auto-report Tool"},owner_name:"SheetsGuru",category:"tool",likeCount:120,price:0},
+ {demo:1,title:{zh:"AI 食譜推薦 App",en:"AI Recipe Finder App"},owner_name:"Foodie AI",category:"app",likeCount:87,price:0}
 ];
+const CAT_EMOJI = {app:"📱",image:"🎨",video:"🎬",prompt:"✨",tool:"🛠️"};
+const GRADS = ["linear-gradient(135deg,#4a3aff,#7c5cff)","linear-gradient(135deg,#ff5c8a,#f5b94e)","linear-gradient(135deg,#2dd4a7,#38b6ff)","linear-gradient(135deg,#7c5cff,#2dd4a7)","linear-gradient(135deg,#f5b94e,#ff6b6b)","linear-gradient(135deg,#38b6ff,#7c5cff)"];
 const AV_COLORS=["linear-gradient(135deg,#6d7cff,#2dd4a7)","linear-gradient(135deg,#f5b94e,#ff6b8b)","linear-gradient(135deg,#2dd4a7,#38b6ff)","linear-gradient(135deg,#ff5c8a,#7c5cff)"];
+const CATS = ["app","image","video","prompt","tool"];
 
+/* ============ Data loading ============ */
+async function loadWorks(){
+  try{
+    const { data, error } = await sb.from("works")
+      .select("*, likes(user_id)")
+      .order("created_at",{ascending:false})
+      .limit(200);
+    if(error) throw error;
+    realWorks = (data||[]).map(w=>({...w, likeCount:(w.likes||[]).length}));
+    myLikes = new Set();
+    if(currentUser){
+      (data||[]).forEach(w=>{ if((w.likes||[]).some(l=>l.user_id===currentUser.id)) myLikes.add(w.id); });
+    }
+  }catch(e){ console.error(e); realWorks = []; }
+  renderExplore(); renderFeatured(); renderStats();
+}
+function allWorks(){ return [...realWorks, ...DEMO]; }
+function renderStats(){
+  const creators = new Set(realWorks.map(w=>w.owner)).size;
+  const likes = realWorks.reduce((s,w)=>s+w.likeCount,0) + DEMO.reduce((s,w)=>s+w.likeCount,0);
+  document.getElementById("statWorks").textContent = (realWorks.length + DEMO.length).toLocaleString();
+  document.getElementById("statCreators").textContent = (creators + 6).toLocaleString();
+  document.getElementById("statLikes").textContent = likes.toLocaleString();
+}
+
+/* ============ Cards ============ */
+function esc(s){ return (s||"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 function cardHTML(w,i){
-  const price = w.price ? `US$${w.price}` : `<span class="price free">${t("free")}</span>`;
-  const init = w.by.split(/[\s.]/).filter(Boolean).map(x=>x[0]).join("").slice(0,2).toUpperCase();
-  return `<div class="card" onclick="toast(t('demo_msg'))">
-    <div class="thumb" style="background:${w.g}">${w.e}
-      ${w.feat?`<span class="badge featured">🔥 ${t("trending")}</span>`:`<span class="badge">${t(w.cat)}</span>`}
-    </div>
+  const isDemo = !!w.demo;
+  const title = isDemo ? w.title[lang] : esc(w.title);
+  const name = esc(w.owner_name||"Anonymous");
+  const init = name.split(/[\s._@-]/).filter(Boolean).map(x=>x[0]).join("").slice(0,2).toUpperCase() || "AI";
+  const price = Number(w.price)>0 ? `US$${Number(w.price)}` : `<span class="price free">${t("free")}</span>`;
+  const thumbStyle = (!isDemo && w.cover_url) ? `background-image:url('${esc(w.cover_url)}')` : `background:${GRADS[i%GRADS.length]}`;
+  const emoji = (!isDemo && w.cover_url) ? "" : (CAT_EMOJI[w.category]||"✨");
+  const badge = isDemo ? `<span class="badge demo">${t("demo")}</span>` : (w.likeCount>=5 ? `<span class="badge featured">🔥 ${t("trending")}</span>` : `<span class="badge">${t("cat_"+w.category)}</span>`);
+  const likeCls = (!isDemo && myLikes.has(w.id)) ? "icon-btn liked" : "icon-btn";
+  const likeBtn = isDemo
+    ? `<button class="icon-btn" onclick="event.stopPropagation();toast(t('demo'))">💜 ${w.likeCount}</button>`
+    : `<button class="${likeCls}" onclick="event.stopPropagation();toggleLike('${w.id}')">💜 ${w.likeCount}</button>`;
+  const viewBtn = (!isDemo && w.link) ? `<button class="icon-btn" onclick="event.stopPropagation();window.open('${esc(w.link)}','_blank','noopener')">${t("view")}</button>` : "";
+  const delBtn = (!isDemo && currentUser && currentUser.id===w.owner) ? `<button class="icon-btn" onclick="event.stopPropagation();delWork('${w.id}')">🗑</button>` : "";
+  const desc = (!isDemo && w.description) ? `<div class="card-desc">${esc(w.description)}</div>` : "";
+  return `<div class="card">
+    <div class="thumb" style="${thumbStyle}">${emoji}${badge}</div>
     <div class="card-body">
       <div class="card-top">
         <div class="avatar" style="background:${AV_COLORS[i%4]}">${init}</div>
-        <div><h3>${w.n[lang]}</h3><div class="by">${t("by")} ${w.by}</div></div>
+        <div><h3>${title}</h3><div class="by">${t("by")} ${name}</div></div>
       </div>
-      <div class="card-meta">
-        <span><span class="star">★</span> ${w.rate.toFixed(1)}</span>
-        <span>${w.sales.toLocaleString()} ${t("sales")}</span>
-      </div>
+      ${desc}
       <div class="card-foot">
         <span class="price">${price}</span>
-        <div class="card-actions">
-          <button class="icon-btn" onclick="event.stopPropagation();toast(t('demo_msg'))">💜 ${t("tip")}</button>
-          <button class="icon-btn" onclick="event.stopPropagation();toast(t('demo_msg'))">${t("view")}</button>
-        </div>
+        <div class="card-actions">${likeBtn}${viewBtn}${delBtn}</div>
       </div>
     </div>
   </div>`;
 }
 
-let activeCat = "cat_all";
+let activeCat = "all";
 function renderChips(){
-  document.getElementById("chips").innerHTML = ["cat_all",...CATS].map(c=>
-    `<button class="chip ${c===activeCat?'active':''}" onclick="filterCat('${c}')">${t(c)}</button>`).join("");
+  document.getElementById("chips").innerHTML = ["all",...CATS].map(c=>
+    `<button class="chip ${c===activeCat?'active':''}" onclick="filterCat('${c}')">${t("cat_"+c)}</button>`).join("");
 }
 function filterCat(c){ activeCat=c; renderChips(); renderExplore(); }
 function renderExplore(){
   const q = (document.getElementById("searchBox").value||"").toLowerCase();
   const sort = document.getElementById("sortSel").value;
-  let list = activeCat==="cat_all" ? [...WORKS] : WORKS.filter(w=>w.cat===activeCat);
-  if(q) list = list.filter(w => w.n.zh.toLowerCase().includes(q) || w.n.en.toLowerCase().includes(q) || w.by.toLowerCase().includes(q));
-  if(sort==="pop") list.sort((a,b)=>b.sales-a.sales);
-  else if(sort==="new") list.sort((a,b)=>a.d-b.d);
-  else if(sort==="price") list.sort((a,b)=>a.price-b.price);
-  document.getElementById("exploreGrid").innerHTML = list.map(cardHTML).join("");
+  let list = allWorks().filter(w => activeCat==="all" || w.category===activeCat);
+  if(q) list = list.filter(w => {
+    const title = w.demo ? (w.title.zh+" "+w.title.en) : (w.title||"");
+    return title.toLowerCase().includes(q) || (w.owner_name||"").toLowerCase().includes(q);
+  });
+  if(sort==="pop") list.sort((a,b)=>b.likeCount-a.likeCount);
+  else if(sort==="price") list.sort((a,b)=>Number(a.price)-Number(b.price));
+  document.getElementById("exploreGrid").innerHTML = list.length
+    ? list.map(cardHTML).join("")
+    : `<p style="color:var(--muted);grid-column:1/-1;text-align:center;padding:40px">${t("no_works")}</p>`;
 }
 function renderFeatured(){
-  document.getElementById("featuredGrid").innerHTML = WORKS.filter(w=>w.feat).map(cardHTML).join("");
+  const top = allWorks().slice().sort((a,b)=>b.likeCount-a.likeCount).slice(0,3);
+  document.getElementById("featuredGrid").innerHTML = top.map(cardHTML).join("");
 }
 
-/* ============ Nav / lang ============ */
+/* ============ Auth ============ */
+function renderAuth(){
+  const area = document.getElementById("authArea");
+  if(currentUser){
+    const name = esc((currentUser.email||"").split("@")[0]);
+    area.innerHTML = `<span class="user-chip">👋 <b>${name}</b></span> <button class="btn btn-ghost" onclick="signOut()">${t("signout")}</button>`;
+  }else{
+    area.innerHTML = `<button class="btn btn-ghost" onclick="openLogin()">${t("signin")}</button> <button class="btn btn-primary" onclick="go('upload')">${t("cta_upload")}</button>`;
+  }
+}
+function openLogin(){ document.getElementById("loginModal").classList.add("on"); }
+function closeLogin(){ document.getElementById("loginModal").classList.remove("on"); }
+async function sendMagicLink(){
+  const email = document.getElementById("lgEmail").value.trim();
+  const st = document.getElementById("lgStatus");
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ st.textContent = t("lg_bad"); return; }
+  document.getElementById("lgBtn").disabled = true;
+  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: "https://cheungck1027-dev.github.io/aimade/" } });
+  document.getElementById("lgBtn").disabled = false;
+  st.textContent = error ? t("lg_fail") : t("lg_sent");
+}
+async function signOut(){ await sb.auth.signOut(); }
+sb.auth.onAuthStateChange((_e, session)=>{
+  currentUser = session ? session.user : null;
+  renderAuth(); loadWorks();
+});
+
+/* ============ Upload ============ */
+async function submitUpload(){
+  const title = document.getElementById("upName").value.trim();
+  if(!title){ toast(t("up_need_name")); return; }
+  if(!currentUser){ toast(t("up_need_login")); openLogin(); return; }
+  const btn = document.getElementById("publishBtn");
+  btn.disabled = true; btn.textContent = t("up_publishing");
+  try{
+    let cover_url = null;
+    const file = document.getElementById("upCover").files[0];
+    if(file){
+      const path = `${currentUser.id}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;
+      const { error: upErr } = await sb.storage.from("covers").upload(path, file);
+      if(upErr) throw upErr;
+      cover_url = sb.storage.from("covers").getPublicUrl(path).data.publicUrl;
+    }
+    const { error } = await sb.from("works").insert({
+      owner: currentUser.id,
+      owner_name: (currentUser.email||"").split("@")[0],
+      title,
+      category: document.getElementById("upCat").value,
+      description: document.getElementById("upDesc").value.trim() || null,
+      link: document.getElementById("upLink").value.trim() || null,
+      cover_url,
+      price: Number(document.getElementById("upPrice").value),
+      accept_tips: document.getElementById("upTips").value === "true"
+    });
+    if(error) throw error;
+    toast(t("up_done"));
+    document.getElementById("upName").value = "";
+    document.getElementById("upDesc").value = "";
+    document.getElementById("upLink").value = "";
+    document.getElementById("upCover").value = "";
+    await loadWorks();
+    go("explore");
+  }catch(e){ console.error(e); toast(t("up_fail")); }
+  btn.disabled = false; btn.textContent = t("up_submit");
+}
+async function delWork(id){
+  if(!confirm(t("del_confirm"))) return;
+  const { error } = await sb.from("works").delete().eq("id", id);
+  if(!error){ toast(t("del_done")); loadWorks(); }
+}
+
+/* ============ Likes ============ */
+async function toggleLike(workId){
+  if(!currentUser){ toast(t("need_login_like")); openLogin(); return; }
+  if(myLikes.has(workId)){
+    await sb.from("likes").delete().eq("work_id", workId).eq("user_id", currentUser.id);
+  }else{
+    await sb.from("likes").insert({ work_id: workId, user_id: currentUser.id });
+  }
+  loadWorks();
+}
+
+/* ============ Nav / lang / misc ============ */
 function go(p){
   document.querySelectorAll(".page").forEach(x=>x.classList.remove("show"));
   document.getElementById("page-"+p).classList.add("show");
@@ -690,14 +851,9 @@ function applyLang(){
   document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ el.placeholder = t(el.dataset.i18nPh); });
   document.getElementById("langBtn").textContent = lang==="zh" ? "EN" : "中文";
   document.documentElement.lang = lang==="zh" ? "zh-Hant" : "en";
-  renderChips(); renderExplore(); renderFeatured();
+  renderChips(); renderExplore(); renderFeatured(); renderAuth();
 }
 function toggleLang(){ lang = lang==="zh" ? "en" : "zh"; applyLang(); }
-
-function submitUpload(){
-  const name = document.getElementById("upName").value.trim();
-  toast(name ? t("up_done") : t("up_need_name"));
-}
 function faq(btn){
   const item = btn.parentElement;
   const was = item.classList.contains("open");
@@ -709,15 +865,14 @@ function toast(msg){
   const el = document.getElementById("toast");
   el.textContent = msg; el.classList.add("on");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>el.classList.remove("on"), 2200);
+  toastTimer = setTimeout(()=>el.classList.remove("on"), 2600);
 }
-
-/* scroll reveal */
 const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target);} }),{threshold:.08});
 function revealAll(){ document.querySelectorAll(".page.show .reveal:not(.in)").forEach(el=>io.observe(el)); }
 
 applyLang();
 revealAll();
+loadWorks();
 </script>
 </body>
 </html>
