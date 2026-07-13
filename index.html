@@ -381,8 +381,13 @@ footer{border-top:1px solid var(--border);margin-top:60px;background:var(--bg2)}
             <option value="app" data-i18n="cat_app"></option>
             <option value="image" data-i18n="cat_image"></option>
             <option value="video" data-i18n="cat_video"></option>
+            <option value="music" data-i18n="cat_music"></option>
             <option value="prompt" data-i18n="cat_prompt"></option>
             <option value="tool" data-i18n="cat_tool"></option>
+            <option value="game" data-i18n="cat_game"></option>
+            <option value="design" data-i18n="cat_design"></option>
+            <option value="writing" data-i18n="cat_writing"></option>
+            <option value="other" data-i18n="cat_other"></option>
           </select>
         </div>
         <div class="field"><label data-i18n="up_desc"></label><textarea rows="3" id="upDesc" maxlength="2000"></textarea></div>
@@ -554,7 +559,7 @@ const I = {
   cta_t:"你嘅 AI 成品,值得畀全世界睇到",cta_p:"三分鐘上載,免費展示,唔使審批。",
   explore_eye:"作品市集",explore_title:"探索所有作品",
   search_ph:"搜尋作品或創作者…",sort_pop:"最多讚好",sort_new:"最新上架",sort_price:"價錢:低至高",
-  cat_all:"全部",cat_app:"網頁 / App",cat_image:"AI 圖片",cat_video:"AI 影片",cat_prompt:"Prompt",cat_tool:"工具 / 自動化",
+  cat_all:"全部",cat_app:"網頁 / App",cat_image:"AI 圖片",cat_video:"AI 影片",cat_music:"AI 音樂",cat_prompt:"Prompt",cat_tool:"工具 / 自動化",cat_game:"遊戲",cat_design:"3D / 設計",cat_writing:"文字 / 寫作",cat_other:"其他",
   up_title:"上載你嘅 AI 成品",up_sub:"自己揀分類、自己定價,發佈即刻上架,唔使等審批。",
   up_name:"作品名稱",up_cat:"分類",up_desc:"簡介(講下你用咗咩 AI 工具做)",
   up_link:"作品連結(demo / 下載 / 網站)",up_cover:"封面圖片(可選)",
@@ -620,7 +625,7 @@ const I = {
   cta_t:"Your AI work deserves a global audience",cta_p:"Upload in three minutes. Free to showcase, no approval queue.",
   explore_eye:"Marketplace",explore_title:"Explore all creations",
   search_ph:"Search works or creators…",sort_pop:"Most liked",sort_new:"Newest",sort_price:"Price: low to high",
-  cat_all:"All",cat_app:"Web / App",cat_image:"AI Images",cat_video:"AI Video",cat_prompt:"Prompts",cat_tool:"Tools / Automation",
+  cat_all:"All",cat_app:"Web / App",cat_image:"AI Images",cat_video:"AI Video",cat_music:"AI Music",cat_prompt:"Prompts",cat_tool:"Tools / Automation",cat_game:"Games",cat_design:"3D / Design",cat_writing:"Writing",cat_other:"Other",
   up_title:"Upload your AI creation",up_sub:"Pick your own category, set your own price — live instantly, no approval queue.",
   up_name:"Title",up_cat:"Category",up_desc:"Description (mention which AI tools you used)",
   up_link:"Link (demo / download / website)",up_cover:"Cover image (optional)",
@@ -667,10 +672,10 @@ const DEMO = [
  {demo:1,title:{zh:"Excel 自動報表工具",en:"Excel Auto-report Tool"},owner_name:"SheetsGuru",category:"tool",likeCount:120,price:0},
  {demo:1,title:{zh:"AI 食譜推薦 App",en:"AI Recipe Finder App"},owner_name:"Foodie AI",category:"app",likeCount:87,price:0}
 ];
-const CAT_EMOJI = {app:"📱",image:"🎨",video:"🎬",prompt:"✨",tool:"🛠️"};
+const CAT_EMOJI = {app:"📱",image:"🎨",video:"🎬",music:"🎵",prompt:"✨",tool:"🛠️",game:"🎮",design:"🧊",writing:"✍️",other:"📦"};
 const GRADS = ["linear-gradient(135deg,#4a3aff,#7c5cff)","linear-gradient(135deg,#ff5c8a,#f5b94e)","linear-gradient(135deg,#2dd4a7,#38b6ff)","linear-gradient(135deg,#7c5cff,#2dd4a7)","linear-gradient(135deg,#f5b94e,#ff6b6b)","linear-gradient(135deg,#38b6ff,#7c5cff)"];
 const AV_COLORS=["linear-gradient(135deg,#6d7cff,#2dd4a7)","linear-gradient(135deg,#f5b94e,#ff6b8b)","linear-gradient(135deg,#2dd4a7,#38b6ff)","linear-gradient(135deg,#ff5c8a,#7c5cff)"];
-const CATS = ["app","image","video","prompt","tool"];
+const CATS = ["app","image","video","music","prompt","tool","game","design","writing","other"];
 
 /* ============ Data loading ============ */
 async function loadWorks(){
