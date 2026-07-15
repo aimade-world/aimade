@@ -338,22 +338,22 @@ footer{border-top:1px solid var(--border);margin-top:56px;background:var(--bg2)}
           <div class="fee-row"><span class="lbl" data-i18n="fee_own"></span><b data-i18n="fee_own_v"></b></div>
           <div class="fee-row"><span class="lbl" data-i18n="fee_mkt"></span><b data-i18n="fee_mkt_v"></b></div>
           <div class="fee-row"><span class="lbl" data-i18n="fee_tip"></span><b data-i18n="fee_tip_v"></b></div>
-          <div class="fee-row"><span class="lbl" data-i18n="fee_first"></span><b>0%</b></div>
+          <div class="fee-row"><span class="lbl" data-i18n="fee_first"></span><b data-i18n="fee_first_v"></b></div>
         </div>
       </div>
       <div class="fee-card">
         <h3 data-i18n="fee_r_t"></h3>
         <div class="sub" data-i18n="fee_r_s"></div>
         <div class="fee-bar">
-          <div class="you" style="width:85%" data-i18n="fee_you"></div>
-          <div class="us" style="width:15%">15%</div>
+          <div class="you" style="width:90%" data-i18n="fee_you"></div>
+          <div class="us" style="width:10%">10%</div>
         </div>
         <div class="fee-legend" data-i18n="fee_legend"></div>
         <ul class="breakdown">
-          <li><span data-i18n="bd1"></span><span>~3%</span></li>
-          <li><span data-i18n="bd2"></span><span>~2%</span></li>
-          <li><span data-i18n="bd3"></span><span>~4%</span></li>
-          <li><span data-i18n="bd4"></span><span>~6%</span></li>
+          <li><span data-i18n="bd1"></span><span data-i18n="bd_inc"></span></li>
+          <li><span data-i18n="bd2"></span><span data-i18n="bd_inc"></span></li>
+          <li><span data-i18n="bd3"></span><span data-i18n="bd_inc"></span></li>
+          <li><span data-i18n="bd4"></span><span data-i18n="bd_inc"></span></li>
         </ul>
       </div>
     </div>
@@ -570,16 +570,16 @@ const I = {
   how1_t:"上載成品",how1_p:"任何用 AI 做嘅嘢都得:網頁、App、圖片、影片、Prompt、自動化工具。",
   how2_t:"自訂價錢",how2_p:"免費展示、定價出售、或者開放打賞 — 完全由你決定。",
   how3_t:"全球曝光",how3_p:"作品自動出現喺探索頁,畀全球用戶發現、試用、收藏。",
-  how4_t:"想賣,先至賣",how4_p:"純分享永遠免費。如果決定出售或者收打賞,自己帶客只收 5%,平台引流先收 15%。",
-  fee_eye:"透明收費",fee_title:"如果你想賣,分成好簡單",fee_sub:"賣唔賣完全由你 — 免費分享永遠免費。決定出售嘅話,我哋只喺你賺到錢嘅時候先賺錢。",
-  fee_l_t:"手續費一覽",fee_l_s:"按流量來源收費:平台幫你搵到客,先至收多少少。",
-  fee_own:"自己帶客(用你嘅分享連結)",fee_own_v:"只收 5%",
-  fee_mkt:"平台引流(探索頁 / 熱門發現)",fee_mkt_v:"15%",
-  fee_tip:"打賞",fee_tip_v:"10%",
-  fee_first:"新創作者首 US$100 銷售額",
-  fee_r_t:"15% 包咗啲乜?",fee_r_s:"以平台引流交易為例,你收 85%,其餘 15% 用途如下:",
-  fee_you:"你收 85%",fee_legend:"每一單交易嘅分配",
-  bd1:"支付處理(Stripe / 信用卡)",bd2:"全球匯款同稅務發票",bd3:"平台營運同內容審核",bd4:"幫你推廣搵客",
+  how4_t:"想賣,先至賣",how4_p:"純分享永遠免費。決定出售嘅話,每單只收 10% + US$0.50,支付同匯款費用已經包晒。",
+  fee_eye:"透明收費",fee_title:"收費好簡單:賣出先至收",fee_sub:"上架免費、瀏覽免費、冇月費。同類平台一般抽 10–20%,我哋定喺最平嗰邊。",
+  fee_l_t:"手續費一覽",fee_l_s:"一個價,全包,冇隱藏費用。",
+  fee_own:"上架 / 展示 / 瀏覽",fee_own_v:"免費",
+  fee_mkt:"出售作品",fee_mkt_v:"10% + US$0.50",
+  fee_tip:"打賞",fee_tip_v:"5%",
+  fee_first:"Pro 會員出售",fee_first_v:"5% + US$0.50",
+  fee_r_t:"個 10% 包咗啲乜?",fee_r_s:"以一單 US$20 為例:你收 US$17.50,我哋嗰份已經包晒以下所有嘢:",
+  fee_you:"你收 ~90%",fee_legend:"每一單交易嘅分配",
+  bd1:"支付處理(Stripe / 信用卡)",bd2:"全球匯款同稅務發票",bd3:"平台營運同內容審核",bd4:"幫你推廣搵客",bd_inc:"已包",
   q_eye:"創作者心聲",q_title:"大家都喺度分享緊",
   q1:"post 咗個履歷生成器上嚟,一個星期有成千人試用,留言仲教我點改進 — 順便賺埋第一筆,完全係意外驚喜。",q1_who:"獨立開發者 · 東京",
   q2:"我嘅 AI 插畫喺呢度分享得最開心,因為個社群真係識欣賞 AI 創作。",q2_who:"數碼藝術家 · 台北",
@@ -596,18 +596,18 @@ const I = {
   up_submit:"發佈作品",up_need_name:"請輸入作品名稱",up_need_login:"要先登入先可以發佈",
   up_publishing:"發佈緊…",up_done:"發佈成功!你嘅作品已經上咗架",up_fail:"發佈失敗,再試一次",
   side1_t:"上載小貼士",side1_a:"加返 demo 連結或者封面圖,轉化率高 3 倍",side1_b:"寫低你用咗邊啲 AI 工具,大家好想知",side1_c:"定價 US$5–25 係最好賣嘅區間",
-  side2_t:"你收幾多?",side2_p:"自己帶客嚟只收 5%;平台幫你搵到客收 15%(已包 Stripe 手續費、全球匯款、稅務發票)。新創作者首 US$100 銷售額完全免手續費。",
+  side2_t:"你收幾多?",side2_p:"免費分享,一蚊都唔收。出售作品每單收 10% + US$0.50,已經包晒 Stripe 手續費、全球匯款、稅務發票 — 你袋大約九成。打賞只收 5%。",
   pr_eye:"收費方案",pr_title:"簡單透明嘅定價",pr_sub:"睇免費,分享免費。想賺多啲、曝光多啲,先至升級。",
   per_month:"/月",popular:"最多人揀",
-  pl1_t:"免費",pl1_s:"啱啱開始嘅創作者",pl1_keep:"出售收 85–95%",
-  pl1_a:"無限瀏覽同收藏",pl1_b:"上載最多 3 個作品",pl1_c:"接受打賞",pl1_d:"首 US$100 銷售 0% 手續費",
-  pl2_t:"Pro 創作者",pl2_s:"認真經營嘅個人創作者",pl2_keep:"出售收 92–97%",
+  pl1_t:"免費",pl1_s:"啱啱開始嘅創作者",pl1_keep:"出售:每單 10% + US$0.50",
+  pl1_a:"無限瀏覽同收藏",pl1_b:"上載最多 3 個作品",pl1_c:"接受打賞(只收 5%)",pl1_d:"冇月費,賣出先收費",
+  pl2_t:"Pro 創作者",pl2_s:"認真經營嘅個人創作者",pl2_keep:"出售:每單 5% + US$0.50",
   pl2_a:"無限上載作品",pl2_b:"數據分析(瀏覽 / 轉化)",pl2_c:"Pro 徽章 + 排名加成",pl2_d:"自訂個人主頁",
-  pl3_t:"工作室 / 團隊",pl3_s:"團隊同小型工作室",pl3_keep:"出售收 95–98%",
+  pl3_t:"工作室 / 團隊",pl3_s:"團隊同小型工作室",pl3_keep:"出售:每單 5% + US$0.50",
   pl3_a:"5 個團隊成員",pl3_b:"首頁推廣位(每月 2 次)",pl3_c:"API 上架同白標嵌入",pl3_d:"專屬客戶經理",
   start_free:"免費開始",go_pro:"升級 Pro",contact:"聯絡我哋",
   faq_title:"常見問題",
-  f1_q:"點解自己帶客同平台引流收費唔同?",f1_a:"因為公道。你自己喺社交平台分享連結帶嚟嘅客,平台冇出過力,所以只收 5% 基本手續費(主要係支付成本)。經探索頁或者熱門發現嘅客,係平台幫你搵返嚟,先至收 15%。",
+  f1_q:"點解收 10% + US$0.50?",f1_a:"呢個價已經包晒 Stripe 信用卡手續費、全球匯款同稅務發票 — 冇上架費、冇月費,唔賣嘢一蚊都唔使畀。同類平台一般抽 10–20%(例如 Fiverr 20%、Gumroad 10% + US$0.50),我哋定喺最平嗰邊;US$0.50 固定費係行業慣例,用嚟冚每單交易嘅支付固定成本。",
   f2_q:"幾時收到錢?",f2_a:"每月 1 號自動結算上個月收入,經 Stripe 匯去你嘅銀行戶口或者借記卡,支援 100+ 個國家同地區。最低提款額 US$10。",
   f3_q:"我嘅作品版權屬於邊個?",f3_a:"永遠屬於你。AIMade 只攞展示同銷售所需嘅授權,你隨時可以下架。買家攞到嘅係你設定嘅使用授權。",
   f4_q:"乜嘢類型嘅 AI 成品都收?",f4_a:"網頁、App、圖片、影片、音樂、Prompt、自動化工具都得。你自己揀分類,發佈即刻上架;侵權或者違規內容會經自動偵測同社群舉報處理下架。",
@@ -638,16 +638,16 @@ const I = {
   how1_t:"Upload your creation",how1_p:"Anything made with AI: web apps, images, videos, prompts, automation tools.",
   how2_t:"Set your price",how2_p:"Showcase for free, sell at your price, or accept tips — entirely your call.",
   how3_t:"Get global exposure",how3_p:"Your work appears in Explore for the whole world to discover and try.",
-  how4_t:"Sell only if you want to",how4_p:"Sharing is free, forever. If you choose to sell or accept tips, it's just 5% on your own traffic and 15% when the marketplace brings the buyer.",
-  fee_eye:"Transparent fees",fee_title:"If you decide to sell, the split is simple",fee_sub:"Selling is entirely optional — sharing stays free forever. If you do sell, we only earn when you earn.",
-  fee_l_t:"Fee schedule",fee_l_s:"Fees depend on who brought the buyer — we only charge more when we did the work.",
-  fee_own:"Your own traffic (via your share link)",fee_own_v:"just 5%",
-  fee_mkt:"Marketplace traffic (Explore / Trending)",fee_mkt_v:"15%",
-  fee_tip:"Tips",fee_tip_v:"10%",
-  fee_first:"First US$100 in sales for new creators",
-  fee_r_t:"What's inside the 15%?",fee_r_s:"For a marketplace-driven sale, you keep 85%. The remaining 15% covers:",
-  fee_you:"You keep 85%",fee_legend:"How every transaction is split",
-  bd1:"Payment processing (Stripe / cards)",bd2:"Global payouts & tax invoicing",bd3:"Platform operations & moderation",bd4:"Marketing that finds you buyers",
+  how4_t:"Sell only if you want to",how4_p:"Sharing is free, forever. If you decide to sell, it's a simple 10% + US$0.50 per sale — payment and payout costs included.",
+  fee_eye:"Transparent fees",fee_title:"Simple pricing: we only charge when you sell",fee_sub:"Free to list, free to browse, no monthly fees. Similar platforms take 10–20% — we sit at the low end.",
+  fee_l_t:"Fee schedule",fee_l_s:"One price, all-inclusive, no hidden fees.",
+  fee_own:"Listing / showcasing / browsing",fee_own_v:"Free",
+  fee_mkt:"Selling a work",fee_mkt_v:"10% + US$0.50",
+  fee_tip:"Tips",fee_tip_v:"5%",
+  fee_first:"Selling as a Pro member",fee_first_v:"5% + US$0.50",
+  fee_r_t:"What does the 10% cover?",fee_r_s:"On a US$20 sale you keep US$17.50 — and our share already covers all of this:",
+  fee_you:"You keep ~90%",fee_legend:"How every transaction is split",
+  bd1:"Payment processing (Stripe / cards)",bd2:"Global payouts & tax invoicing",bd3:"Platform operations & moderation",bd4:"Marketing that finds you buyers",bd_inc:"Included",
   q_eye:"Creator stories",q_title:"People are already sharing",
   q1:"I posted my resume builder and a thousand people tried it in the first week — the feedback made it better, and the first sales were a happy surprise.",q1_who:"Indie developer · Tokyo",
   q2:"This is my favourite place to share AI art — the community here actually appreciates AI-made work.",q2_who:"Digital artist · Taipei",
@@ -664,18 +664,18 @@ const I = {
   up_submit:"Publish",up_need_name:"Please enter a title",up_need_login:"Sign in first to publish",
   up_publishing:"Publishing…",up_done:"Published! Your work is live",up_fail:"Failed to publish, try again",
   side1_t:"Tips for a great listing",side1_a:"Add a demo link or cover image — 3× higher conversion",side1_b:"List the AI tools you used; people love to know",side1_c:"US$5–25 is the best-selling price range",
-  side2_t:"How much do you keep?",side2_p:"Just 5% when you bring your own buyers; 15% when the marketplace finds them for you (Stripe fees, global payouts and tax invoicing included). New creators pay 0% on their first US$100 in sales.",
+  side2_t:"How much do you keep?",side2_p:"Sharing costs nothing. Selling costs 10% + US$0.50 per sale — Stripe fees, global payouts and tax invoicing all included, so you pocket roughly 90%. Tips are just 5%.",
   pr_eye:"Pricing",pr_title:"Simple, transparent pricing",pr_sub:"Browsing and sharing are free. Upgrade to earn more and get seen more.",
   per_month:"/mo",popular:"Most popular",
-  pl1_t:"Free",pl1_s:"For creators just getting started",pl1_keep:"Keep 85–95% on sales",
-  pl1_a:"Unlimited browsing & bookmarks",pl1_b:"Upload up to 3 works",pl1_c:"Accept tips",pl1_d:"0% fee on first US$100 in sales",
-  pl2_t:"Pro Creator",pl2_s:"For serious solo creators",pl2_keep:"Keep 92–97% on sales",
+  pl1_t:"Free",pl1_s:"For creators just getting started",pl1_keep:"Sales: 10% + US$0.50 each",
+  pl1_a:"Unlimited browsing & bookmarks",pl1_b:"Upload up to 3 works",pl1_c:"Accept tips (just 5%)",pl1_d:"No monthly fee — pay only when you sell",
+  pl2_t:"Pro Creator",pl2_s:"For serious solo creators",pl2_keep:"Sales: 5% + US$0.50 each",
   pl2_a:"Unlimited uploads",pl2_b:"Analytics (views / conversion)",pl2_c:"Pro badge + ranking boost",pl2_d:"Custom profile page",
-  pl3_t:"Studio / Team",pl3_s:"For teams and small studios",pl3_keep:"Keep 95–98% on sales",
+  pl3_t:"Studio / Team",pl3_s:"For teams and small studios",pl3_keep:"Sales: 5% + US$0.50 each",
   pl3_a:"5 team seats",pl3_b:"Homepage promo slot (2×/mo)",pl3_c:"API listing & white-label embeds",pl3_d:"Dedicated account manager",
   start_free:"Start free",go_pro:"Go Pro",contact:"Contact us",
   faq_title:"Frequently asked questions",
-  f1_q:"Why do fees differ by traffic source?",f1_a:"Because it's fair. When a buyer comes through your own share link, we did no work — so you pay just 5% (mostly payment costs). When the buyer found you through Explore or Trending, the marketplace earned its 15%.",
+  f1_q:"Why 10% + US$0.50?",f1_a:"That price includes Stripe card fees, global payouts and tax invoicing — no listing fees, no monthly fees, and you pay nothing unless you sell. Similar platforms take 10–20% (Fiverr 20%, Gumroad 10% + US$0.50); we sit at the low end. The US$0.50 fixed fee is industry standard and covers the fixed payment cost of each transaction.",
   f2_q:"When do I get paid?",f2_a:"Payouts run automatically on the 1st of each month via Stripe to your bank account or debit card, in 100+ countries. Minimum payout US$10.",
   f3_q:"Who owns the rights to my work?",f3_a:"You do, always. AIMade only takes the licence needed to display and sell it, and you can delist anytime. Buyers receive the usage licence you define.",
   f4_q:"What kinds of AI work can I upload?",f4_a:"Web apps, images, video, music, prompts, and automation tools. You choose your own category and go live instantly; infringing or prohibited content is removed via automated checks and community reports.",
