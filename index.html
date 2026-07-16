@@ -329,7 +329,6 @@ footer{border-top:1px solid var(--border);margin-top:56px;background:var(--bg2)}
       <div class="sort"><select id="sortSel" onchange="renderExplore()">
         <option value="new" data-i18n="sort_new"></option>
         <option value="pop" data-i18n="sort_pop"></option>
-        <option value="price" data-i18n="sort_price"></option>
       </select></div>
     </div>
     <div class="chips" id="chips"></div>
@@ -362,14 +361,6 @@ footer{border-top:1px solid var(--border);margin-top:56px;background:var(--bg2)}
         <div class="field"><label data-i18n="up_desc"></label><textarea rows="3" id="upDesc" maxlength="2000"></textarea></div>
         <div class="field"><label data-i18n="up_link"></label><input type="url" id="upLink" placeholder="https://"></div>
         <div class="field"><label data-i18n="up_cover"></label><input type="file" id="upCover" accept="image/*"></div>
-        <div class="pricing-row">
-          <div class="field"><label data-i18n="up_price"></label>
-            <select id="upPrice"><option value="0" data-i18n="up_free"></option><option value="5" disabled>US$5</option><option value="10" disabled>US$10</option><option value="25" disabled>US$25</option></select>
-          </div>
-          <div class="field"><label data-i18n="up_tips"></label>
-            <select id="upTips"><option value="true" data-i18n="yes"></option><option value="false" data-i18n="no"></option></select>
-          </div>
-        </div>
         <button class="btn btn-primary btn-lg" style="width:100%" id="publishBtn" data-i18n="up_submit" onclick="submitUpload()"></button>
       </div>
       <div>
@@ -393,43 +384,10 @@ footer{border-top:1px solid var(--border);margin-top:56px;background:var(--bg2)}
 <!-- ============ PRICING ============ -->
 <div class="page" id="page-pricing">
   <div class="container section">
-    <div class="section-head">
-      <div class="eyebrow" data-i18n="pr_eye"></div>
-      <h2 data-i18n="pr_title"></h2>
-      <p data-i18n="pr_sub"></p>
+    <div class="section-head" style="margin-bottom:36px">
+      <h2 data-i18n="faq_title"></h2>
     </div>
-    <div class="plans">
-      <div class="plan">
-        <h3 data-i18n="pl1_t"></h3>
-        <div class="plan-sub" data-i18n="pl1_s"></div>
-        <div class="amount">US$0<small data-i18n="per_month"></small></div>
-        <span class="keep" data-i18n="pl1_keep"></span>
-        <ul><li data-i18n="pl1_a"></li><li data-i18n="pl1_b"></li><li data-i18n="pl1_c"></li><li data-i18n="pl1_d"></li></ul>
-        <button class="btn btn-ghost" data-i18n="start_free" onclick="go('upload')"></button>
-      </div>
-      <div class="plan hot">
-        <div class="tag" data-i18n="popular"></div>
-        <h3 data-i18n="pl2_t"></h3>
-        <div class="plan-sub" data-i18n="pl2_s"></div>
-        <div class="amount">US$9<small data-i18n="per_month"></small></div>
-        <span class="keep" data-i18n="pl2_keep"></span>
-        <ul><li data-i18n="pl2_a"></li><li data-i18n="pl2_b"></li><li data-i18n="pl2_c"></li><li data-i18n="pl2_d"></li></ul>
-        <button class="btn btn-primary" data-i18n="go_pro" onclick="toast(t('coming_soon'))"></button>
-      </div>
-      <div class="plan">
-        <h3 data-i18n="pl3_t"></h3>
-        <div class="plan-sub" data-i18n="pl3_s"></div>
-        <div class="amount">US$29<small data-i18n="per_month"></small></div>
-        <span class="keep" data-i18n="pl3_keep"></span>
-        <ul><li data-i18n="pl3_a"></li><li data-i18n="pl3_b"></li><li data-i18n="pl3_c"></li><li data-i18n="pl3_d"></li></ul>
-        <button class="btn btn-ghost" data-i18n="contact" onclick="toast(t('coming_soon'))"></button>
-      </div>
-    </div>
-
-    <div class="section" style="padding-bottom:0">
-      <div class="section-head" style="margin-bottom:34px">
-        <h2 data-i18n="faq_title" style="font-size:25px"></h2>
-      </div>
+    <div>
       <div class="faq">
         <div class="faq-item"><button class="faq-q" onclick="faq(this)" data-i18n="f1_q"></button><div class="faq-a"><div data-i18n="f1_a"></div></div></div>
         <div class="faq-item"><button class="faq-q" onclick="faq(this)" data-i18n="f2_q"></button><div class="faq-a"><div data-i18n="f2_a"></div></div></div>
@@ -465,7 +423,6 @@ footer{border-top:1px solid var(--border);margin-top:56px;background:var(--bg2)}
     </div>
     <div class="foot-bottom">
       <span>© 2026 AIMade · <span data-i18n="foot_rights"></span></span>
-      <div class="pay-logos"><span>VISA</span><span>Mastercard</span><span>Stripe</span><span>PayPal</span><span>Alipay</span></div>
     </div>
   </div>
 </footer>
@@ -513,11 +470,11 @@ let myLikes = new Set();
 /* ============ i18n ============ */
 const I = {
  zh:{
-  nav_home:"首頁",nav_explore:"探索",nav_upload:"上傳作品",nav_pricing:"收費方案",
+  nav_home:"首頁",nav_explore:"探索",nav_upload:"上傳作品",nav_pricing:"常見問題",
   signin:"登入",signout:"登出",
   pill:"全球 AI 創作者分享社群",
   hero_1:"你用 AI 做的作品,",hero_2:"值得讓全世界看見",
-  hero_sub:"AIMade 是全球 AI 創作者的分享社群 — 上傳你的網頁、App、圖片、影片、Prompt 和工具,免費展示給全世界。喜歡的話,還可以定價出售或接受打賞。",
+  hero_sub:"AIMade 是全球 AI 創作者的分享社群 — 上傳你的網頁、App、圖片、影片、Prompt 和工具,免費展示給全世界,讓更多人看見你的創作。",
   cta_upload:"上傳我的作品",cta_explore:"探索作品",
   stat_projects:"已發佈作品",stat_creators:"創作者",stat_likes:"總讚數",
   trusted:"創作者愛用的工具",
@@ -525,9 +482,9 @@ const I = {
   see_all:"看全部作品 →",
   how_eye:"如何運作",how_title:"四步與全世界分享",
   how1_t:"上傳作品",how1_p:"任何用 AI 做的東西都可以:網頁、App、圖片、影片、Prompt、自動化工具。",
-  how2_t:"自訂價格",how2_p:"免費展示、定價出售、或開放打賞 — 完全由你決定。",
+  how2_t:"即刻上架",how2_p:"自選分類,發佈立即公開,不需等待審核。",
   how3_t:"全球曝光",how3_p:"作品自動出現在探索頁,讓全球用戶發現、試用、收藏。",
-  how4_t:"想賣才賣",how4_p:"純分享永遠免費。之後如果想出售或接受打賞,隨時可以開啟 — 主導權在你手上。",
+  how4_t:"社群互動",how4_p:"收讚、獲得回饋、認識同路人 — 好作品自然被更多人看見。",
   fee_eye:"透明收費",fee_title:"收費很簡單:賣出才收費",fee_sub:"上架免費、瀏覽免費、沒有月費。同類平台一般抽 10–20%,我們定在最低的一端。",
   fee_l_t:"手續費一覽",fee_l_s:"一個價格,全部包含,沒有隱藏費用。",
   fee_own:"上架 / 展示 / 瀏覽",fee_own_v:"免費",
@@ -546,14 +503,14 @@ const I = {
   search_ph:"搜尋作品或創作者…",sort_pop:"最多讚",sort_new:"最新上架",sort_price:"價格:低至高",
   cat_all:"全部",cat_app:"網頁 / App",cat_image:"AI 圖片",cat_video:"AI 影片",cat_music:"AI 音樂",cat_prompt:"Prompt",cat_tool:"工具 / 自動化",cat_game:"遊戲",cat_design:"3D / 設計",cat_writing:"文字 / 寫作",cat_other:"其他",
   cat_mine:"我的作品",
-  up_title:"上傳你的 AI 作品",up_sub:"自選分類、自訂價格,發佈即刻上架,不需等待審核。",
+  up_title:"上傳你的 AI 作品",up_sub:"自選分類,發佈即刻上架,不需等待審核。",
   up_name:"作品名稱",up_cat:"分類",up_desc:"簡介(說說你用了哪些 AI 工具)",
   up_link:"作品連結(demo / 下載 / 網站)",up_cover:"封面圖片(選填)",
   up_price:"價格(出售功能即將推出)",up_free:"免費",up_tips:"接受打賞?(即將推出)",yes:"接受",no:"不接受",
   up_submit:"發佈作品",up_need_name:"請輸入作品名稱",up_need_login:"請先登入才能發佈",
   up_publishing:"發佈中…",up_done:"發佈成功!你的作品已經上架",up_fail:"發佈失敗,請再試一次",
   side1_t:"上架小提示",side1_a:"加上 demo 連結或封面圖,轉換率高 3 倍",side1_b:"寫下你用了哪些 AI 工具,大家都想知道",side1_c:"定價 US$5–25 是最好賣的區間",
-  side2_t:"關於出售功能",side2_p:"目前平台處於免費展示階段,出售與打賞功能即將推出。屆時出售作品每筆收 10% + US$0.50(金流費用全包,你實拿約九成),打賞收 5%。現在上傳的作品,功能開通後隨時可以補上定價。",
+  side2_t:"為什麼免費?",side2_p:"AIMade 現階段專注做好分享社群,所有功能完全免費,也沒有廣告。我們相信先讓好作品被看見,其他一切都是後話。",
   pr_eye:"收費方案",pr_title:"簡單透明的定價",pr_sub:"瀏覽免費,分享免費。出售與付費功能即將推出 — 以下為公佈的定價計劃,現階段全部功能免費使用。",
   per_month:"/月",popular:"最受歡迎",
   pl1_t:"免費",pl1_s:"剛起步的創作者",pl1_keep:"出售:每筆 10% + US$0.50",
@@ -564,13 +521,13 @@ const I = {
   pl3_a:"5 個團隊席位",pl3_b:"首頁推廣位(每月 2 次)",pl3_c:"API 上架與白標嵌入",pl3_d:"專屬客戶經理",
   start_free:"免費開始",go_pro:"升級 Pro",contact:"聯絡我們",
   faq_title:"常見問題",
-  f1_q:"為什麼收 10% + US$0.50?",f1_a:"這個價格已包含 Stripe 信用卡手續費、全球匯款與稅務發票 — 沒有上架費、沒有月費,不賣東西就完全不用付錢。同類平台一般抽 10–20%(例如 Fiverr 20%、Gumroad 10% + US$0.50),我們定在最低的一端;US$0.50 固定費是行業慣例,用來覆蓋每筆交易的金流固定成本。",
-  f2_q:"什麼時候收到錢?",f2_a:"出售功能推出後:每月 1 號自動結算上月收入,透過 Stripe 匯到你的銀行帳戶或簽帳卡,支援 100+ 個國家和地區。最低提領額 US$10。",
-  f3_q:"我的作品版權屬於誰?",f3_a:"永遠屬於你。AIMade 只取得展示與銷售所需的授權,你隨時可以下架。買家獲得的是你設定的使用授權。",
+  f1_q:"使用 AIMade 要收費嗎?",f1_a:"完全免費 — 上傳、展示、瀏覽、按讚全部不收費,也沒有廣告。",
+  f2_q:"將來會收費嗎?",f2_a:"分享和瀏覽會永遠免費。將來或會推出自願性的進階功能,屆時會事先公佈,絕不會影響免費分享。",
+  f3_q:"我的作品版權屬於誰?",f3_a:"永遠屬於你。AIMade 只取得展示作品所需的授權,你隨時可以下架,授權隨即終止。",
   f4_q:"什麼類型的 AI 作品都收嗎?",f4_a:"網頁、App、圖片、影片、音樂、Prompt、自動化工具都可以。你自選分類,發佈即刻上架;侵權或違規內容會透過自動偵測與社群檢舉處理下架。",
   foot_tag:"全球 AI 創作者的分享社群。讓全世界看見你用 AI 做的作品。",
   fc1:"平台",fc2:"創作者",fc3:"公司",
-  fc2_a:"創作者指南",fc2_b:"收費說明",fc2_c:"成功案例",
+  fc2_a:"創作者指南",fc2_b:"常見問題",fc2_c:"成功案例",
   fc3_a:"關於我們",fc3_b:"服務條款",fc3_c:"隱私政策",
   foot_rights:"版權所有",
   coming_soon:"即將推出 — 現在先免費使用",
@@ -582,11 +539,11 @@ const I = {
   share:"複製連結",copy_ok:"連結已複製!快分享出去",report:"檢舉",report_why:"檢舉原因?(例如:侵權、垃圾內容)",report_ok:"已收到檢舉,謝謝你協助維護社群",open_work:"開啟作品",like:"讚",
  },
  en:{
-  nav_home:"Home",nav_explore:"Explore",nav_upload:"Upload",nav_pricing:"Pricing",
+  nav_home:"Home",nav_explore:"Explore",nav_upload:"Upload",nav_pricing:"FAQ",
   signin:"Sign in",signout:"Sign out",
   pill:"The global community for AI creators",
   hero_1:"What you built with AI",hero_2:"deserves to be seen by the world",
-  hero_sub:"AIMade is the global community for sharing AI-made work. Upload your web apps, images, videos, prompts and tools — showcase for free, forever. And if you like, sell it or accept tips.",
+  hero_sub:"AIMade is the global community for sharing AI-made work. Upload your web apps, images, videos, prompts and tools — showcase for free and let the world see what you've built.",
   cta_upload:"Upload my work",cta_explore:"Explore creations",
   stat_projects:"Projects published",stat_creators:"Creators",stat_likes:"Total likes",
   trusted:"Built with the tools creators love",
@@ -594,9 +551,9 @@ const I = {
   see_all:"See all creations →",
   how_eye:"How it works",how_title:"Share with the world in four steps",
   how1_t:"Upload your creation",how1_p:"Anything made with AI: web apps, images, videos, prompts, automation tools.",
-  how2_t:"Set your price",how2_p:"Showcase for free, sell at your price, or accept tips — entirely your call.",
+  how2_t:"Live instantly",how2_p:"Pick your category and publish — your work goes live immediately, no approval queue.",
   how3_t:"Get global exposure",how3_p:"Your work appears in Explore for the whole world to discover and try.",
-  how4_t:"Sell only if you want to",how4_p:"Sharing is free, forever. If you ever want to sell or accept tips, you can turn it on anytime — entirely your call.",
+  how4_t:"Community feedback",how4_p:"Get likes, feedback and connections — good work naturally gets seen by more people.",
   fee_eye:"Transparent fees",fee_title:"Simple pricing: we only charge when you sell",fee_sub:"Free to list, free to browse, no monthly fees. Similar platforms take 10–20% — we sit at the low end.",
   fee_l_t:"Fee schedule",fee_l_s:"One price, all-inclusive, no hidden fees.",
   fee_own:"Listing / showcasing / browsing",fee_own_v:"Free",
@@ -615,14 +572,14 @@ const I = {
   search_ph:"Search works or creators…",sort_pop:"Most liked",sort_new:"Newest",sort_price:"Price: low to high",
   cat_all:"All",cat_app:"Web / App",cat_image:"AI Images",cat_video:"AI Video",cat_music:"AI Music",cat_prompt:"Prompts",cat_tool:"Tools / Automation",cat_game:"Games",cat_design:"3D / Design",cat_writing:"Writing",cat_other:"Other",
   cat_mine:"My works",
-  up_title:"Upload your AI creation",up_sub:"Pick your own category, set your own price — live instantly, no approval queue.",
+  up_title:"Upload your AI creation",up_sub:"Pick your own category — live instantly, no approval queue.",
   up_name:"Title",up_cat:"Category",up_desc:"Description (mention which AI tools you used)",
   up_link:"Link (demo / download / website)",up_cover:"Cover image (optional)",
   up_price:"Price (selling coming soon)",up_free:"Free",up_tips:"Accept tips? (coming soon)",yes:"Yes",no:"No",
   up_submit:"Publish",up_need_name:"Please enter a title",up_need_login:"Sign in first to publish",
   up_publishing:"Publishing…",up_done:"Published! Your work is live",up_fail:"Failed to publish, try again",
   side1_t:"Tips for a great listing",side1_a:"Add a demo link or cover image — 3× higher conversion",side1_b:"List the AI tools you used; people love to know",side1_c:"US$5–25 is the best-selling price range",
-  side2_t:"About selling",side2_p:"The platform is currently in free-showcase mode; selling and tips are coming soon. Once live, sales will cost 10% + US$0.50 each (payment costs included, you keep roughly 90%) and tips 5%. Works you upload now can add a price anytime after launch.",
+  side2_t:"Why free?",side2_p:"AIMade is focused on building a great sharing community — everything is completely free, with no ads. We believe in letting good work be seen first; everything else can come later.",
   pr_eye:"Pricing",pr_title:"Simple, transparent pricing",pr_sub:"Browsing and sharing are free. Selling and paid features are coming soon — the plans below are our published pricing; everything is free during this stage.",
   per_month:"/mo",popular:"Most popular",
   pl1_t:"Free",pl1_s:"For creators just getting started",pl1_keep:"Sales: 10% + US$0.50 each",
@@ -633,13 +590,13 @@ const I = {
   pl3_a:"5 team seats",pl3_b:"Homepage promo slot (2×/mo)",pl3_c:"API listing & white-label embeds",pl3_d:"Dedicated account manager",
   start_free:"Start free",go_pro:"Go Pro",contact:"Contact us",
   faq_title:"Frequently asked questions",
-  f1_q:"Why 10% + US$0.50?",f1_a:"That price includes Stripe card fees, global payouts and tax invoicing — no listing fees, no monthly fees, and you pay nothing unless you sell. Similar platforms take 10–20% (Fiverr 20%, Gumroad 10% + US$0.50); we sit at the low end. The US$0.50 fixed fee is industry standard and covers the fixed payment cost of each transaction.",
-  f2_q:"When do I get paid?",f2_a:"Once selling launches: payouts run automatically on the 1st of each month via Stripe to your bank account or debit card, in 100+ countries. Minimum payout US$10.",
-  f3_q:"Who owns the rights to my work?",f3_a:"You do, always. AIMade only takes the licence needed to display and sell it, and you can delist anytime. Buyers receive the usage licence you define.",
+  f1_q:"Does AIMade cost anything?",f1_a:"Completely free — uploading, showcasing, browsing and liking cost nothing, and there are no ads.",
+  f2_q:"Will it ever cost money?",f2_a:"Sharing and browsing will always be free. We may introduce optional advanced features in the future — any changes will be announced in advance and will never affect free sharing.",
+  f3_q:"Who owns the rights to my work?",f3_a:"You do, always. AIMade only takes the licence needed to display your work, and you can delist anytime — the licence ends immediately.",
   f4_q:"What kinds of AI work can I upload?",f4_a:"Web apps, images, video, music, prompts, and automation tools. You choose your own category and go live instantly; infringing or prohibited content is removed via automated checks and community reports.",
   foot_tag:"The global community for sharing AI-made work. Show the world what you built.",
   fc1:"Platform",fc2:"Creators",fc3:"Company",
-  fc2_a:"Creator guide",fc2_b:"Fees explained",fc2_c:"Success stories",
+  fc2_a:"Creator guide",fc2_b:"FAQ",fc2_c:"Success stories",
   fc3_a:"About us",fc3_b:"Terms of service",fc3_c:"Privacy policy",
   foot_rights:"All rights reserved",
   coming_soon:"Coming soon — everything is free for now",
@@ -699,7 +656,6 @@ function cardHTML(w,i){
   const title = isDemo ? w.title[lang] : esc(w.title);
   const name = esc(w.owner_name||"Anonymous");
   const init = name.split(/[\s._@-]/).filter(Boolean).map(x=>x[0]).join("").slice(0,2).toUpperCase() || "AI";
-  const price = Number(w.price)>0 ? `US$${Number(w.price)}` : `<span class="price free">${t("free")}</span>`;
   const thumbStyle = (!isDemo && w.cover_url) ? `background-image:url('${esc(w.cover_url)}')` : `background:${TINTS[i%TINTS.length]}`;
   const letter = (!isDemo && w.cover_url) ? "" : `<span class="thumb-letter">${esc(titleInitial(w))}</span>`;
   const badge = isDemo ? `<span class="badge">${t("demo")}</span>` : (w.likeCount>=5 ? `<span class="badge hot">${t("trending")}</span>` : `<span class="badge">${t("cat_"+w.category)}</span>`);
@@ -719,7 +675,7 @@ function cardHTML(w,i){
       </div>
       ${desc}
       <div class="card-foot">
-        <span class="price">${price}</span>
+        <span class="by" style="color:var(--faint);font-size:12px">${t("cat_"+w.category)}</span>
         <div class="card-actions">${likeBtn}${viewBtn}${delBtn}</div>
       </div>
     </div>
@@ -761,7 +717,6 @@ function openWork(id){
   const name = esc(w.owner_name||"Anonymous");
   const coverStyle = (!isDemo && w.cover_url) ? `background-image:url('${esc(w.cover_url)}')` : `background:${TINTS[Math.max(0,CATS.indexOf(w.category))%TINTS.length]}`;
   const letter = (!isDemo && w.cover_url) ? "" : `<span class="thumb-letter">${esc(titleInitial(w))}</span>`;
-  const price = Number(w.price)>0 ? `US$${Number(w.price)}` : t("free");
   const linkBtn = (!isDemo && w.link) ? `<button class="btn btn-primary" onclick="window.open('${esc(w.link)}','_blank','noopener')">${t("open_work")}</button>` : "";
   const shareBtn = !isDemo ? `<button class="btn btn-ghost" onclick="shareWork('${w.id}')">${t("share")}</button>` : "";
   const reportBtn = !isDemo ? `<button class="btn btn-ghost" onclick="reportWork('${w.id}')">${t("report")}</button>` : "";
@@ -770,7 +725,7 @@ function openWork(id){
     <div class="wm-cover" style="${coverStyle}">${letter}</div>
     <div class="wm-body">
       <h3>${title}</h3>
-      <div class="wm-meta">${t("by")} ${name} · ${t("cat_"+w.category)} · ${price}${isDemo?` · ${t("demo")}`:""}</div>
+      <div class="wm-meta">${t("by")} ${name} · ${t("cat_"+w.category)}${isDemo?` · ${t("demo")}`:""}</div>
       ${(!isDemo && w.description)?`<div class="wm-desc">${esc(w.description)}</div>`:""}
       <div class="wm-actions">${linkBtn}${shareBtn}${reportBtn}${delBtn}</div>
     </div>`;
@@ -862,8 +817,8 @@ async function submitUpload(){
       description: document.getElementById("upDesc").value.trim() || null,
       link: document.getElementById("upLink").value.trim() || null,
       cover_url,
-      price: Number(document.getElementById("upPrice").value),
-      accept_tips: document.getElementById("upTips").value === "true"
+      price: 0,
+      accept_tips: true
     });
     if(error) throw error;
     toast(t("up_done"));
