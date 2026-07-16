@@ -675,7 +675,7 @@ function cardHTML(w,i){
   const name = esc(w.owner_name||"Anonymous");
   const init = name.split(/[\s._@-]/).filter(Boolean).map(x=>x[0]).join("").slice(0,2).toUpperCase() || "AI";
   const cover = isDemo ? "" : safeCover(w.cover_url);
-  const thumbStyle = cover ? `background-image:url("${encodeURI(cover)}")` : `background:${TINTS[i%TINTS.length]}`;
+  const thumbStyle = cover ? `background-image:url('${encodeURI(cover).replace(/'/g,"%27")}')` : `background:${TINTS[i%TINTS.length]}`;
   const letter = cover ? "" : `<span class="thumb-letter">${esc(titleInitial(w))}</span>`;
   const badge = isDemo ? `<span class="badge">${t("demo")}</span>` : (w.likeCount>=5 ? `<span class="badge hot">${t("trending")}</span>` : `<span class="badge">${t("cat_"+w.category)}</span>`);
   const likeCls = (!isDemo && myLikes.has(w.id)) ? "icon-btn liked" : "icon-btn";
@@ -736,7 +736,7 @@ function openWork(id){
   const title = isDemo ? w.title[lang] : esc(w.title);
   const name = esc(w.owner_name||"Anonymous");
   const cover = isDemo ? "" : safeCover(w.cover_url);
-  const coverStyle = cover ? `background-image:url("${encodeURI(cover)}")` : `background:${TINTS[Math.max(0,CATS.indexOf(w.category))%TINTS.length]}`;
+  const coverStyle = cover ? `background-image:url('${encodeURI(cover).replace(/'/g,"%27")}')` : `background:${TINTS[Math.max(0,CATS.indexOf(w.category))%TINTS.length]}`;
   const letter = cover ? "" : `<span class="thumb-letter">${esc(titleInitial(w))}</span>`;
   const link = isDemo ? "" : safeUrl(w.link);
   const linkBtn = link ? `<button class="btn btn-primary" onclick="openExt(this.dataset.u)" data-u="${esc(link)}">${t("open_work")}</button>` : "";
