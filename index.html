@@ -344,6 +344,7 @@ footer{border-top:1px solid var(--border);margin-top:56px;background:var(--bg2)}
         <h2 data-i18n="up_title"></h2>
         <div class="sub" data-i18n="up_sub"></div>
         <div class="field"><label data-i18n="up_name"></label><input type="text" id="upName" maxlength="120"></div>
+        <div class="field"><label data-i18n="up_dispname"></label><input type="text" id="upDisp" maxlength="40" data-i18n-ph="up_dispname_ph"></div>
         <div class="field"><label data-i18n="up_cat"></label>
           <select id="upCat">
             <option value="app" data-i18n="cat_app"></option>
@@ -504,7 +505,7 @@ const I = {
   cat_all:"全部",cat_app:"網頁 / App",cat_image:"AI 圖片",cat_video:"AI 影片",cat_music:"AI 音樂",cat_prompt:"Prompt",cat_tool:"工具 / 自動化",cat_game:"遊戲",cat_design:"3D / 設計",cat_writing:"文字 / 寫作",cat_other:"其他",
   cat_mine:"我的作品",
   up_title:"上傳你的 AI 作品",up_sub:"自選分類,發佈即刻上架,不需等待審核。",
-  up_name:"作品名稱",up_cat:"分類",up_desc:"簡介(說說你用了哪些 AI 工具)",
+  up_name:"作品名稱",up_dispname:"顯示名稱(公開顯示的作者名)",up_dispname_ph:"例如:PixelCat / 阿樂工作室",anon:"匿名創作者",up_cat:"分類",up_desc:"簡介(說說你用了哪些 AI 工具)",
   up_link:"作品連結(demo / 下載 / 網站)",up_cover:"封面圖片(選填)",
   up_price:"價格(出售功能即將推出)",up_free:"免費",up_tips:"接受打賞?(即將推出)",yes:"接受",no:"不接受",
   up_submit:"發佈作品",up_need_name:"請輸入作品名稱",up_need_login:"請先登入才能發佈",
@@ -573,7 +574,7 @@ const I = {
   cat_all:"All",cat_app:"Web / App",cat_image:"AI Images",cat_video:"AI Video",cat_music:"AI Music",cat_prompt:"Prompts",cat_tool:"Tools / Automation",cat_game:"Games",cat_design:"3D / Design",cat_writing:"Writing",cat_other:"Other",
   cat_mine:"My works",
   up_title:"Upload your AI creation",up_sub:"Pick your own category — live instantly, no approval queue.",
-  up_name:"Title",up_cat:"Category",up_desc:"Description (mention which AI tools you used)",
+  up_name:"Title",up_dispname:"Display name (shown publicly as the author)",up_dispname_ph:"e.g. PixelCat / Studio Lok",anon:"Anonymous creator",up_cat:"Category",up_desc:"Description (mention which AI tools you used)",
   up_link:"Link (demo / download / website)",up_cover:"Cover image (optional)",
   up_price:"Price (selling coming soon)",up_free:"Free",up_tips:"Accept tips? (coming soon)",yes:"Yes",no:"No",
   up_submit:"Publish",up_need_name:"Please enter a title",up_need_login:"Sign in first to publish",
@@ -809,9 +810,11 @@ async function submitUpload(){
       if(upErr) throw upErr;
       cover_url = sb.storage.from("covers").getPublicUrl(path).data.publicUrl;
     }
+    const disp = document.getElementById("upDisp").value.trim();
+    if(disp) localStorage.setItem("aimade_dispname", disp);
     const { error } = await sb.from("works").insert({
       owner: currentUser.id,
-      owner_name: (currentUser.email||"").split("@")[0],
+      owner_name: disp || t("anon"),
       title,
       category: document.getElementById("upCat").value,
       description: document.getElementById("upDesc").value.trim() || null,
@@ -883,6 +886,8 @@ const io = new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.
 function revealAll(){ document.querySelectorAll(".page.show .reveal:not(.in)").forEach(el=>io.observe(el)); }
 
 document.querySelectorAll(".modal-bg").forEach(m=>m.addEventListener("click",e=>{ if(e.target===m) m.classList.remove("on"); }));
+const savedDisp = localStorage.getItem("aimade_dispname");
+if(savedDisp) document.getElementById("upDisp").value = savedDisp;
 applyLang();
 revealAll();
 loadWorks();
