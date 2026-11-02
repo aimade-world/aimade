@@ -3,3 +3,5 @@
 nav .mobile-share{display:none}@media(max-width:620px){nav .mobile-share{display:block}}
 
 @media(max-width:620px){.section-title{display:block}.section-title .text-link{display:inline-block;margin-top:7px;font-size:12px;white-space:nowrap}nav.open{flex-wrap:wrap;justify-content:flex-start;gap:12px 20px}}
+
+#discover{scroll-margin-top:96px}
