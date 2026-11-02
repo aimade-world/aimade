@@ -5,7 +5,7 @@ Free discovery and sharing of AI-assisted creations. Live: https://aimade.world/
 ## Architecture
 - GitHub Pages static site: `index.html`, `assets/app.css`, `assets/app.js`.
 - Supabase Auth (email magic links), Postgres RLS and public `covers` bucket.
-- Supabase JS 2.45.4 is vendored with its MIT license. No secret/service-role key belongs in this repository.
+- Supabase JS 2.118.0 is vendored with its MIT license. The pinned package manifest/lockfile supports `npm audit`; the browser uses the vendored UMD file. No secret/service-role key belongs in this repository.
 - Client hash routes; `?w=<uuid>` supports copied work links. Social crawlers still see the generic site card, not per-work previews.
 - No transactions, tipping, hosted executable code, third-party ad tracking, or AI API proxy.
 

@@ -1,0 +1,12 @@
+{
+  "name": "aimade-web",
+  "private": true,
+  "version": "1.0.0",
+  "description": "AIMade static discovery website",
+  "scripts": {
+    "test": "node tests/frontend.test.cjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.118.0"
+  }
+}
