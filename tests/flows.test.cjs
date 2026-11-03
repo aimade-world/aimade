@@ -82,7 +82,7 @@ test('Legacy edit draft is preserved separately, not restored as a new creation'
   assert.equal(h.run('editId'),null);assert.equal(h.el('title').value,'');
   assert.equal(h.run(`drafts.edits['${WORK}'].title`),'尚未提交的修改');
   assert.equal(h.store.has('aimade_draft_v2'),false);
-  assert.equal(h.el('editorContext').hidden,false);
+  assert.equal(h.el('editorContext').hidden,true); // Unowned legacy draft titles stay private until ownership is known.
 });
 
 test('New draft and each edit draft do not overwrite one another',()=>{
@@ -410,4 +410,38 @@ test('The actual recovery callback tab still verifies Auth before showing reset 
 test('Choosing a cover replaces the stale reselect warning without claiming server upload',async()=>{
   const h=harness(),a=api();ready(h,a.client);h.el('draftStatus').textContent='已還原文字草稿；尚未上傳的封面請重新選取。';h.el('cover').files=[{size:500,type:'image/png'}];
   await h.run('chooseCover()');assert.equal(a.stats.uploads,0);assert(h.el('draftStatus').textContent.includes('將於發布時上傳'));assert.equal(h.el('coverPreview').hidden,false);
+});
+
+
+test('A different account never sees the previous owner edit-draft title or link',()=>{
+  const h=harness({aimade_drafts_v3:{version:3,create:null,edits:{[WORK]:{editId:WORK,owner:OWNER,title:'Private unfinished title'}},lastEdit:WORK}});
+  h.run("user={id:'1ca75222-cd0f-49d0-b3e8-a52fd6e58f79'};renderEditorContext()");
+  assert.equal(h.el('editorContext').hidden,true);assert.equal(h.el('editorContextText').textContent,'');assert.equal(h.el('editorContextAction').getAttribute('href'),'#upload');
+  assert.equal(h.run(`drafts.edits['${WORK}'].title`),'Private unfinished title');
+  h.run(`user={id:'${OWNER}'};renderEditorContext()`);
+  assert.equal(h.el('editorContext').hidden,false);assert.equal(h.el('editorContextAction').getAttribute('href'),'#edit/'+WORK);
+  h.run('user=null;renderEditorContext()');assert.equal(h.el('editorContextText').textContent,'');
+});
+
+test('Account identity is shown only in the signed-in workspace and cleared elsewhere',()=>{
+  const h=harness();h.run(`user={id:'${OWNER}',email:'private@example.com'};mode='upload';adminRoleState='member';renderAuth()`);
+  assert.equal(h.el('accountStatus').hidden,false);assert.equal(h.el('accountEmail').textContent,'private@example.com');assert.equal(h.el('accountRole').textContent,'普通會員');
+  h.run("mode='detail';renderAccount()");assert.equal(h.el('accountStatus').hidden,true);assert.equal(h.el('accountEmail').textContent,'');
+  h.run("mode='mine';user=null;renderAuth()");assert.equal(h.el('accountStatus').hidden,true);assert.equal(h.el('accountRole').textContent,'');
+});
+
+test('Only a matching admin UUID can label the authenticated workspace as admin',async()=>{
+  const h=harness(),a=api({roles:table=>Promise.resolve({data:table==='admins'?{user_id:OWNER}:[],error:null})});h.context.client=a.client;h.run("sb=client;mode='upload'");
+  await h.run(`refreshUser({user:{id:'${OWNER}',email:'admin@example.com'}})`);assert.equal(h.run('isAdmin'),true);assert.equal(h.el('accountRole').textContent,'管理員');
+  await h.run("refreshUser({user:{id:'1ca75222-cd0f-49d0-b3e8-a52fd6e58f79',email:'member@example.com'}})");assert.equal(h.run('isAdmin'),false);assert.equal(h.el('accountRole').textContent,'普通會員');
+});
+
+test('An unavailable role query is not presented as confirmed membership',async()=>{
+  const h=harness(),a=api({roles:()=>Promise.resolve({data:null,error:{message:'offline'}})});h.context.client=a.client;h.run("sb=client;mode='mine'");
+  await h.run(`refreshUser({user:{id:'${OWNER}',email:'member@example.com'}})`);assert.equal(h.run('isAdmin'),false);assert.equal(h.el('accountRole').textContent,'暫時無法確認角色');
+});
+
+test('Prompt cards use a concrete content action and recent rankings state their scope',()=>{
+  const h=harness();assert.match(h.run(`card(normalize({id:'${WORK}',title:'Prompt',category:'prompt'}),0)`),/查看 Prompt/);
+  assert.equal(h.run("t('hot')"),'近 30 天新作 · 最多讚');
 });
