@@ -9,6 +9,15 @@ navHome:['探索作品','Explore'],navSaved:['我的收藏','Saved'],navGuide:['
 hero:['別只看 AI 能做什麼，\n直接玩看看。','Don’t just see what AI can do.\nTry it for yourself.'],heroSub:['發現創作者做的小遊戲、實用工具和互動作品。找到喜歡的，就打開試試；做了新作品，也歡迎分享。','Discover little games, useful tools and interactive creations. Try something new. Made something yourself? Share it here.'],explore:['探索作品 ↓','Explore creations ↓'],noteTag:['MADE WITH AI. SHARED WITH YOU.','MADE WITH AI. SHARED WITH YOU.'],noteTitle:['一個小點子，\n也值得被看見。','Small ideas.\nWorth sharing.'],noteBody:['不需要是專業開發者。\n你做的第一個作品，也歡迎。','You don’t need to be a developer.\nYour first creation belongs here, too.'],join:['分享你的創作 ↗','Share yours ↗'],new:['最新發布','Newest'],hot:['近 30 天熱門','Popular this month'],pop:['最多讚','Most liked'],hasLink:['只看附有使用連結的作品','Only works with a link'],more:['載入更多作品','Load more'],stripTitle:['你做的下一件作品，放在這裡。','Your next creation belongs here.'],stripSub:['一個連結、一句介紹，就能開始分享。上傳前可先儲存草稿。','Start with a link and a short description. Save a draft before publishing.'],
 uploadTitle:['分享你的 AI 作品','Share your AI creation'],editTitle:['編輯作品','Edit creation'],uploadSub:['讓別人知道它可以做什麼，以及如何開始使用。發布後仍可編輯。','Explain what it does and how to get started. You can edit it after publishing.'],step1:['作品與連結','Work & link'],step2:['介紹與封面','Story & cover'],step3:['確認並發布','Review & publish'],category:['作品類型','Category'],access:['外部作品使用條件','External access'],accessUnknown:['未標示／請看作品說明','Not specified'],accessFree:['免費使用','Free to use'],accessLogin:['需外站登入','External sign-in'],accessTrial:['有限免費試用','Limited free trial'],accessDisplay:['僅展示','Showcase only'],link:['作品連結','Work URL'],linkHelp:['遊戲和工具請提供可開啟的網址；圖片、文字或 Prompt 可只分享內容。','For games and tools, provide a working URL. Images, writing and prompts can be shared without one.'],title:['作品名稱 *','Title *'],description:['一句用途與簡介 *','What does it do? *'],promptLabel:['可複製的 Prompt *','Copyable prompt *'],promptHelp:['只放你有權分享的內容，請勿包含密碼、API key 或個人資料。','Share only content you have permission to share. No passwords, API keys or personal data.'],displayName:['公開作者名稱 *','Public display name *'],tools:['使用的 AI 工具（選填）','AI tools used (optional)'],cover:['封面圖片（選填）','Cover image (optional)'],coverHelp:['PNG、JPG、WebP 或 GIF，最多 5MB。圖片不會跟文字草稿一起保存。每帳戶每日最多 20 次封面上傳，最多保留 50 張；達上限請聯絡我們。','PNG, JPG, WebP or GIF, up to 5MB. Files are not saved with your text draft. Up to 20 cover uploads/day and 50 stored per account; contact us if you reach the limit.'],removeCover:['移除現有封面','Remove existing cover'],mobileCheck:['我已在手機測試，作品可使用','I tested this work on mobile'],feedbackCheck:['歡迎試用建議／正在找測試者','Feedback and testers welcome'],rights:['我有權分享這份內容，並同意','I have permission to share this content and agree to the'],terms:['服務條款','Terms'],privacy:['隱私政策','Privacy'],publish:['確認並發布','Publish creation'],update:['儲存更新','Save changes'],saveDraft:['儲存草稿','Save draft'],clearDraft:['清除草稿','Clear draft'],beforeShare:['BEFORE YOU SHARE','BEFORE YOU SHARE'],tipsTitle:['讓人一眼看懂，\n再親手試試。','Make it clear.\nMake it worth a try.'],tip1:['名稱具體，例如「三分鐘專注計時器」。','Use a specific title, like “Three-minute focus timer”.'],tip2:['說明用途、操作方式及使用限制。','Describe the use case, instructions and any limits.'],tip3:['放一張真實畫面，不用誇大的宣傳圖。','Use an actual screenshot, not exaggerated promises.'],hostingNote:['目前提供作品展示和外部連結分享，不代管可執行程式，也不替作品支付 AI API 費用。','We showcase creations and external links. We do not host executable code or pay the AI API costs of shared works.'],draftNote:['草稿只存在這個瀏覽器。共用電腦使用後請清除草稿；請勿在草稿中放入秘密資料。','Drafts stay in this browser only. Clear them on shared devices, and never include secrets.'],guideTitle:['分享很簡單。','A small guide to sharing.'],guideSub:['AIMade 是作品的展示入口，不是 AI 模型訓練或程式託管服務。','AIMade is a discovery and showcase platform, not a model-training or code-hosting service.'],ready:['準備好分享了嗎？','Ready to share?'],guideEnd:['也可以先逛逛，找到下一個靈感。','Or explore first and find your next idea.'],tagline:['把創意變成現實，讓世界看見。','Turn ideas into reality. Share them with the world.'],contact:['聯絡我們','Contact'],loginTitle:['用電郵登入','Sign in with email'],loginSub:['瀏覽和開啟作品不需要登入。發布、按讚或管理自己的作品時才需要。','No sign-in needed to browse or open works. Sign in to publish, like or manage your creations.'],email:['電郵地址','Email address'],sendLink:['寄送登入連結','Send sign-in link'],report:['檢舉作品','Report work'],reportReason:['請說明侵權、詐騙或其他問題','Describe the infringement, scam or other issue'],sendReport:['提交檢舉','Submit report'],
 browseTitle:['來找一件好玩的作品','Find something worth a try'],browseSub:['免費瀏覽與分享。外部作品的使用條件依作者設定。','Free to browse and share. External works have their own access conditions.'],search:['想玩什麼？搜尋作品、用途或創作者…','Find a game, a useful tool or a creator…'],all:['全部作品','All creations'],feedback:['找人試玩','Testers welcome'],savedSub:['收藏儲存在這個瀏覽器，不會跨裝置同步。','Saved in this browser only; not synced across devices.'],mineSub:['管理、編輯及分享你發布的作品。','Manage, edit and share your published creations.'],loading:['正在載入作品…','Loading creations…'],loadError:['暫時無法載入作品','Couldn’t load creations'],loadErrorBody:['這是連線問題，不代表作品被刪除。請稍後重試；如持續發生，聯絡 hello@aimade.world。','A connection problem does not mean works were deleted. Retry, or contact hello@aimade.world if it continues.'],retry:['重新載入','Retry'],empty:['這裡還沒有作品','No creations here yet'],emptyBody:['歡迎分享你的第一件 AI 創作。','Share your first AI creation.'],noResults:['找不到符合的作品','No matching creations'],noResultsBody:['試試其他關鍵字，或清除篩選。','Try another keyword or clear the filters.'],reset:['清除篩選','Clear filters'],noSaved:['還沒有收藏','Nothing saved yet'],saveHelp:['按作品上的「收藏」，下次在這裡找到它。','Save a work to find it here next time.'],view:['作品介紹','Details'],play:['立即試玩 ↗','Play now ↗'],use:['開啟使用 ↗','Try it ↗'],watch:['觀看作品 ↗','Watch ↗'],listen:['聆聽作品 ↗','Listen ↗'],external:['外部網站','External website'],save:['收藏','Save'],saved:['已收藏','Saved'],like:['讚','Like'],mobile:['手機可用 · 作者標示','Mobile · author noted'],feedbackBadge:['歡迎試用建議','Feedback welcome'],authorLabels:['使用條件由作者提供，未經平台驗證。外部網站有各自的收費、隱私與登入規則。','Access labels are provided by the author, not verified by AIMade. External sites have their own pricing, privacy and sign-in rules.'],back:['← 返回探索','← Back to explore'],copyLink:['複製分享連結','Copy share link'],copyPrompt:['複製 Prompt','Copy prompt'],copied:['已複製','Copied'],copyFail:['未能自動複製，請手動複製網址或內容。','Copy failed. Please copy the URL or content manually.'],edit:['編輯作品','Edit work'],notFound:['找不到這件作品','Work not found'],notFoundBody:['作品可能已移除，或分享網址不正確。','The work may have been removed, or the URL is incorrect.'],needLogin:['請先登入；你的文字草稿會保留。','Sign in first. Your text draft will be kept.'],sending:['寄送中…','Sending…'],sent:['登入連結已寄出。請檢查收件箱和垃圾郵件；使用同一瀏覽器開啟連結後，可回到分享頁繼續。','Sign-in link sent. Check inbox and spam. Open it in the same browser, then return to the editor to continue.'],authFail:['登入服務暫時無法使用，請稍後重試。','Sign-in is temporarily unavailable. Please retry later.'],busy:['儲存中…','Saving…'],published:['作品已發布','Creation published'],updated:['作品已更新','Creation updated'],saveFail:['未能儲存。你的草稿仍在；請檢查網絡後重試。','Couldn’t save. Your draft is still here; check your connection and retry.'],badLink:['請輸入有效的 https:// 或 http:// 網址，不可包含登入密碼。','Enter a valid https:// or http:// URL without embedded credentials.'],needLink:['這類作品需要提供可使用的連結。','This type of work needs a working URL.'],needPrompt:['請填寫可分享的 Prompt。','Enter a prompt to share.'],badCover:['封面只接受 5MB 以下的 PNG、JPG、WebP 或 GIF。','Cover must be PNG, JPG, WebP or GIF, up to 5MB.'],draftSaved:['文字草稿已保存於這個瀏覽器（不含圖片）。','Text draft saved in this browser (not the image).'],draftFail:['瀏覽器無法保存草稿，請先自行複製內容。','This browser cannot save your draft. Copy your text before leaving.'],draftClear:['確定清除這個瀏覽器的草稿？不會刪除已發布作品。','Clear this browser’s draft? Published works will not be deleted.'],draftRestored:['已還原文字草稿；如有封面，請重新選取。','Text draft restored. Please reselect any cover file.'],reported:['已收到檢舉，管理員會查看。','Report received for administrator review.'],reportFail:['檢舉未送出，請重試或寄信至 hello@aimade.world。','Report not sent. Retry or email hello@aimade.world.'],likeFail:['操作失敗，讚數未變更。請稍後重試。','Could not update your like. Please retry.'],sessionFail:['登入連結無效或已過期，請重新取得連結。','Sign-in link invalid or expired. Request a new link.'],savedLimit:['這個瀏覽器最多保存 300 件收藏，請先取消部分收藏。','This browser supports 300 saved works. Remove some before saving more.'],leaveEdit:['目前有未提交的內容。已保存文字草稿，是否切換至另一件作品？','You have unsaved content. Text draft saved. Switch to another work?'],untitled:['未命名作品','Untitled work'],anonymous:['創作者','Creator'],cancel:['取消','Cancel'],archived:['已下架 · 不公開','Unpublished · not public'],archiveWork:['下架作品','Unpublish'],restoreWork:['恢復公開','Restore publication'],archiveConfirm:['下架後訪客無法查看作品頁，但已公開的封面網址仍可能有效。你可以在「我的作品」恢復公開。確定下架？','Unpublish this work? Visitors will no longer see its page, but previously public cover URLs may remain accessible. You can restore it from My works.']};
+Object.assign(words,{
+  coverPrivacy:['封面是公開檔案，請勿包含個人資料、密鑰或敏感畫面；下架作品不會自動刪除圖片。','Covers are public files. Do not include personal data, keys or sensitive screenshots. Unpublishing a creation does not delete its image.'],
+  draftClear:['確定清除此份草稿？其他草稿及已發布作品不會刪除。','Clear this draft? Other drafts and published creations will be kept.'],draftRestored:['已還原文字草稿；尚未上傳的封面請重新選取。','Text draft restored. Reselect any cover that has not been uploaded.'],draftNote:['新作品及各件作品的編輯草稿分開保存，只存在這個瀏覽器。共用電腦使用後請清除草稿；請勿放入秘密資料。','New creations and each creation’s edit drafts are saved separately in this browser only. Clear drafts on shared devices; never include secrets.'],
+  editContext:['你正在編輯既有作品；儲存會更新原作品，不會新增一件。','You are editing an existing creation. Saving updates it; it does not publish a new one.'],
+  newCreation:['分享新作品','Share a new creation'],resumeEdit:['繼續上次編輯','Resume previous edit'],editDraftAvailable:['另有一份未提交的編輯草稿：','An unfinished edit is saved separately: '],editDraftRestored:['已還原這件作品的編輯草稿；尚未發布的圖片請重新選取。','Restored this creation’s edit draft. Reselect any image that was not uploaded.'],
+  switchCover:['文字草稿已保留，但尚未上傳的圖片不會隨草稿保存。確定切換？','Your text draft is saved, but an image that has not been uploaded is not saved with it. Switch anyway?'],
+  requiredFields:['請填寫作品名稱、用途簡介及公開作者名稱，內容不能只有空白。','Enter a title, description and public author name; whitespace alone is not enough.'],fieldTooLong:['部分內容超過長度限制，請檢查各欄位。','Some text exceeds the field limits. Please check the form.'],consentRequired:['發布前請閱讀並親自確認分享權利及服務條款。','Read and confirm your sharing rights and the terms before publishing.'],
+  loginSentTitle:['登入連結已寄出','Sign-in link sent'],loginSentHelp:['請到收件箱或垃圾郵件查看，並開啟最新一封登入信。請用同一個瀏覽器登入，文字草稿才會保留。','Check your inbox and spam folder, then open the latest sign-in email. Use this same browser to keep your text draft.'],changeEmail:['更改電郵地址','Change email'],resendLink:['重新寄送','Send again'],resendWait:['{seconds} 秒後可重寄','Send again in {seconds}s'],authRate:['寄送次數較多，請稍後再試；重複點擊不會加快收信。','Too many requests. Please wait before trying again; repeated clicks will not speed up delivery.'],authPending:['寄送尚未確認，請先檢查收件箱，避免重複寄送。','Delivery has not been confirmed yet. Check your inbox before requesting another link.']
+});
 const cats={app:['網頁 / App','Web / App'],game:['小遊戲','Games'],tool:['實用工具','Tools'],prompt:['Prompt','Prompts'],image:['圖片','Images'],video:['影片','Videos'],music:['音樂','Music'],design:['3D / 設計','3D / Design'],writing:['文字創作','Writing'],other:['其他','Other']};
 const t=k=>(words[k]||[k,k])[lang==='en'?1:0];
 const cat=k=>(cats[k]||cats.other)[lang==='en'?1:0];
@@ -18,10 +27,10 @@ function safeUrl(x){try{const u=new URL(x);return ['https:','http:'].includes(u.
 function safeCover(x){const u=safeUrl(x);return u.startsWith(SB_URL+'/storage/v1/object/public/covers/')?u:''}
 const colors=['#ece3d2','#e4e9dc','#e9e2ed','#e4e9ec','#f0e1d8'];
 let sb=null,user=null,isAdmin=false,works=[],likes=new Set(),saved=new Set((Array.isArray(storage.get('aimade_saved'))?storage.get('aimade_saved'):[]).filter(uuid).slice(0,300)),mode='home',activeCat='all',search='',sort='new',onlyLink=false,offset=0,loading=false,hasMore=false,requestSeq=0,editId=null,pendingId=null,editingCover='',detailWork=null,reportId=null,dirty=false,previewUrl=null;
-const pageSize=24,cache=new Map();let detailSeq=0;
+const pageSize=24,cache=new Map();let detailSeq=0,authSeq=0,editSeq=0,authReady=false,editOwner=null,lastRouteHash='',mailBusy=false,mailCooldownUntil=0,mailTimer=null,stagedCoverFile=null,stagedCoverUrl='',coverUpload=null;
 let toastTimer,searchTimer,draftTimer;
 function toast(msg){$('toast').textContent=msg;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3500)}
-function applyLang(){document.documentElement.lang=lang==='zh'?'zh-Hant':'en';if(mode!=='detail')document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';document.querySelectorAll('[data-i]').forEach(el=>{el.textContent=t(el.dataset.i);if(['hero','noteTitle','noteBody','tipsTitle'].includes(el.dataset.i))el.style.whiteSpace='pre-line'});$('lang').textContent=lang==='zh'?'EN':'中文';$('search').placeholder=t('search');$('search').setAttribute('aria-label',t('search'));$('sort').setAttribute('aria-label',lang==='zh'?'作品排序':'Sort creations');const current=$('category').value||'app';$('category').innerHTML=Object.keys(cats).map(k=>`<option value="${k}">${cat(k)}</option>`).join('');$('category').value=current;$('description').placeholder=lang==='zh'?'它能幫誰做什麼？要怎樣開始？':'Who is it for? What can it do? How do you start?';renderFilters();renderAuth();renderFAQ();updateBrowseHeading();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');if(detailWork)renderDetail(detailWork);}
+function applyLang(){document.documentElement.lang=lang==='zh'?'zh-Hant':'en';if(mode!=='detail')document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';document.querySelectorAll('[data-i]').forEach(el=>{el.textContent=t(el.dataset.i);if(['hero','noteTitle','noteBody','tipsTitle'].includes(el.dataset.i))el.style.whiteSpace='pre-line'});$('lang').textContent=lang==='zh'?'EN':'中文';$('search').placeholder=t('search');$('search').setAttribute('aria-label',t('search'));$('sort').setAttribute('aria-label',lang==='zh'?'作品排序':'Sort creations');const current=$('category').value||'app';$('category').innerHTML=Object.keys(cats).map(k=>`<option value="${k}">${cat(k)}</option>`).join('');$('category').value=current;$('description').placeholder=lang==='zh'?'它能幫誰做什麼？要怎樣開始？':'Who is it for? What can it do? How do you start?';renderFilters();renderAuth();renderFAQ();updateBrowseHeading();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');renderEditorContext();renderMailButton();for(const key of ['draftSaved','draftFail','draftRestored','editDraftRestored']){if(words[key].includes($('draftStatus').textContent)){$('draftStatus').textContent=t(key);break}}if(detailWork)renderDetail(detailWork);}
 function renderAuth(){$('authButton').textContent=t(user?'signout':'signin');document.querySelector('[data-i=navMine]').hidden=!user;}
 function renderFilters(){const list=['all',...Object.keys(cats),'feedback'];$('filters').innerHTML=list.map(k=>`<button class="chip" data-cat="${k}" aria-pressed="${activeCat===k}">${esc(cats[k]?cat(k):t(k))}</button>`).join('')}
 function updateBrowseHeading(){$('hero').hidden=mode!=='home';$('browseTitle').textContent=t(mode==='saved'?'navSaved':mode==='mine'?'navMine':'browseTitle');$('browseSubtitle').textContent=t(mode==='saved'?'savedSub':mode==='mine'?'mineSub':'browseSub');}
@@ -57,26 +66,167 @@ function renderDetail(w){const cover=safeCover(w.cover_url),url=safeUrl(w.link),
 async function copy(text){try{await navigator.clipboard.writeText(text);toast(t('copied'))}catch{toast(t('copyFail'))}}
 function saveWork(id){if(saved.has(id))saved.delete(id);else{if(saved.size>=300){toast(t('savedLimit'));return}saved.add(id)}if(!storage.set('aimade_saved',[...saved]))toast(t('draftFail'));if(mode==='detail'&&detailWork)renderDetail(detailWork);else if(mode==='saved')loadWorks();else renderGrid()}
 const pendingLikes=new Set();
-async function toggleLike(id){if(!user){openLogin();return}if(pendingLikes.has(id))return;pendingLikes.add(id);try{const was=likes.has(id);const q=was?sb.from('likes').delete().eq('work_id',id).eq('user_id',user.id):sb.from('likes').insert({work_id:id,user_id:user.id});const {error}=await timed(q);if(error)throw error;if(was)likes.delete(id);else likes.add(id);const w=cache.get(id);if(w)w.likes_count=Math.max(0,w.likes_count+(was?-1:1));if(mode==='detail'&&detailWork?.id===id)renderDetail(w||detailWork);else renderGrid()}catch{toast(t('likeFail'))}finally{pendingLikes.delete(id)}}
-function openLogin(){if(!$('loginDialog').open)$('loginDialog').showModal();$('email').focus()}
-async function sendLink(e){e.preventDefault();if(!sb){$('loginStatus').textContent=t('authFail');return}const b=$('sendLink');b.disabled=true;b.textContent=t('sending');$('loginStatus').textContent='';try{const {error}=await sb.auth.signInWithOtp({email:$('email').value.trim(),options:{emailRedirectTo:location.origin+'/'}});if(error)throw error;$('loginStatus').textContent=t('sent')}catch{$('loginStatus').textContent=t('authFail')}finally{b.disabled=false;b.textContent=t('sendLink')}}
-async function refreshUser(session){user=session?.user||null;renderAuth();isAdmin=false;likes=new Set();if(user&&sb){try{const [l,a]=await Promise.all([timed(sb.from('likes').select('work_id').eq('user_id',user.id)),timed(sb.from('admins').select('user_id').eq('user_id',user.id).maybeSingle())]);if(!l.error)likes=new Set((l.data||[]).map(x=>x.work_id));isAdmin=!!a.data}catch{}}renderAuth();if(mode==='detail'&&detailWork)renderDetail(detailWork);if(['home','mine','saved'].includes(mode))loadWorks();if(user&&location.hash.startsWith('#edit/'))startEdit(location.hash.split('/')[1]);}
+async function toggleLike(id){if(!user){openLogin();return}if(pendingLikes.has(id))return;pendingLikes.add(id);const owner=user.id;try{const was=likes.has(id);const q=was?sb.from('likes').delete().eq('work_id',id).eq('user_id',owner):sb.from('likes').insert({work_id:id,user_id:owner});const {error}=await timed(q);if(error)throw error;if(user?.id!==owner)return;if(was)likes.delete(id);else likes.add(id);const w=cache.get(id);if(w)w.likes_count=Math.max(0,w.likes_count+(was?-1:1));if(mode==='detail'&&detailWork?.id===id)renderDetail(w||detailWork);else renderGrid()}catch{toast(t('likeFail'))}finally{pendingLikes.delete(id)}}
+function validReturnHash(hash){if(typeof hash!=='string')return '#home';if(/^#(?:home|upload|mine|saved|guide)$/.test(hash))return hash;const [key,id]=hash.slice(1).split('/');return ['work','edit'].includes(key)&&uuid(id)&&hash==='#'+key+'/'+id?hash:'#home'}
+function renderMailButton(){
+  clearTimeout(mailTimer);const seconds=Math.max(0,Math.ceil((mailCooldownUntil-Date.now())/1000));
+  const waiting=t('resendWait').replace('{seconds}',String(seconds));
+  $('sendLink').disabled=$('resendLink').disabled=mailBusy||seconds>0;
+  $('sendLink').textContent=mailBusy?t('sending'):seconds?waiting:t('sendLink');
+  $('resendLink').textContent=mailBusy?t('sending'):seconds?waiting:t('resendLink');
+  if(seconds)mailTimer=setTimeout(renderMailButton,1000);
+}
+function openLogin(){if(!$('loginDialog').open)$('loginDialog').showModal();renderMailButton();if(!$('loginForm').hidden)$('email').focus()}
+async function sendLink(e){
+  e.preventDefault();if(mailBusy||Date.now()<mailCooldownUntil){renderMailButton();return}
+  if(!sb){$('loginStatus').textContent=t('authFail');return}
+  const email=$('email').value.trim();if(!$('email').checkValidity()||!email){$('email').reportValidity();return}
+  mailBusy=true;$('loginStatus').textContent='';renderMailButton();
+  if(mode==='upload')saveDraft(false);
+  storage.set('aimade_auth_return_v3',validReturnHash(location.hash||'#home'));
+  let timeout;try{
+    const response=sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+'/'}});
+    const {error}=await Promise.race([response,new Promise((_,reject)=>{timeout=setTimeout(()=>reject({pending:true}),20000)})]);
+    if(error)throw error;
+    $('loginForm').hidden=true;$('loginDone').hidden=false;$('loginSentEmail').textContent=email;
+    $('loginStatus').textContent=t('sent');mailCooldownUntil=Date.now()+60000;
+  }catch(error){
+    const limited=error?.status===429||['over_email_send_rate_limit','over_request_rate_limit'].includes(error?.code);
+    $('loginStatus').textContent=t(limited?'authRate':error?.pending?'authPending':'authFail');
+    if(limited||error?.pending)mailCooldownUntil=Date.now()+60000;
+  }finally{clearTimeout(timeout);mailBusy=false;renderMailButton()}
+}
+async function refreshUser(session){
+  const seq=++authSeq,previousId=user?.id;user=session?.user||null;const currentId=user?.id;authReady=true;isAdmin=false;likes=new Set();renderAuth();
+  if(user){
+    if($('loginDialog').open)$('loginDialog').close();
+    const next=storage.get('aimade_auth_return_v3');
+    if(next){storage.remove('aimade_auth_return_v3');if(!location.hash||location.hash==='#home'){history.replaceState(null,'',location.pathname+location.search+validReturnHash(next));route()}}
+    if(location.hash.startsWith('#edit/'))startEdit(location.hash.split('/')[1]);
+    if(sb)try{
+      const [l,a]=await Promise.all([timed(sb.from('likes').select('work_id').eq('user_id',currentId)),timed(sb.from('admins').select('user_id').eq('user_id',currentId).maybeSingle())]);
+      if(seq!==authSeq||user?.id!==currentId)return;
+      if(!l.error)likes=new Set((l.data||[]).map(x=>x.work_id));isAdmin=!!a.data;
+    }catch{}
+  }
+  if(seq!==authSeq)return;renderAuth();
+  if(mode==='detail'){if(previousId!==currentId)loadDetail(location.hash.split('/')[1]);else if(detailWork)renderDetail(detailWork)}
+  if(['home','mine','saved'].includes(mode))loadWorks();
+  if(!user&&location.hash.startsWith('#edit/'))startEdit(location.hash.split('/')[1]);
+}
 const textFields=['category','access','link','title','description','prompt','displayName','tools'];
-function draftData(){const d={editId,pendingId,editingCover};textFields.forEach(k=>d[k]=$(k).value);d.mobile=$('mobile').checked;d.feedback=$('feedback').checked;return d}
-function saveDraft(show=true){const ok=storage.set('aimade_draft_v2',draftData());if(show)$('draftStatus').textContent=t(ok?'draftSaved':'draftFail');return ok}
-function clearPreview(){if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;$('coverPreview').hidden=true;$('cover').value='';}
-function fillEditor(d){textFields.forEach(k=>{if(d[k]!==undefined)$(k).value=String(d[k])});$('mobile').checked=!!d.mobile;$('feedback').checked=!!d.feedback;editId=uuid(d.editId)?d.editId:null;pendingId=uuid(d.pendingId)?d.pendingId:null;editingCover=safeCover(d.editingCover);clearPreview();if(editingCover){$('coverPreview').src=editingCover;$('coverPreview').hidden=false}$('removeCoverRow').hidden=!editingCover;$('removeCover').checked=false;updatePrompt();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');}
-function restoreDraft(){const d=storage.get('aimade_draft_v2');if(d&&typeof d==='object'){fillEditor(d);$('draftStatus').textContent=t('draftRestored')}else{fillEditor({category:'app',access:'unknown',displayName:storage.get('aimade_display','')})}}
+const DRAFTS_KEY='aimade_drafts_v3';
+function draftObject(d){return !!d&&typeof d==='object'&&!Array.isArray(d)}
+function readDrafts(){
+  const raw=storage.get(DRAFTS_KEY),result={version:3,create:null,edits:{},lastEdit:null};
+  if(draftObject(raw)&&raw.version===3){
+    if(draftObject(raw.create)&&!uuid(raw.create.editId))result.create=raw.create;
+    if(draftObject(raw.edits))for(const [id,d]of Object.entries(raw.edits))if(uuid(id)&&draftObject(d)&&d.editId===id)result.edits[id]=d;
+    if(uuid(raw.lastEdit)&&result.edits[raw.lastEdit])result.lastEdit=raw.lastEdit;
+    return result;
+  }
+  const legacy=storage.get('aimade_draft_v2');
+  if(draftObject(legacy)){if(uuid(legacy.editId)){result.edits[legacy.editId]=legacy;result.lastEdit=legacy.editId}else result.create=legacy}
+  return result;
+}
+let drafts=readDrafts();
+function persistDrafts(next){if(!storage.set(DRAFTS_KEY,next))return false;drafts=next;storage.remove('aimade_draft_v2');return true}
+function draftData(){const d={editId,pendingId,editingCover,owner:user?.id||editOwner||null};textFields.forEach(k=>d[k]=$(k).value);d.mobile=$('mobile').checked;d.feedback=$('feedback').checked;d.removeCover=$('removeCover').checked;return d}
+function saveDraft(show=true){const d=draftData(),next={...drafts,edits:{...drafts.edits}};if(editId){next.edits[editId]=d;next.lastEdit=editId}else next.create=d;const ok=persistDrafts(next);if(show)$('draftStatus').textContent=t(ok?'draftSaved':'draftFail');renderEditorContext();return ok}
+function discardCurrentDraft(){const next={...drafts,edits:{...drafts.edits}};if(editId){delete next.edits[editId];if(next.lastEdit===editId)next.lastEdit=Object.keys(next.edits).at(-1)||null}else next.create=null;return persistDrafts(next)}
+function renderEditorContext(){
+  const old=drafts.lastEdit&&drafts.edits[drafts.lastEdit],editing=!!editId;
+  $('editorContext').hidden=!editing&&!old;
+  $('editorContextText').textContent=editing?t('editContext'):old?t('editDraftAvailable')+(old.title||t('untitled')):'';
+  $('editorContextAction').textContent=t(editing?'newCreation':'resumeEdit');
+  $('editorContextAction').setAttribute('href',editing?'#upload':old?'#edit/'+drafts.lastEdit:'#upload');
+}
+function clearPreview(){if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;stagedCoverFile=null;stagedCoverUrl='';coverUpload=null;$('coverPreview').hidden=true;$('cover').value='';}
+function fillEditor(d){
+  textFields.forEach(k=>$(k).value=String(d[k]??(k==='category'?'app':k==='access'?'unknown':k==='displayName'?storage.get('aimade_display',''):'')));
+  if(!cats[$('category').value])$('category').value='app';
+  $('mobile').checked=!!d.mobile;$('feedback').checked=!!d.feedback;editId=uuid(d.editId)?d.editId:null;editOwner=uuid(d.owner)?d.owner:null;pendingId=uuid(d.pendingId)?d.pendingId:null;editingCover=safeCover(d.editingCover);clearPreview();
+  $('removeCover').checked=!!d.removeCover;
+  if(editingCover){$('coverPreview').src=editingCover;$('coverPreview').hidden=$('removeCover').checked}
+  $('removeCoverRow').hidden=!editingCover;$('rights').checked=false;updatePrompt();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');renderEditorContext();
+}
+function restoreDraft(){const d=drafts.create;$('workForm').reset();fillEditor(d||{});dirty=false;$('draftStatus').textContent=d?t('draftRestored'):'';$('formStatus').textContent=''}
 function updatePrompt(){$('promptField').hidden=$('category').value!=='prompt';$('prompt').required=$('category').value==='prompt';}
-async function startEdit(id){if(!user){$('formStatus').textContent=t('needLogin');openLogin();return}if(!uuid(id))return;if(editId===id)return;if(dirty){clearTimeout(draftTimer);saveDraft(false);if(!confirm(t('leaveEdit')))return;}try{const {data,error}=await timed(sb.from('works').select('*').eq('id',id).eq('owner',user.id).maybeSingle());if(error||!data)throw Error();const w=normalize(data);$('workForm').reset();fillEditor({editId:id,editingCover:w.cover_url,title:w.title,description:w.description||'',link:w.link||'',category:w.category,displayName:w.owner_name||'',access:w.details.access||'unknown',mobile:w.details.mobile===true,feedback:w.details.feedback===true,tools:w.details.tools||'',prompt:w.details.prompt||''});dirty=false;$('formStatus').textContent='';saveDraft(false)}catch{$('formStatus').textContent=t('notFound')}}
-async function chooseCover(){clearTimeout(draftTimer);const file=$('cover').files[0];if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;if(!file){$('coverPreview').hidden=!editingCover;if(editingCover)$('coverPreview').src=editingCover;return}if(!validCover(file)){toast(t('badCover'));$('cover').value='';return}previewUrl=URL.createObjectURL(file);$('coverPreview').src=previewUrl;$('coverPreview').hidden=false;dirty=true;}
-function validCover(file){return file.size<=5*1024*1024&&['image/png','image/jpeg','image/webp','image/gif'].includes(file.type)}
+function guardEditorChange(){clearTimeout(draftTimer);if(dirty&&!saveDraft(false)){toast(t('draftFail'));return false}return !$('cover').files.length||confirm(t('switchCover'))}
+async function startEdit(id){
+  const seq=++editSeq;$('workForm').hidden=true;$('editorContext').hidden=true;$('editorTitle').textContent=t('editTitle');$('editorLoadStatus').textContent=t('loading');
+  if(!uuid(id)){$('editorLoadStatus').textContent=t('notFound');return}
+  if(!authReady)return;
+  if(!user){$('editorLoadStatus').textContent=t('needLogin');openLogin();return}
+  const owner=user.id;
+  if(editId===id&&editOwner===owner){$('workForm').hidden=false;$('editorLoadStatus').textContent='';renderEditorContext();return}
+  try{
+    const {data,error}=await timed(sb.from('works').select('*').eq('id',id).eq('owner',owner).maybeSingle());
+    if(seq!==editSeq||user?.id!==owner||location.hash!=='#edit/'+id||mode!=='upload')return;
+    if(error||!data)throw Error();const w=normalize(data),savedEdit=drafts.edits[id];
+    const previous=draftObject(savedEdit)&&(!savedEdit.owner||savedEdit.owner===owner)?savedEdit:null;
+    $('workForm').reset();fillEditor(previous?{...previous,owner}:{editId:id,owner,editingCover:w.cover_url,title:w.title,description:w.description||'',link:w.link||'',category:w.category,displayName:w.owner_name||'',access:w.details.access||'unknown',mobile:w.details.mobile===true,feedback:w.details.feedback===true,tools:w.details.tools||'',prompt:w.details.prompt||''});
+    dirty=false;$('formStatus').textContent='';$('draftStatus').textContent=previous?t('editDraftRestored'):'';$('workForm').hidden=false;$('editorLoadStatus').textContent='';
+  }catch{if(seq===editSeq)$('editorLoadStatus').textContent=t('notFound')}
+}
+async function chooseCover(){
+  clearTimeout(draftTimer);const file=$('cover').files[0];if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;
+  if(stagedCoverFile!==file){stagedCoverFile=null;stagedCoverUrl=''}
+  if(coverUpload?.file!==file)coverUpload=null;
+  if(!file||!validCover(file)){
+    if(file){toast(t('badCover'));$('cover').value=''}
+    $('coverPreview').hidden=!editingCover||$('removeCover').checked;if(editingCover)$('coverPreview').src=editingCover;return;
+  }
+  $('removeCover').checked=false;previewUrl=URL.createObjectURL(file);$('coverPreview').src=previewUrl;$('coverPreview').hidden=false;dirty=true;
+}
+function validCover(file){return file.size>0&&file.size<=5*1024*1024&&['image/png','image/jpeg','image/webp','image/gif'].includes(file.type)}
+async function deadline(promise,ms=20000){let timer;try{return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Response unconfirmed')),ms)})])}finally{clearTimeout(timer)}}
+function uploadCover(file,owner){
+  if(coverUpload?.file===file&&coverUpload.owner===owner)return coverUpload.promise;
+  const ext={'image/png':'png','image/jpeg':'jpg','image/webp':'webp','image/gif':'gif'}[file.type],path=`${owner}/${crypto.randomUUID()}.${ext}`;
+  const entry={file,owner,promise:null};coverUpload=entry;
+  entry.promise=(async()=>{const {error}=await sb.storage.from('covers').upload(path,file,{contentType:file.type,upsert:false});if(error)throw error;return sb.storage.from('covers').getPublicUrl(path).data.publicUrl})();
+  entry.promise.catch(()=>{if(coverUpload===entry)coverUpload=null});return entry.promise;
+}
 let publishing=false;
-async function submitWork(e){e.preventDefault();if(publishing)return;clearTimeout(draftTimer);saveDraft();$('formStatus').textContent='';if(!user||!sb){$('formStatus').textContent=t('needLogin');openLogin();return}const d=draftData();let url=d.link.trim();if(url&&!/^[a-z][a-z0-9+.-]*:/i.test(url))url='https://'+url;if(url&&!safeUrl(url)){$('formStatus').textContent=t('badLink');return}if(['game','app','tool'].includes(d.category)&&!url){$('formStatus').textContent=t('needLink');return}if(d.category==='prompt'&&!d.prompt.trim()){$('formStatus').textContent=t('needPrompt');return}const file=$('cover').files[0];if(file&&!validCover(file)){$('formStatus').textContent=t('badCover');return}if(!editId&&!pendingId){pendingId=crypto.randomUUID();saveDraft(false)}publishing=true;$('publish').disabled=true;$('publish').textContent=t('busy');let uploadedPath=null;
- try{let cover=$('removeCover').checked?null:editingCover||null;if(file){const ext={'image/png':'png','image/jpeg':'jpg','image/webp':'webp','image/gif':'gif'}[file.type];uploadedPath=`${user.id}/${crypto.randomUUID()}.${ext}`;const {error}=await sb.storage.from('covers').upload(uploadedPath,file,{contentType:file.type,upsert:false});if(error)throw error;cover=sb.storage.from('covers').getPublicUrl(uploadedPath).data.publicUrl}
- const payload={owner:user.id,owner_name:d.displayName.trim(),title:d.title.trim(),description:d.description.trim(),category:d.category,link:safeUrl(url)||null,cover_url:cover,details:{access:d.access,mobile:d.mobile,feedback:d.feedback,tools:d.tools.trim(),prompt:d.category==='prompt'?d.prompt.trim():''}};if(!payload.title||!payload.description||!payload.owner_name)throw Error('Required');
- const result=editId?await timed(sb.from('works').update(payload).eq('id',editId).eq('owner',user.id).select('id').single(),20000):await timed(sb.from('works').upsert({...payload,id:pendingId,price:0,accept_tips:false},{onConflict:'id'}).select('id').single(),20000);if(result.error)throw result.error;const id=result.data.id;uploadedPath=null;storage.set('aimade_display',payload.owner_name);clearTimeout(draftTimer);storage.remove('aimade_draft_v2');dirty=false;toast(t(editId?'updated':'published'));editId=null;pendingId=null;editingCover='';$('workForm').reset();clearPreview();fillEditor({category:'app',access:'unknown',displayName:payload.owner_name});$('draftStatus').textContent='';location.hash='work/'+id;
- }catch(e){/* Keep uploaded files after ambiguous network failures: a committed row may reference them. */$('formStatus').textContent=t('saveFail');saveDraft(false)}finally{publishing=false;$('publish').disabled=false;$('publish').textContent=t(editId?'update':'publish')}
+function validateWork(d,consent){
+  if(!d.title.trim()||!d.description.trim()||!d.displayName.trim())return 'requiredFields';
+  if(d.title.trim().length>120||d.description.trim().length>2000||d.displayName.trim().length>40||d.tools.trim().length>160||d.prompt.length>6000||d.link.length>2000)return 'fieldTooLong';
+  if(d.category==='prompt'&&!d.prompt.trim())return 'needPrompt';
+  if(!consent)return 'consentRequired';return '';
+}
+async function submitWork(e){
+  e.preventDefault();if(publishing)return;clearTimeout(draftTimer);saveDraft();$('formStatus').textContent='';
+  if(!user||!sb){$('formStatus').textContent=t('needLogin');openLogin();return}
+  const d=draftData(),validation=validateWork(d,$('rights').checked);
+  if(validation){$('formStatus').textContent=t(validation);return}
+  let url=d.link.trim();if(url&&!/^[a-z][a-z0-9+.-]*:/i.test(url))url='https://'+url;
+  if(url&&!safeUrl(url)){$('formStatus').textContent=t('badLink');return}
+  if(url.length>2000){$('formStatus').textContent=t('fieldTooLong');return}
+  if(['game','app','tool'].includes(d.category)&&!url){$('formStatus').textContent=t('needLink');return}
+  const file=$('cover').files[0];if(file&&!validCover(file)){$('formStatus').textContent=t('badCover');return}
+  if(!editId&&!pendingId){pendingId=crypto.randomUUID();saveDraft(false)}
+  const owner=user.id,submittedEditId=editId;
+  publishing=true;$('editorFields').disabled=true;$('publish').disabled=true;$('publish').textContent=t('busy');
+  try{
+    let cover=$('removeCover').checked?null:editingCover||null;
+    if(file){
+      if(stagedCoverFile===file&&safeCover(stagedCoverUrl))cover=stagedCoverUrl;
+      else{
+        cover=await deadline(uploadCover(file,owner));
+        stagedCoverFile=file;stagedCoverUrl=cover;editingCover=cover;saveDraft(false);
+      }
+    }
+    if(user?.id!==owner)throw Error('Session changed');
+    const payload={owner,owner_name:d.displayName.trim(),title:d.title.trim(),description:d.description.trim(),category:d.category,link:safeUrl(url)||null,cover_url:cover,details:{access:d.access,mobile:d.mobile,feedback:d.feedback,tools:d.tools.trim(),prompt:d.category==='prompt'?d.prompt.trim():''}};
+    const result=submittedEditId?await timed(sb.from('works').update(payload).eq('id',submittedEditId).eq('owner',owner).select('id').single(),20000):await timed(sb.from('works').upsert({...payload,id:pendingId,price:0,accept_tips:false},{onConflict:'id'}).select('id').single(),20000);
+    if(result.error)throw result.error;const id=result.data.id;
+    storage.set('aimade_display',payload.owner_name);clearTimeout(draftTimer);discardCurrentDraft();dirty=false;toast(t(submittedEditId?'updated':'published'));
+    $('workForm').reset();restoreDraft();$('draftStatus').textContent='';location.hash='work/'+id;
+  }catch{
+    /* A delayed server response may have committed. Keep the cover and pending ID for safe retry. */
+    $('formStatus').textContent=t('saveFail');saveDraft(false);
+  }finally{publishing=false;$('editorFields').disabled=false;$('publish').disabled=false;$('publish').textContent=t(editId?'update':'publish')}
 }
 async function archiveWork(id){if(!user||!detailWork||detailWork.id!==id||detailWork.owner!==user.id)return;const target=!detailWork.archived;if(target&&!confirm(t('archiveConfirm')))return;try{const {data,error}=await timed(sb.from('works').update({archived:target}).eq('id',id).eq('owner',user.id).select('id').single());if(error||!data)throw Error();loadDetail(id)}catch{toast(t('saveFail'))}}
 async function submitReport(e){e.preventDefault();if(!user||!sb){openLogin();return}const b=e.target.querySelector('button[type=submit]');b.disabled=true;try{const {error}=await timed(sb.from('reports').insert({work_id:reportId,reporter:user.id,reason:$('reportReason').value.trim().slice(0,1000)}));if(error)throw error;$('reportDialog').close();toast(t('reported'))}catch{$('reportStatus').textContent=t('reportFail')}finally{b.disabled=false}}
@@ -99,17 +249,40 @@ function renderFAQ(){const entries=lang==='zh'?[
 ['Who owns the rights?','AIMade does not take ownership of your existing rights. Whether AI output is protected depends on the content and applicable law. You must have permission to share it. Publication is not endorsement; reports are reviewed by administrators.'],
 ['How can I report a problem?','Use Report work after signing in, or email the work URL and details to hello@aimade.world. Be cautious about giving passwords, API keys or sensitive information to external sites.']
 ];$('faqItems').innerHTML=entries.map(([q,a])=>`<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('');}
-function route(){const hash=location.hash.slice(1);$('nav').classList.remove('open');$('menu').setAttribute('aria-expanded','false');['browsePage','uploadPage','detailPage','guidePage'].forEach(k=>$(k).hidden=true);document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';const [key,id]=hash.split('/');if(key==='work'){mode='detail';$('detailPage').hidden=false;loadDetail(id)}else if(key==='upload'||key==='edit'){mode='upload';$('uploadPage').hidden=false;if(key==='edit')startEdit(id);$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle')}else if(key==='guide'){mode='guide';$('guidePage').hidden=false}else{mode=['saved','mine'].includes(key)?key:'home';$('browsePage').hidden=false;updateBrowseHeading();loadWorks();}document.querySelectorAll('nav a').forEach(a=>{if(a.getAttribute('href')==='#'+(mode==='detail'?'home':mode))a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});if(hash==='discover')$('discover').scrollIntoView({block:'start'});else window.scrollTo(0,0);}
+function route(){
+  const hash=location.hash.slice(1),[key,id]=hash.split('/');
+  const changingEditor=key==='upload'&&!!editId||key==='edit'&&id!==editId;
+  if(changingEditor&&(publishing||!guardEditorChange())){
+    if(publishing)toast(t('busy'));
+    history.replaceState(null,'',location.pathname+location.search+(lastRouteHash||'#home'));return;
+  }
+  if(mode==='upload'&&dirty&&!['upload','edit'].includes(key))saveDraft(false);
+  $('nav').classList.remove('open');$('menu').setAttribute('aria-expanded','false');
+  ['browsePage','uploadPage','detailPage','guidePage'].forEach(k=>$(k).hidden=true);
+  document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';
+  if(key==='work'){++editSeq;mode='detail';$('detailPage').hidden=false;loadDetail(id)}
+  else if(key==='upload'||key==='edit'){
+    mode='upload';$('uploadPage').hidden=false;
+    if(key==='edit')startEdit(id);
+    else{++editSeq;if(editId)restoreDraft();$('editorTitle').textContent=t('uploadTitle');$('workForm').hidden=false;$('editorLoadStatus').textContent='';renderEditorContext()}
+  }else if(key==='guide'){++editSeq;mode='guide';$('guidePage').hidden=false}
+  else{++editSeq;mode=['saved','mine'].includes(key)?key:'home';$('browsePage').hidden=false;updateBrowseHeading();loadWorks()}
+  lastRouteHash=location.hash;
+  document.querySelectorAll('nav a').forEach(a=>{if(a.getAttribute('href')==='#'+(mode==='detail'?'home':mode))a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  if(hash==='discover')$('discover').scrollIntoView({block:'start'});else window.scrollTo(0,0);
+}
 function resetFilters(){activeCat='all';search='';sort='new';onlyLink=false;$('search').value='';$('sort').value='new';$('hasLink').checked=false;renderFilters();loadWorks()}
 document.addEventListener('click',e=>{const close=e.target.closest('[data-close]');if(close)$(close.dataset.close).close();const chip=e.target.closest('[data-cat]');if(chip){activeCat=chip.dataset.cat;renderFilters();loadWorks();return}const btn=e.target.closest('[data-action]');if(!btn)return;const id=btn.dataset.id;switch(btn.dataset.action){case'retry':loadWorks();break;case'retry-detail':loadDetail(location.hash.split('/')[1]);break;case'reset':resetFilters();break;case'upload':location.hash='upload';break;case'home':location.hash='home';break;case'login':openLogin();break;case'archive':if(uuid(id))archiveWork(id);break;case'like':if(uuid(id))toggleLike(id);break;case'save':if(uuid(id))saveWork(id);break;case'copy-link':copy('https://aimade.world/?w='+id);break;case'copy-prompt':copy(detailWork?.details.prompt||'');break;case'report':if(!user){openLogin();return}reportId=id;$('reportForm').reset();$('reportStatus').textContent='';$('reportDialog').showModal();break;}});
 $('menu').addEventListener('click',()=>{$('nav').classList.toggle('open');$('menu').setAttribute('aria-expanded',String($('nav').classList.contains('open')))});
 $('lang').addEventListener('click',()=>{lang=lang==='zh'?'en':'zh';storage.set('aimade_lang',lang);applyLang();if(['home','saved','mine'].includes(mode))loadWorks()});
-$('authButton').addEventListener('click',async()=>{if(!user){openLogin();return}try{const {error}=await sb.auth.signOut();if(error)throw error;user=null;likes.clear();isAdmin=false;renderAuth();if(mode==='mine')loadWorks()}catch{toast(t('authFail'))}});
+$('authButton').addEventListener('click',async()=>{if(!user){openLogin();return}try{const {error}=await sb.auth.signOut();if(error)throw error;await refreshUser(null)}catch{toast(t('authFail'))}});
 $('search').addEventListener('input',()=>{search=$('search').value;clearTimeout(searchTimer);searchTimer=setTimeout(()=>loadWorks(),300)});
 $('sort').addEventListener('change',()=>{sort=$('sort').value;loadWorks()});$('hasLink').addEventListener('change',()=>{onlyLink=$('hasLink').checked;loadWorks()});$('loadMore').addEventListener('click',()=>{if(loading)return;$('loadMore').disabled=true;loadWorks(false)});
-$('workForm').addEventListener('submit',submitWork);$('workForm').addEventListener('input',()=>{dirty=true;clearTimeout(draftTimer);draftTimer=setTimeout(()=>saveDraft(),500)});$('category').addEventListener('change',updatePrompt);$('cover').addEventListener('change',chooseCover);$('saveDraft').addEventListener('click',()=>saveDraft());$('clearDraft').addEventListener('click',()=>{if(!confirm(t('draftClear')))return;clearTimeout(draftTimer);storage.remove('aimade_draft_v2');$('workForm').reset();editId=null;pendingId=null;editingCover='';dirty=false;clearPreview();fillEditor({category:'app',access:'unknown',displayName:storage.get('aimade_display','')});$('draftStatus').textContent='';$('formStatus').textContent='';if(location.hash.startsWith('#edit/'))location.hash='upload'});
+$('workForm').addEventListener('submit',submitWork);$('workForm').addEventListener('input',()=>{dirty=true;clearTimeout(draftTimer);draftTimer=setTimeout(()=>saveDraft(),500)});$('category').addEventListener('change',updatePrompt);$('cover').addEventListener('change',chooseCover);$('saveDraft').addEventListener('click',()=>saveDraft());$('clearDraft').addEventListener('click',()=>{if(publishing||!confirm(t('draftClear')))return;clearTimeout(draftTimer);if(!discardCurrentDraft()){toast(t('draftFail'));return}const wasEdit=!!editId;dirty=false;if(wasEdit){editId=null;editOwner=null;clearPreview();startEdit(location.hash.split('/')[1])}else restoreDraft();$('draftStatus').textContent='';$('formStatus').textContent=''});
+$('removeCover').addEventListener('change',()=>{if($('removeCover').checked)clearPreview();else if(editingCover){$('coverPreview').src=editingCover;$('coverPreview').hidden=false}});
+$('resendLink').addEventListener('click',sendLink);$('changeLoginEmail').addEventListener('click',()=>{$('loginDone').hidden=true;$('loginForm').hidden=false;$('loginStatus').textContent='';renderMailButton();$('email').focus()});
 $('loginForm').addEventListener('submit',sendLink);$('reportForm').addEventListener('submit',submitReport);window.addEventListener('hashchange',()=>{if(!location.hash.includes('access_token='))route()});window.addEventListener('beforeunload',()=>{if(dirty)saveDraft(false)});
-applyLang();restoreDraft();
+applyLang();restoreDraft();persistDrafts(drafts);
 async function init(){
   try{if(!window.supabase)throw Error();sb=window.supabase.createClient(SB_URL,SB_KEY);
     sb.auth.onAuthStateChange((event,session)=>{if(['SIGNED_IN','SIGNED_OUT','USER_UPDATED'].includes(event))setTimeout(()=>refreshUser(session),0)});
@@ -120,6 +293,6 @@ async function init(){
     const {data,error}=await sb.auth.getSession();if(error)throw error;
     if(location.hash.includes('access_token=')){history.replaceState(null,'',location.pathname);route()}
     await refreshUser(data.session);
-  }catch{if(!sb)route();else toast(t('authFail'))}
+  }catch{authReady=true;if(!sb)route();else toast(t('authFail'));if(location.hash.startsWith('#edit/'))$('editorLoadStatus').textContent=t('authFail')}
 }
 init();

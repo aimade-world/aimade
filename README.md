@@ -13,9 +13,16 @@ Free discovery and sharing of AI-assisted creations. Live: https://aimade.world/
 ```
 python -m http.server 4173 --bind 127.0.0.1
 node --check assets/app.js
-node tests/frontend.test.cjs
+npm test
 ```
 Do not publish from a local preview unless the Auth redirect allowlist is deliberately configured. Preview uses the production read API.
+
+## Drafts and sign-in flow
+- `aimade_drafts_v3` keeps the new-creation draft separate from per-work edit drafts. The previous `aimade_draft_v2` is migrated only after a successful local write; it is not discarded on a failed migration.
+- Entering Share opens the new-creation draft, not the last edited published work. A notice links to the last saved edit. Edit data is loaded only after the authenticated owner is verified, and stale edit responses cannot replace a newer route.
+- Email-link requests show a confirmation panel, a client-side resend delay and a distinct rate-limit message. Backend rate limits are still required; the client delay is not an abuse-prevention boundary. Redirects remain at the approved site root; only allowlisted local hash routes can resume after login.
+- Legal consent is never restored from a draft. Required trimmed text is checked before a file upload. Publishing locks the form, retains the pending creation ID and reuses completed/in-flight cover uploads on retry.
+- The automated flow tests use stubbed Auth, Storage and database clients. They do not prove real email delivery or a complete production publication. Those require an owner-assisted end-to-end test.
 
 ## Database
 The November 2 recovery migrations under `supabase/migrations/` have been applied to the existing project. They are **one-time migrations**, not a fresh-install schema or scripts to rerun blindly.

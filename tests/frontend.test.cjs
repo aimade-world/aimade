@@ -10,7 +10,7 @@ test('Allow HTTPS',()=>assert.equal(run("safeUrl('https://example.com')"),'https
 test('Covers only from project bucket',()=>assert.equal(run("safeCover('https://example.com/x.png')"),''));
 test('Covers reject hostname prefix spoof',()=>assert.equal(run("safeCover(SB_URL+'.evil.test/storage/v1/object/public/covers/a.png')"),''));
 test('HTML escaping',()=>assert.equal(run(`esc('<img onerror="x">')`),'&lt;img onerror=&quot;x&quot;&gt;'));
-test('Reject oversized or SVG covers',()=>{assert.equal(run("validCover({size:5242881,type:'image/png'})"),false);assert.equal(run("validCover({size:20,type:'image/svg+xml'})"),false)});
+test('Reject empty, oversized or SVG covers',()=>{assert.equal(run("validCover({size:0,type:'image/png'})"),false);assert.equal(run("validCover({size:5242881,type:'image/png'})"),false);assert.equal(run("validCover({size:20,type:'image/svg+xml'})"),false)});
 test('Accept allowed cover',()=>assert.equal(run("validCover({size:500,type:'image/webp'})"),true));
 test('Untrusted metadata shape normalized',()=>assert.equal(run("Object.keys(normalize({details:['x']}).details).length"),0));
 test('Card cannot inject script or dangerous link',()=>{const html=run(`card(normalize({id:'3517bbf5-6468-4e23-8eaa-aa02e228c7b4',title:'<img onerror="evil()">',owner_name:'<script>x</script>',description:'<svg/onload=x>',link:'javascript:evil()',cover_url:'https://evil.test/a.png',category:'game'}),0)`);assert(!html.includes('<script>'));assert(!html.includes('href="javascript:'));assert(!html.includes('<svg/'));assert(html.includes('&lt;img'))});
