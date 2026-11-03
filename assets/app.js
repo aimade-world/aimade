@@ -342,7 +342,7 @@ async function startEdit(id){
     const {data,error}=await timed(sb.from('works').select('*').eq('id',id).eq('owner',owner).maybeSingle());
     if(seq!==editSeq||user?.id!==owner||location.hash!=='#edit/'+id||mode!=='upload')return;
     if(error||!data||data.owner!==owner)throw Error();const w=normalize(data),accountDrafts=readDrafts(owner),savedEdit=accountDrafts.edits[id]||(!accountDrafts.retiredEdits.includes(id)&&legacyDrafts().edits?.[id]);
-    const previous=draftObject(savedEdit)&&(!savedEdit.owner||savedEdit.owner===owner)?savedEdit:null;
+    const previous=draftObject(savedEdit)&&savedEdit.editId===id&&(!savedEdit.owner||savedEdit.owner===owner)?savedEdit:null;
     $('workForm').reset();fillEditor(previous?{...previous,owner}:{editId:id,owner,editingCover:w.cover_url,title:w.title,description:w.description||'',link:w.link||'',category:w.category,displayName:w.owner_name||'',access:w.details.access||'unknown',mobile:w.details.mobile===true,feedback:w.details.feedback===true,tools:w.details.tools||'',prompt:w.details.prompt||''});
     dirty=false;$('formStatus').textContent='';$('draftStatus').textContent=previous?t('editDraftRestored'):'';$('workForm').hidden=false;$('editorLoadStatus').textContent='';
   }catch{if(seq===editSeq)$('editorLoadStatus').textContent=t('notFound')}

@@ -510,3 +510,7 @@ test('Cleared legacy edits never reappear when the owner reopens the work',async
  await h.run(`startEdit('${WORK}')`);assert.equal(h.el('title').value,'Retired legacy');h.run('discardCurrentDraft();editId=null');await h.run(`startEdit('${WORK}')`);assert.equal(h.el('title').value,'Live title');
  assert.equal(JSON.parse(h.store.get('aimade_draft_v2')).title,'Retired legacy');
 });
+test('A malformed legacy edit cannot change the target work identifier',async()=>{
+ const h=harness({aimade_drafts_v3:{version:3,create:null,edits:{[WORK]:{editId:MEMBER,owner:OWNER,title:'Wrong target'}}}}),a=api({work:{id:WORK,owner:OWNER,title:'Verified live work'}});ready(h,a.client);h.location.hash='#edit/'+WORK;
+ await h.run(`startEdit('${WORK}')`);assert.equal(h.el('title').value,'Verified live work');assert.equal(h.run('editId'),WORK);
+});
