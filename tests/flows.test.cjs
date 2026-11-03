@@ -205,3 +205,8 @@ test('A late like response cannot change the next account’s like state',async(
   h.run("user={id:'11111111-1111-4111-8111-111111111111'};likes=new Set()");resolve({error:null});await request;
   assert.equal(h.run('likes.size'),0);
 });
+
+test('Ordinary sign-out affects the current session, not every user device',async()=>{
+  const h=harness(),a=api();let scope;a.client.auth.signOut=async options=>{scope=options.scope;return {error:null}};ready(h,a.client);
+  await h.run('signOutCurrent()');assert.equal(scope,'local');assert.equal(h.run('user'),null);
+});

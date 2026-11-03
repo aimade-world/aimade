@@ -21,6 +21,7 @@ Do not publish from a local preview unless the Auth redirect allowlist is delibe
 - `aimade_drafts_v3` keeps the new-creation draft separate from per-work edit drafts. The previous `aimade_draft_v2` is migrated only after a successful local write; it is not discarded on a failed migration.
 - Entering Share opens the new-creation draft, not the last edited published work. A notice links to the last saved edit. Edit data is loaded only after the authenticated owner is verified, and stale edit responses cannot replace a newer route.
 - Email-link requests show a confirmation panel, a client-side resend delay and a distinct rate-limit message. Backend rate limits are still required; the client delay is not an abuse-prevention boundary. Redirects remain at the approved site root; only allowlisted local hash routes can resume after login.
+- Ordinary sign-out explicitly uses the local scope, so it does not unexpectedly sign the user out on every other device.
 - Legal consent is never restored from a draft. Required trimmed text is checked before a file upload. Publishing locks the form, retains the pending creation ID and reuses completed/in-flight cover uploads on retry.
 - The automated flow tests use stubbed Auth, Storage and database clients. They do not prove real email delivery or a complete production publication. Those require an owner-assisted end-to-end test.
 
