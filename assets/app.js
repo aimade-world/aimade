@@ -10,10 +10,11 @@ hero:['別只看 AI 能做什麼，\n直接玩看看。','Don’t just see what 
 uploadTitle:['分享你的 AI 作品','Share your AI creation'],editTitle:['編輯作品','Edit creation'],uploadSub:['讓別人知道它可以做什麼，以及如何開始使用。發布後仍可編輯。','Explain what it does and how to get started. You can edit it after publishing.'],step1:['作品與連結','Work & link'],step2:['介紹與封面','Story & cover'],step3:['確認並發布','Review & publish'],category:['作品類型','Category'],access:['外部作品使用條件','External access'],accessUnknown:['未標示／請看作品說明','Not specified'],accessFree:['免費使用','Free to use'],accessLogin:['需外站登入','External sign-in'],accessTrial:['有限免費試用','Limited free trial'],accessDisplay:['僅展示','Showcase only'],link:['作品連結','Work URL'],linkHelp:['遊戲和工具請提供可開啟的網址；圖片、文字或 Prompt 可只分享內容。','For games and tools, provide a working URL. Images, writing and prompts can be shared without one.'],title:['作品名稱 *','Title *'],description:['一句用途與簡介 *','What does it do? *'],promptLabel:['可複製的 Prompt *','Copyable prompt *'],promptHelp:['只放你有權分享的內容，請勿包含密碼、API key 或個人資料。','Share only content you have permission to share. No passwords, API keys or personal data.'],displayName:['公開作者名稱 *','Public display name *'],tools:['使用的 AI 工具（選填）','AI tools used (optional)'],cover:['封面圖片（選填）','Cover image (optional)'],coverHelp:['PNG、JPG、WebP 或 GIF，最多 5MB。圖片不會跟文字草稿一起保存。每帳戶每日最多 20 次封面上傳，最多保留 50 張；達上限請聯絡我們。','PNG, JPG, WebP or GIF, up to 5MB. Files are not saved with your text draft. Up to 20 cover uploads/day and 50 stored per account; contact us if you reach the limit.'],removeCover:['移除現有封面','Remove existing cover'],mobileCheck:['我已在手機測試，作品可使用','I tested this work on mobile'],feedbackCheck:['歡迎試用建議／正在找測試者','Feedback and testers welcome'],rights:['我有權分享這份內容，並同意','I have permission to share this content and agree to the'],terms:['服務條款','Terms'],privacy:['隱私政策','Privacy'],publish:['確認並發布','Publish creation'],update:['儲存更新','Save changes'],saveDraft:['儲存草稿','Save draft'],clearDraft:['清除草稿','Clear draft'],beforeShare:['BEFORE YOU SHARE','BEFORE YOU SHARE'],tipsTitle:['讓人一眼看懂，\n再親手試試。','Make it clear.\nMake it worth a try.'],tip1:['名稱具體，例如「三分鐘專注計時器」。','Use a specific title, like “Three-minute focus timer”.'],tip2:['說明用途、操作方式及使用限制。','Describe the use case, instructions and any limits.'],tip3:['放一張真實畫面，不用誇大的宣傳圖。','Use an actual screenshot, not exaggerated promises.'],hostingNote:['目前提供作品展示和外部連結分享，不代管可執行程式，也不替作品支付 AI API 費用。','We showcase creations and external links. We do not host executable code or pay the AI API costs of shared works.'],draftNote:['草稿只存在這個瀏覽器。共用電腦使用後請清除草稿；請勿在草稿中放入秘密資料。','Drafts stay in this browser only. Clear them on shared devices, and never include secrets.'],guideTitle:['分享很簡單。','A small guide to sharing.'],guideSub:['AIMade 是作品的展示入口，不是 AI 模型訓練或程式託管服務。','AIMade is a discovery and showcase platform, not a model-training or code-hosting service.'],ready:['準備好分享了嗎？','Ready to share?'],guideEnd:['也可以先逛逛，找到下一個靈感。','Or explore first and find your next idea.'],tagline:['把創意變成現實，讓世界看見。','Turn ideas into reality. Share them with the world.'],contact:['聯絡我們','Contact'],loginTitle:['用電郵登入','Sign in with email'],loginSub:['瀏覽和開啟作品不需要登入。發布、按讚或管理自己的作品時才需要。','No sign-in needed to browse or open works. Sign in to publish, like or manage your creations.'],email:['電郵地址','Email address'],report:['檢舉作品','Report work'],reportReason:['請說明侵權、詐騙或其他問題','Describe the infringement, scam or other issue'],sendReport:['提交檢舉','Submit report'],
 browseTitle:['來找一件好玩的作品','Find something worth a try'],browseSub:['免費瀏覽與分享。外部作品的使用條件依作者設定。','Free to browse and share. External works have their own access conditions.'],search:['想玩什麼？搜尋作品、用途或創作者…','Find a game, a useful tool or a creator…'],all:['全部作品','All creations'],feedback:['找人試玩','Testers welcome'],savedSub:['收藏儲存在這個瀏覽器，不會跨裝置同步。','Saved in this browser only; not synced across devices.'],mineSub:['管理、編輯及分享你發布的作品。','Manage, edit and share your published creations.'],loading:['正在載入作品…','Loading creations…'],loadError:['暫時無法載入作品','Couldn’t load creations'],loadErrorBody:['這是連線問題，不代表作品被刪除。請稍後重試；如持續發生，聯絡 hello@aimade.world。','A connection problem does not mean works were deleted. Retry, or contact hello@aimade.world if it continues.'],retry:['重新載入','Retry'],empty:['這裡還沒有作品','No creations here yet'],emptyBody:['歡迎分享你的第一件 AI 創作。','Share your first AI creation.'],noResults:['找不到符合的作品','No matching creations'],noResultsBody:['試試其他關鍵字，或清除篩選。','Try another keyword or clear the filters.'],reset:['清除篩選','Clear filters'],noSaved:['還沒有收藏','Nothing saved yet'],saveHelp:['按作品上的「收藏」，下次在這裡找到它。','Save a work to find it here next time.'],view:['作品介紹','Details'],play:['立即試玩 ↗','Play now ↗'],use:['開啟使用 ↗','Try it ↗'],watch:['觀看作品 ↗','Watch ↗'],listen:['聆聽作品 ↗','Listen ↗'],external:['外部網站','External website'],save:['收藏','Save'],saved:['已收藏','Saved'],like:['讚','Like'],mobile:['手機可用 · 作者標示','Mobile · author noted'],feedbackBadge:['歡迎試用建議','Feedback welcome'],authorLabels:['使用條件由作者提供，未經平台驗證。外部網站有各自的收費、隱私與登入規則。','Access labels are provided by the author, not verified by AIMade. External sites have their own pricing, privacy and sign-in rules.'],back:['← 返回探索','← Back to explore'],copyLink:['複製分享連結','Copy share link'],copyPrompt:['複製 Prompt','Copy prompt'],copied:['已複製','Copied'],copyFail:['未能自動複製，請手動複製網址或內容。','Copy failed. Please copy the URL or content manually.'],edit:['編輯作品','Edit work'],notFound:['找不到這件作品','Work not found'],notFoundBody:['作品可能已移除，或分享網址不正確。','The work may have been removed, or the URL is incorrect.'],needLogin:['請先登入；你的文字草稿會保留。','Sign in first. Your text draft will be kept.'],sending:['寄送中…','Sending…'],authFail:['登入服務暫時無法使用，請稍後重試。','Sign-in is temporarily unavailable. Please retry later.'],busy:['儲存中…','Saving…'],published:['作品已發布','Creation published'],updated:['作品已更新','Creation updated'],saveFail:['未能儲存。你的草稿仍在；請檢查網絡後重試。','Couldn’t save. Your draft is still here; check your connection and retry.'],badLink:['請輸入有效的 https:// 或 http:// 網址，不可包含登入密碼。','Enter a valid https:// or http:// URL without embedded credentials.'],needLink:['這類作品需要提供可使用的連結。','This type of work needs a working URL.'],needPrompt:['請填寫可分享的 Prompt。','Enter a prompt to share.'],badCover:['封面只接受 5MB 以下的 PNG、JPG、WebP 或 GIF。','Cover must be PNG, JPG, WebP or GIF, up to 5MB.'],draftSaved:['文字草稿已保存於這個瀏覽器（不含圖片）。','Text draft saved in this browser (not the image).'],draftFail:['瀏覽器無法保存草稿，請先自行複製內容。','This browser cannot save your draft. Copy your text before leaving.'],draftClear:['確定清除這個瀏覽器的草稿？不會刪除已發布作品。','Clear this browser’s draft? Published works will not be deleted.'],draftRestored:['已還原文字草稿；如有封面，請重新選取。','Text draft restored. Please reselect any cover file.'],reported:['已收到檢舉，管理員會查看。','Report received for administrator review.'],reportFail:['檢舉未送出，請重試或寄信至 hello@aimade.world。','Report not sent. Retry or email hello@aimade.world.'],likeFail:['操作失敗，讚數未變更。請稍後重試。','Could not update your like. Please retry.'],sessionFail:['登入連結無效或已過期，請重新取得連結。','Sign-in link invalid or expired. Request a new link.'],savedLimit:['這個瀏覽器最多保存 300 件收藏，請先取消部分收藏。','This browser supports 300 saved works. Remove some before saving more.'],leaveEdit:['目前有未提交的內容。已保存文字草稿，是否切換至另一件作品？','You have unsaved content. Text draft saved. Switch to another work?'],untitled:['未命名作品','Untitled work'],anonymous:['創作者','Creator'],cancel:['取消','Cancel'],archived:['已下架 · 不公開','Unpublished · not public'],archiveWork:['下架作品','Unpublish'],restoreWork:['恢復公開','Restore publication'],archiveConfirm:['下架後訪客無法查看作品頁，但已公開的封面網址仍可能有效。你可以在「我的作品」恢復公開。確定下架？','Unpublish this work? Visitors will no longer see its page, but previously public cover URLs may remain accessible. You can restore it from My works.']};
 Object.assign(words,{
+  accountDrafts:['正在保存至目前帳戶的本機草稿；切換帳戶不會載入這份內容。','Saving to this account’s local drafts; other accounts will not load this content.'],guestDrafts:['目前是訪客草稿。登入後會切換至帳戶草稿，兩者不會自動合併。','This is a guest draft. Signing in switches to your account drafts; they are not merged automatically.'],draftAccountChanged:['已切換帳戶草稿；原帳戶草稿仍保留。','Switched account drafts. The previous account’s drafts are retained.'],draftMemoryOnly:['舊帳戶的草稿暫時只保留在此分頁記憶體。請勿關閉；切回原帳戶後複製內容。','The previous account’s unsaved draft is kept in this tab’s memory only. Keep the tab open; switch back to copy your text.'],
   accountLabel:['目前登入帳戶','Signed-in account'],accountPrivate:['只在你的帳戶管理畫面顯示，電郵不會發布到作品頁。','Shown only in your account workspace; your email is not published on work pages.'],roleChecking:['正在確認權限…','Checking permissions…'],roleAdmin:['管理員','Administrator'],roleMember:['普通會員','Member'],roleUnknown:['暫時無法確認角色','Role temporarily unavailable'],viewPrompt:['查看 Prompt','View prompt'],
   signoutHint:['只登出此瀏覽器的登入階段','Sign out of this browser session only'],
   coverPrivacy:['封面是公開檔案，請勿包含個人資料、密鑰或敏感畫面；下架作品不會自動刪除圖片。','Covers are public files. Do not include personal data, keys or sensitive screenshots. Unpublishing a creation does not delete its image.'],
-  draftClear:['確定清除此份草稿？其他草稿及已發布作品不會刪除。','Clear this draft? Other drafts and published creations will be kept.'],draftRestored:['已還原文字草稿；尚未上傳的封面請重新選取。','Text draft restored. Reselect any cover that has not been uploaded.'],draftNote:['新作品及各件作品的編輯草稿分開保存，只存在這個瀏覽器。共用電腦使用後請清除草稿；請勿放入秘密資料。','New creations and each creation’s edit drafts are saved separately in this browser only. Clear drafts on shared devices; never include secrets.'],
+  draftClear:['確定清除此份草稿？其他草稿及已發布作品不會刪除。','Clear this draft? Other drafts and published creations will be kept.'],draftRestored:['已還原文字草稿；尚未上傳的封面請重新選取。','Text draft restored. Reselect any cover that has not been uploaded.'],draftNote:['文字草稿按帳戶分開，只存在這個瀏覽器，不會跨裝置同步或加密。登出會隱藏帳戶草稿，但不會刪除。共用電腦請清除網站資料；請勿保存秘密。','Text drafts are separated by account in this browser, not synced or encrypted. Signing out hides account drafts without deleting them. Clear site data on shared devices; never save secrets.'],
   editContext:['你正在編輯既有作品；儲存會更新原作品，不會新增一件。','You are editing an existing creation. Saving updates it; it does not publish a new one.'],
   newCreation:['分享新作品','Share a new creation'],resumeEdit:['繼續上次編輯','Resume previous edit'],editDraftAvailable:['另有一份未提交的編輯草稿：','An unfinished edit is saved separately: '],editDraftRestored:['已還原這件作品的編輯草稿；尚未發布的圖片請重新選取。','Restored this creation’s edit draft. Reselect any image that was not uploaded.'],
   switchCover:['文字草稿已保留，但尚未上傳的圖片不會隨草稿保存。確定切換？','Your text draft is saved, but an image that has not been uploaded is not saved with it. Switch anyway?'],
@@ -245,7 +246,12 @@ async function handleAuthState(event,session){
   await Promise.all([refreshUser(session),recoveryActive?prepareRecovery(session):Promise.resolve()]);
 }
 async function refreshUser(session){
-  const seq=++authSeq,previousId=user?.id;user=session?.user||null;const currentId=user?.id;authReady=true;isAdmin=false;adminRoleState=currentId?'checking':'unknown';likes=new Set();renderAuth();
+  const seq=++authSeq,previousId=user?.id,nextUser=session?.user||null,nextScope=scopeFor(nextUser?.id),switching=editorScope!==nextScope;
+  let draftOk=true;
+  if(switching){clearTimeout(draftTimer);if(dirty)draftOk=saveDraft(false);++editSeq;++editorEpoch;}
+  user=nextUser;const currentId=user?.id;authReady=true;
+  if(switching){restoreDraft();if(!draftOk)toast(t('draftMemoryOnly'));else if(previousId||dirty)toast(t('draftAccountChanged'));}
+  isAdmin=false;adminRoleState=currentId?'checking':'unknown';likes=new Set();renderAuth();
   if(user){
     if(!recoveryActive&&$('loginDialog').open)$('loginDialog').close();
     const next=!recoveryActive&&storage.get('aimade_auth_return_v3');
@@ -265,44 +271,64 @@ async function refreshUser(session){
 }
 async function signOutCurrent(){const {error}=await sb.auth.signOut({scope:'local'});if(error)throw error;await refreshUser(null)}
 const textFields=['category','access','link','title','description','prompt','displayName','tools'];
-const DRAFTS_KEY='aimade_drafts_v3';
+const DRAFTS_KEY='aimade_drafts_v4:';
 function draftObject(d){return !!d&&typeof d==='object'&&!Array.isArray(d)}
-function readDrafts(){
-  const raw=storage.get(DRAFTS_KEY),result={version:3,create:null,edits:{},lastEdit:null};
-  if(draftObject(raw)&&raw.version===3){
-    if(draftObject(raw.create)&&!uuid(raw.create.editId))result.create=raw.create;
-    if(draftObject(raw.edits))for(const [id,d]of Object.entries(raw.edits))if(uuid(id)&&draftObject(d)&&d.editId===id)result.edits[id]=d;
-    if(uuid(raw.lastEdit)&&result.edits[raw.lastEdit])result.lastEdit=raw.lastEdit;
-    return result;
-  }
-  const legacy=storage.get('aimade_draft_v2');
-  if(draftObject(legacy)){if(uuid(legacy.editId)){result.edits[legacy.editId]=legacy;result.lastEdit=legacy.editId}else result.create=legacy}
+function scopeFor(id){return uuid(id)?id:'guest'}
+function emptyDrafts(){return {version:4,create:null,edits:{},lastEdit:null,retiredEdits:[]}}
+// One storage key per authenticated UUID. Never derive ownership from an email or form field.
+let editorScope='guest',editorEpoch=0;
+const unsavedScopes=new Map();
+function legacyDrafts(){
+  const raw=storage.get('aimade_drafts_v3');
+  if(draftObject(raw)&&raw.version===3)return raw;
+  const d=storage.get('aimade_draft_v2');
+  return draftObject(d)?{create:uuid(d.editId)?null:d,edits:uuid(d.editId)?{[d.editId]:d}:{}}:{};
+}
+function readDrafts(scope=editorScope){
+  const key=DRAFTS_KEY+scope,raw=unsavedScopes.get(scope)||storage.get(key),result=emptyDrafts();
+  const source=draftObject(raw)&&raw.version===4?raw:legacyDrafts();
+  // Unattributed legacy drafts are retained in their original key, not shown to a later account.
+  const allowed=d=>draftObject(d)&&(scope==='guest'?source===raw&&!d.owner:d.owner===scope);
+  if(allowed(source.create)&&!uuid(source.create.editId))result.create=source.create;
+  if(draftObject(source.edits))for(const [id,d]of Object.entries(source.edits))if(uuid(id)&&allowed(d)&&d.editId===id)result.edits[id]=d;
+  if(source===raw&&Array.isArray(source.retiredEdits))result.retiredEdits=source.retiredEdits.filter(uuid);
+  if(uuid(source.lastEdit)&&result.edits[source.lastEdit])result.lastEdit=source.lastEdit;
   return result;
 }
 let drafts=readDrafts();
-function persistDrafts(next){if(!storage.set(DRAFTS_KEY,next))return false;drafts=next;storage.remove('aimade_draft_v2');return true}
-function draftData(){const d={editId,pendingId,editingCover,owner:user?.id||editOwner||null};textFields.forEach(k=>d[k]=$(k).value);d.mobile=$('mobile').checked;d.feedback=$('feedback').checked;d.removeCover=$('removeCover').checked;return d}
-function saveDraft(show=true){const d=draftData(),next={...drafts,edits:{...drafts.edits}};if(editId){next.edits[editId]=d;next.lastEdit=editId}else next.create=d;const ok=persistDrafts(next);if(show)$('draftStatus').textContent=t(ok?'draftSaved':'draftFail');renderEditorContext();return ok}
-function discardCurrentDraft(){const next={...drafts,edits:{...drafts.edits}};if(editId){delete next.edits[editId];if(next.lastEdit===editId)next.lastEdit=Object.keys(next.edits).at(-1)||null}else next.create=null;return persistDrafts(next)}
+function persistDrafts(next,scope=editorScope){
+  // A failed write stays in memory, isolated by account, until this page is closed.
+  const ok=storage.set(DRAFTS_KEY+scope,next);
+  if(ok)unsavedScopes.delete(scope);else unsavedScopes.set(scope,next);
+  if(scope===editorScope)drafts=next;return ok;
+}
+function draftData(){const d={editId,pendingId,editingCover,owner:editorScope==='guest'?null:editorScope};textFields.forEach(k=>d[k]=$(k).value);d.mobile=$('mobile').checked;d.feedback=$('feedback').checked;d.removeCover=$('removeCover').checked;return d}
+function saveDraft(show=true){
+  const d=draftData(),latest=readDrafts(),next={...latest,edits:{...latest.edits}};
+  if(editId){next.edits[editId]=d;next.lastEdit=editId}else next.create=d;
+  const ok=persistDrafts(next);if(show)$('draftStatus').textContent=t(ok?'draftSaved':'draftFail');renderEditorContext();return ok;
+}
+function discardCurrentDraft(){const latest=readDrafts(),next={...latest,edits:{...latest.edits}};if(editId){next.retiredEdits=[...new Set([...(next.retiredEdits||[]),editId])];delete next.edits[editId];if(next.lastEdit===editId)next.lastEdit=Object.keys(next.edits).at(-1)||null}else next.create=null;return persistDrafts(next)}
 function renderEditorContext(){
-  const candidate=drafts.lastEdit&&drafts.edits[drafts.lastEdit];
-  const old=user&&(candidate?.owner===user.id?candidate:Object.values(drafts.edits).reverse().find(d=>d.owner===user.id)),editing=!!editId;
-  // Preserve other users' drafts locally, but never advertise their titles or edit links here.
+  const scoped=user?readDrafts(user.id):emptyDrafts(),candidate=scoped.lastEdit&&scoped.edits[scoped.lastEdit];
+  const old=candidate||Object.values(scoped.edits).at(-1),editing=!!editId&&editorScope===scopeFor(user?.id);
   $('editorContext').hidden=!editing&&!old;
   $('editorContextText').textContent=editing?t('editContext'):old?t('editDraftAvailable')+(old.title||t('untitled')):'';
   $('editorContextAction').textContent=t(editing?'newCreation':'resumeEdit');
   $('editorContextAction').setAttribute('href',editing?'#upload':old?'#edit/'+old.editId:'#upload');
+  $('draftScopeNote').textContent=t(user?'accountDrafts':'guestDrafts');
 }
 function clearPreview(){if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;stagedCoverFile=null;stagedCoverUrl='';coverUpload=null;$('coverPreview').hidden=true;$('cover').value='';}
 function fillEditor(d){
-  textFields.forEach(k=>$(k).value=String(d[k]??(k==='category'?'app':k==='access'?'unknown':k==='displayName'?storage.get('aimade_display',''):'')));
+  editorScope=scopeFor(user?.id);++editorEpoch;
+  textFields.forEach(k=>$(k).value=String(d[k]??(k==='category'?'app':k==='access'?'unknown':k==='displayName'?storage.get('aimade_display_v4:'+editorScope,''):'')));
   if(!cats[$('category').value])$('category').value='app';
   $('mobile').checked=!!d.mobile;$('feedback').checked=!!d.feedback;editId=uuid(d.editId)?d.editId:null;editOwner=uuid(d.owner)?d.owner:null;pendingId=uuid(d.pendingId)?d.pendingId:null;editingCover=safeCover(d.editingCover);clearPreview();
   $('removeCover').checked=!!d.removeCover;
   if(editingCover){$('coverPreview').src=editingCover;$('coverPreview').hidden=$('removeCover').checked}
   $('removeCoverRow').hidden=!editingCover;$('rights').checked=false;updatePrompt();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');renderEditorContext();
 }
-function restoreDraft(){const d=drafts.create;$('workForm').reset();fillEditor(d||{});dirty=false;$('draftStatus').textContent=d?t('draftRestored'):'';$('formStatus').textContent=''}
+function restoreDraft(){editorScope=scopeFor(user?.id);drafts=readDrafts();persistDrafts(drafts);const d=drafts.create;$('workForm').reset();fillEditor(d||{});dirty=false;$('draftStatus').textContent=d?t('draftRestored'):'';$('formStatus').textContent=''}
 function updatePrompt(){$('promptField').hidden=$('category').value!=='prompt';$('prompt').required=$('category').value==='prompt';}
 function guardEditorChange(){clearTimeout(draftTimer);if(dirty&&!saveDraft(false)){toast(t('draftFail'));return false}return !$('cover').files.length||confirm(t('switchCover'))}
 async function startEdit(id){
@@ -315,7 +341,7 @@ async function startEdit(id){
   try{
     const {data,error}=await timed(sb.from('works').select('*').eq('id',id).eq('owner',owner).maybeSingle());
     if(seq!==editSeq||user?.id!==owner||location.hash!=='#edit/'+id||mode!=='upload')return;
-    if(error||!data)throw Error();const w=normalize(data),savedEdit=drafts.edits[id];
+    if(error||!data||data.owner!==owner)throw Error();const w=normalize(data),accountDrafts=readDrafts(owner),savedEdit=accountDrafts.edits[id]||(!accountDrafts.retiredEdits.includes(id)&&legacyDrafts().edits?.[id]);
     const previous=draftObject(savedEdit)&&(!savedEdit.owner||savedEdit.owner===owner)?savedEdit:null;
     $('workForm').reset();fillEditor(previous?{...previous,owner}:{editId:id,owner,editingCover:w.cover_url,title:w.title,description:w.description||'',link:w.link||'',category:w.category,displayName:w.owner_name||'',access:w.details.access||'unknown',mobile:w.details.mobile===true,feedback:w.details.feedback===true,tools:w.details.tools||'',prompt:w.details.prompt||''});
     dirty=false;$('formStatus').textContent='';$('draftStatus').textContent=previous?t('editDraftRestored'):'';$('workForm').hidden=false;$('editorLoadStatus').textContent='';
@@ -350,6 +376,7 @@ function validateWork(d,consent){
 async function submitWork(e){
   e.preventDefault();if(publishing)return;clearTimeout(draftTimer);saveDraft();$('formStatus').textContent='';
   if(!user||!sb){$('formStatus').textContent=t('needLogin');openLogin();return}
+  if(editorScope!==user.id){$('formStatus').textContent=t('draftAccountChanged');return}
   const d=draftData(),validation=validateWork(d,$('rights').checked);
   if(validation){$('formStatus').textContent=t(validation);return}
   let url=d.link.trim();if(url&&!/^[a-z][a-z0-9+.-]*:/i.test(url))url='https://'+url;
@@ -358,7 +385,7 @@ async function submitWork(e){
   if(['game','app','tool'].includes(d.category)&&!url){$('formStatus').textContent=t('needLink');return}
   const file=$('cover').files[0];if(file&&!validCover(file)){$('formStatus').textContent=t('badCover');return}
   if(!editId&&!pendingId){pendingId=crypto.randomUUID();saveDraft(false)}
-  const owner=user.id,submittedEditId=editId;
+  const owner=user.id,submittedEditId=editId,submittedEpoch=editorEpoch;
   publishing=true;$('editorFields').disabled=true;$('publish').disabled=true;$('publish').textContent=t('busy');
   try{
     let cover=$('removeCover').checked?null:editingCover||null;
@@ -366,18 +393,19 @@ async function submitWork(e){
       if(stagedCoverFile===file&&safeCover(stagedCoverUrl))cover=stagedCoverUrl;
       else{
         cover=await deadline(uploadCover(file,owner));
+        if(user?.id!==owner||editorEpoch!==submittedEpoch)throw Error('Session changed');
         stagedCoverFile=file;stagedCoverUrl=cover;editingCover=cover;saveDraft(false);
       }
     }
-    if(user?.id!==owner)throw Error('Session changed');
+    if(user?.id!==owner||editorEpoch!==submittedEpoch)throw Error('Session changed');
     const payload={owner,owner_name:d.displayName.trim(),title:d.title.trim(),description:d.description.trim(),category:d.category,link:safeUrl(url)||null,cover_url:cover,details:{access:d.access,mobile:d.mobile,feedback:d.feedback,tools:d.tools.trim(),prompt:d.category==='prompt'?d.prompt.trim():''}};
     const result=submittedEditId?await timed(sb.from('works').update(payload).eq('id',submittedEditId).eq('owner',owner).select('id').single(),20000):await timed(sb.from('works').upsert({...payload,id:pendingId,price:0,accept_tips:false},{onConflict:'id'}).select('id').single(),20000);
-    if(result.error)throw result.error;const id=result.data.id;
-    storage.set('aimade_display',payload.owner_name);clearTimeout(draftTimer);discardCurrentDraft();dirty=false;toast(t(submittedEditId?'updated':'published'));
+    if(result.error)throw result.error;if(user?.id!==owner||editorEpoch!==submittedEpoch)return;const id=result.data.id;
+    storage.set('aimade_display_v4:'+owner,payload.owner_name);clearTimeout(draftTimer);discardCurrentDraft();dirty=false;toast(t(submittedEditId?'updated':'published'));
     $('workForm').reset();restoreDraft();$('draftStatus').textContent='';location.hash='work/'+id;
   }catch{
     /* A delayed server response may have committed. Keep the cover and pending ID for safe retry. */
-    $('formStatus').textContent=t('saveFail');saveDraft(false);
+    if(user?.id===owner&&editorEpoch===submittedEpoch){$('formStatus').textContent=t('saveFail');saveDraft(false);}
   }finally{publishing=false;$('editorFields').disabled=false;$('publish').disabled=false;$('publish').textContent=t(editId?'update':'publish')}
 }
 async function archiveWork(id){if(!user||!detailWork||detailWork.id!==id||detailWork.owner!==user.id)return;const target=!detailWork.archived;if(target&&!confirm(t('archiveConfirm')))return;try{const {data,error}=await timed(sb.from('works').update({archived:target}).eq('id',id).eq('owner',user.id).select('id').single());if(error||!data)throw Error();loadDetail(id)}catch{toast(t('saveFail'))}}
@@ -443,7 +471,7 @@ $('loginDialog').addEventListener('close',()=>{
   ++authUiVersion;clearPasswordFields();$('signupConsent').checked=false;authMode='signin';authMail=null;$('loginStatus').textContent='';
   if(recoveryActive){++recoveryRequest;recoveryActive=false;recoveryCallbackTab=false;recoveryVerified=false;recoveryUserId=null;authMode='signin';cleanAuthUrl(true)}
 });
-$('loginForm').addEventListener('submit',submitAuth);$('reportForm').addEventListener('submit',submitReport);window.addEventListener('hashchange',()=>{if(!location.hash.includes('access_token='))route()});window.addEventListener('beforeunload',()=>{if(dirty)saveDraft(false)});
+$('loginForm').addEventListener('submit',submitAuth);$('reportForm').addEventListener('submit',submitReport);window.addEventListener('hashchange',()=>{if(!location.hash.includes('access_token='))route()});window.addEventListener('beforeunload',e=>{if(dirty)saveDraft(false);if(unsavedScopes.size){e.preventDefault();e.returnValue=''}});
 applyLang();restoreDraft();persistDrafts(drafts);
 async function init(){
   const params=new URLSearchParams(location.hash.slice(1)),authError=params.has('error')||params.has('error_description')||params.has('error_code');

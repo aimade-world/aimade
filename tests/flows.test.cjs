@@ -80,14 +80,14 @@ test('Legacy edit draft is preserved separately, not restored as a new creation'
   const h=harness({aimade_draft_v2:{editId:WORK,title:'尚未提交的修改',description:'保留此內容'}});
   h.run('restoreDraft();persistDrafts(drafts)');
   assert.equal(h.run('editId'),null);assert.equal(h.el('title').value,'');
-  assert.equal(h.run(`drafts.edits['${WORK}'].title`),'尚未提交的修改');
-  assert.equal(h.store.has('aimade_draft_v2'),false);
+  assert.equal(h.run(`legacyDrafts().edits['${WORK}'].title`),'尚未提交的修改');
+  assert.equal(h.store.has('aimade_draft_v2'),true);
   assert.equal(h.el('editorContext').hidden,true); // Unowned legacy draft titles stay private until ownership is known.
 });
 
 test('New draft and each edit draft do not overwrite one another',()=>{
   const h=harness();h.run(`fillEditor({editId:'${WORK}',owner:'${OWNER}',title:'編輯草稿'});saveDraft(false);fillEditor({title:'新作品草稿'});saveDraft(false)`);
-  const saved=JSON.parse(h.store.get('aimade_drafts_v3'));
+  const saved=JSON.parse(h.store.get('aimade_drafts_v4:guest'));
   assert.equal(saved.create.title,'新作品草稿');assert.equal(saved.edits[WORK].title,'編輯草稿');
 });
 
@@ -172,7 +172,7 @@ test('Database retry reuses its uploaded cover and pending creation ID',async()=
 test('Reload after a failed database save retains the completed cover upload',async()=>{
   const a=api({writeError:{message:'Network failed'}}),h=harness();ready(h,a.client);validForm(h);h.el('cover').files=[{size:500,type:'image/png'}];
   await h.run('submitWork({preventDefault(){}})');
-  const reloaded=harness({aimade_drafts_v3:JSON.parse(h.store.get('aimade_drafts_v3'))}),retry=api();ready(reloaded,retry.client);reloaded.el('rights').checked=true;
+  const reloaded=harness({['aimade_drafts_v4:'+OWNER]:JSON.parse(h.store.get('aimade_drafts_v4:'+OWNER))}),retry=api();ready(reloaded,retry.client);reloaded.el('rights').checked=true;
   await reloaded.run('submitWork({preventDefault(){}})');
   assert.equal(retry.stats.uploads,0);assert.equal(retry.stats.writes.length,1);assert.equal(retry.stats.writes[0].cover_url,a.stats.writes[0].cover_url);
 });
@@ -286,8 +286,8 @@ test('Recovery rejects a mismatched / expired server identity',async()=>{
 });
 
 test('Password recovery preserves the existing UID, draft and safe return route',async()=>{
-  const h=harness({aimade_auth_return_v3:'#upload',aimade_drafts_v3:{version:3,create:{title:'保留的草稿'},edits:{},lastEdit:null}}),a=api();authReady(h,a);
-  h.run(`user={id:'${OWNER}'};recoveryActive=true`);h.location.search='?auth=recovery';await h.run(`prepareRecovery({user:{id:'${OWNER}'}})`);
+  const h=harness({aimade_auth_return_v3:'#upload',aimade_drafts_v3:{version:3,create:{owner:OWNER,title:'保留的草稿'},edits:{},lastEdit:null}}),a=api();authReady(h,a);
+  h.run(`user={id:'${OWNER}'};restoreDraft();recoveryActive=true`);h.location.search='?auth=recovery';await h.run(`prepareRecovery({user:{id:'${OWNER}'}})`);
   newPassword(h);await h.run(submit());assert.equal(a.stats.updates.length,1);assert.deepEqual(Object.keys(a.stats.updates[0]),['password']);assert.equal(a.stats.signups.length,0);
   assert.equal(h.run('user.id'),OWNER);assert.equal(h.location.search,'');assert.equal(h.location.hash,'#upload');assert.equal(h.el('loginDialog').open,false);assert.equal(h.run('drafts.create.title'),'保留的草稿');
   assert(![...h.store.values()].join('').includes(MOCK_PASSWORD));
@@ -417,7 +417,7 @@ test('A different account never sees the previous owner edit-draft title or link
   const h=harness({aimade_drafts_v3:{version:3,create:null,edits:{[WORK]:{editId:WORK,owner:OWNER,title:'Private unfinished title'}},lastEdit:WORK}});
   h.run("user={id:'1ca75222-cd0f-49d0-b3e8-a52fd6e58f79'};renderEditorContext()");
   assert.equal(h.el('editorContext').hidden,true);assert.equal(h.el('editorContextText').textContent,'');assert.equal(h.el('editorContextAction').getAttribute('href'),'#upload');
-  assert.equal(h.run(`drafts.edits['${WORK}'].title`),'Private unfinished title');
+  assert.equal(h.run(`legacyDrafts().edits['${WORK}'].title`),'Private unfinished title');
   h.run(`user={id:'${OWNER}'};renderEditorContext()`);
   assert.equal(h.el('editorContext').hidden,false);assert.equal(h.el('editorContextAction').getAttribute('href'),'#edit/'+WORK);
   h.run('user=null;renderEditorContext()');assert.equal(h.el('editorContextText').textContent,'');
@@ -444,4 +444,69 @@ test('An unavailable role query is not presented as confirmed membership',async(
 test('Prompt cards use a concrete content action and recent rankings state their scope',()=>{
   const h=harness();assert.match(h.run(`card(normalize({id:'${WORK}',title:'Prompt',category:'prompt'}),0)`),/查看 Prompt/);
   assert.equal(h.run("t('hot')"),'近 30 天新作 · 最多讚');
+});
+const MEMBER='1ca75222-cd0f-49d0-b3e8-a52fd6e58f79';
+const newDrafts=(owner,title)=>({version:4,create:{owner,title,category:'prompt'},edits:{},lastEdit:null});
+
+test('A new draft and public author name are isolated by account UUID',async()=>{
+  const h=harness(),a=api();ready(h,a.client);validForm(h);h.el('title').value='Admin private draft';h.run('dirty=true;saveDraft(false)');
+  h.store.set('aimade_display_v4:'+OWNER,JSON.stringify('Admin name'));
+  await h.run(`refreshUser({user:{id:'${MEMBER}'}})`);
+  assert.equal(h.el('title').value,'');assert.equal(h.el('displayName').value,'');assert.equal(h.run('pendingId'),null);
+  h.el('title').value='Member private draft';h.run('dirty=true;saveDraft(false)');
+  await h.run(`refreshUser({user:{id:'${OWNER}'}})`);
+  assert.equal(h.el('title').value,'Admin private draft');
+  assert.equal(JSON.parse(h.store.get('aimade_drafts_v4:'+MEMBER)).create.title,'Member private draft');
+});
+test('Signing out hides the account form and keeps guest and account drafts separate',async()=>{
+  const h=harness({'aimade_drafts_v4:guest':newDrafts(null,'Guest note')}),a=api();ready(h,a.client);validForm(h);h.run('dirty=true;saveDraft(false)');
+  await h.run('refreshUser(null)');assert.equal(h.el('title').value,'Guest note');assert.equal(h.el('rights').checked,false);
+  await h.run(`refreshUser({user:{id:'${OWNER}'}})`);assert.equal(h.el('title').value,'作品介紹助手');
+});
+test('Legacy owned create migrates only to its owner and original data is retained',()=>{
+  const legacy={version:3,create:{owner:OWNER,title:'Legacy admin'},edits:{},lastEdit:null};
+  const h=harness({aimade_drafts_v3:legacy});h.run(`user={id:'${MEMBER}'};restoreDraft()`);assert.equal(h.el('title').value,'');
+  h.run(`user={id:'${OWNER}'};restoreDraft()`);assert.equal(h.el('title').value,'Legacy admin');
+  h.run('discardCurrentDraft();restoreDraft()');assert.equal(h.el('title').value,''); // no resurrection
+  assert.deepEqual(JSON.parse(h.store.get('aimade_drafts_v3')),legacy);
+});
+test('Unattributed legacy create is preserved but never automatically assigned',()=>{
+  const h=harness({aimade_draft_v2:{title:'Unknown owner'}});h.run('restoreDraft()');assert.equal(h.el('title').value,'');
+  h.run(`user={id:'${OWNER}'};restoreDraft()`);assert.equal(h.el('title').value,'');assert.equal(JSON.parse(h.store.get('aimade_draft_v2')).title,'Unknown owner');
+});
+test('Anonymous legacy edit can be recovered only after server owner verification',async()=>{
+  const h=harness({aimade_draft_v2:{editId:WORK,title:'Original legacy edit'}}),a=api({work:{id:WORK,owner:OWNER,title:'Published'}});ready(h,a.client);h.location.hash='#edit/'+WORK;
+  await h.run(`startEdit('${WORK}')`);assert.equal(h.el('title').value,'Original legacy edit');assert.equal(h.run('editOwner'),OWNER);
+});
+test('Forged server edit ownership cannot restore a legacy draft',async()=>{
+  const h=harness({aimade_draft_v2:{editId:WORK,title:'Never leak'}}),a=api({work:{id:WORK,owner:MEMBER,title:'Other'}});ready(h,a.client);h.location.hash='#edit/'+WORK;
+  await h.run(`startEdit('${WORK}')`);assert.equal(h.el('workForm').hidden,true);assert.notEqual(h.el('title').value,'Never leak');
+});
+test('Switching accounts with blocked storage keeps old input only in scoped memory',async()=>{
+  const h=harness(),a=api();ready(h,a.client);validForm(h);h.run('dirty=true');h.failWrites();
+  await h.run(`refreshUser({user:{id:'${MEMBER}'}})`);assert.equal(h.el('title').value,'');assert.equal(h.run(`unsavedScopes.get('${OWNER}').create.title`),'作品介紹助手');
+  await h.run(`refreshUser({user:{id:'${OWNER}'}})`);assert.equal(h.el('title').value,'作品介紹助手');
+});
+test('A same-account save merges latest unrelated edit data from another tab',()=>{
+  const h=harness(),a=api();ready(h,a.client);validForm(h);
+  h.store.set('aimade_drafts_v4:'+OWNER,JSON.stringify({version:4,create:null,edits:{[WORK]:{editId:WORK,owner:OWNER,title:'Other tab edit'}},lastEdit:WORK}));
+  h.run('saveDraft(false)');assert.equal(JSON.parse(h.store.get('aimade_drafts_v4:'+OWNER)).edits[WORK].title,'Other tab edit');
+});
+test('Delayed cover upload cannot attach old account cover to a new account draft',async()=>{
+  let resolve;const pending=new Promise(r=>resolve=r),h=harness(),a=api();
+  a.client.storage.from=()=>({upload(){return pending},getPublicUrl:p=>({data:{publicUrl:SB+'/storage/v1/object/public/covers/'+p}})});
+  ready(h,a.client);validForm(h);h.el('cover').files=[{size:100,type:'image/png'}];const request=h.run('submitWork({preventDefault(){}})');
+  await h.run(`refreshUser({user:{id:'${MEMBER}'}})`);h.el('title').value='Member in progress';h.run('dirty=true;saveDraft(false)');resolve({error:null});await request;
+  assert.equal(a.stats.writes.length,0);assert.equal(h.el('title').value,'Member in progress');assert.equal(h.run('editingCover'),'');assert.equal(h.run('pendingId'),null);
+});
+test('Delayed database response cannot clear the next account draft',async()=>{
+  let resolve;const pending=new Promise(r=>resolve=r),h=harness(),a=api();ready(h,a.client);validForm(h);
+  const original=a.client.from;a.client.from=table=>{if(table!=='works')return original(table);return {upsert(){return this},select(){return this},single(){return this},abortSignal(){return pending}}};
+  const request=h.run('submitWork({preventDefault(){}})');await h.run(`refreshUser({user:{id:'${MEMBER}'}})`);h.el('title').value='Member survives';h.run('dirty=true;saveDraft(false)');
+  resolve({data:{id:WORK},error:null});await request;assert.equal(h.el('title').value,'Member survives');assert.equal(h.location.hash,'#upload');assert.equal(JSON.parse(h.store.get('aimade_drafts_v4:'+MEMBER)).create.title,'Member survives');
+});
+test('Cleared legacy edits never reappear when the owner reopens the work',async()=>{
+ const h=harness({aimade_draft_v2:{editId:WORK,title:'Retired legacy'}}),a=api({work:{id:WORK,owner:OWNER,title:'Live title'}});ready(h,a.client);h.location.hash='#edit/'+WORK;
+ await h.run(`startEdit('${WORK}')`);assert.equal(h.el('title').value,'Retired legacy');h.run('discardCurrentDraft();editId=null');await h.run(`startEdit('${WORK}')`);assert.equal(h.el('title').value,'Live title');
+ assert.equal(JSON.parse(h.store.get('aimade_draft_v2')).title,'Retired legacy');
 });
