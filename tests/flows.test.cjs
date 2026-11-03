@@ -8,7 +8,9 @@ const crypto = require('node:crypto');
 const WORK = '3517bbf5-6468-4e23-8eaa-aa02e228c7b4';
 const OWNER = '6e3ccb94-b4f1-4906-88c7-3dcdb8a5085e';
 const SB = 'https://ulntmokjyvbxmkdejagt.supabase.co';
-const source = fs.readFileSync(path.join(__dirname, '../assets/app.js'), 'utf8').split('applyLang();restoreDraft();')[0];
+const fullSource = fs.readFileSync(path.join(__dirname, '../assets/app.js'), 'utf8');
+const source = fullSource.split('applyLang();restoreDraft();')[0];
+const initDefinition = fullSource.slice(fullSource.indexOf('async function init(){'),fullSource.lastIndexOf('\ninit();'));
 
 function harness(seed = {}) {
   const store = new Map(Object.entries(seed).map(([k,v]) => [k,JSON.stringify(v)]));
@@ -18,20 +20,21 @@ function harness(seed = {}) {
     if (elements.has(id)) return elements.get(id);
     let value = '';
     const classes = new Set();
+    const listeners = {};
     const node = {id,textContent:'',innerHTML:'',hidden:false,disabled:false,checked:false,files:[],style:{},dataset:{},attrs:{},
-      addEventListener(){},setAttribute(k,v){this.attrs[k]=String(v)},getAttribute(k){return this.attrs[k]??null},removeAttribute(k){delete this.attrs[k]},
+      addEventListener(k,fn){(listeners[k]??=[]).push(fn)},setAttribute(k,v){this.attrs[k]=String(v)},getAttribute(k){return this.attrs[k]??null},removeAttribute(k){delete this.attrs[k]},
       classList:{add:k=>classes.add(k),remove:k=>classes.delete(k),contains:k=>classes.has(k),toggle(k){classes.has(k)?classes.delete(k):classes.add(k)}},
-      querySelector(){return el('button')},focus(){},scrollIntoView(){},showModal(){this.open=true},close(){this.open=false},
+      querySelector(){return el('button')},focus(){},scrollIntoView(){},showModal(){this.open=true},close(){this.open=false;for(const fn of listeners.close||[])fn()},
       checkValidity(){return id!=='email'||value.includes('@')},reportValidity(){return this.checkValidity()},
       reset(){if(id==='workForm'){for(const field of ['category','access','link','title','description','prompt','displayName','tools','cover'])el(field).value='';for(const field of ['mobile','feedback','rights','removeCover'])el(field).checked=false}}
     };
     Object.defineProperty(node,'value',{get:()=>value,set:v=>{value=String(v);if(id==='cover'&&!value)node.files=[]}});
     elements.set(id,node);return node;
   }
-  const location = {origin:'https://aimade.world',pathname:'/',search:'',_hash:'#home',get hash(){return this._hash},set hash(v){this._hash=v?(v.startsWith('#')?v:'#'+v):''}};
+  const location = {origin:'https://aimade.world',pathname:'/',search:'',_hash:'#home',assigned:null,assign(url){this.assigned=url},get hash(){return this._hash},set hash(v){this._hash=v?(v.startsWith('#')?v:'#'+v):''}};
   class TestURL extends URL {static createObjectURL(){return 'blob:test-cover'}static revokeObjectURL(){}}
   class TestDate extends Date {static now(){return now}}
-  const context = vm.createContext({console:{warn(){},log(){},error(){}},URL:TestURL,AbortController,Set,Map,Date:TestDate,crypto,
+  const context = vm.createContext({console:{warn(){},log(){},error(){}},URL:TestURL,URLSearchParams,AbortController,Set,Map,Date:TestDate,crypto,
     setTimeout(fn,ms){const id=++timerId;timers.set(id,{fn,ms});return id},clearTimeout(id){timers.delete(id)},
     localStorage:{getItem:k=>store.get(k)??null,setItem(k,v){if(failWrites)throw Error('Quota');store.set(k,v)},removeItem(k){store.delete(k)}},
     document:{getElementById:el,querySelector:()=>el('query'),querySelectorAll:()=>[],addEventListener(){},documentElement:{},title:''},
@@ -44,9 +47,18 @@ function harness(seed = {}) {
 }
 
 function api({work,writeError=null,roles}={}) {
-  const stats = {uploads:0,writes:[],mail:0};
+  const stats = {uploads:0,writes:[],mail:0,logins:[],signups:[],resets:[],resends:[],updates:[],oauth:[]};
   const client = {
-    auth:{async signInWithOtp(){stats.mail++;return {error:null}}},
+    auth:{
+      async signInWithOtp(){stats.mail++;return {error:null}},
+      async signInWithPassword(p){stats.logins.push(p);return {data:{session:{user:{id:OWNER}}},error:null}},
+      async signUp(p){stats.signups.push(p);return {data:{session:null},error:null}},
+      async resetPasswordForEmail(...p){stats.resets.push(p);return {error:null}},
+      async resend(p){stats.resends.push(p);return {error:null}},
+      async updateUser(p){stats.updates.push(p);return {data:{user:{id:OWNER}},error:null}},
+      async getUser(){return {data:{user:{id:OWNER}},error:null}},
+      async signInWithOAuth(p){stats.oauth.push(p);return {data:{url:SB+'/auth/v1/authorize?provider='+p.provider},error:null}}
+    },
     storage:{from(){return {async upload(){stats.uploads++;return {error:null}},getPublicUrl:p=>({data:{publicUrl:SB+'/storage/v1/object/public/covers/'+p}})}}},
     from(table){let payload=null;const query={
       select(){return this},eq(){return this},maybeSingle(){return this},single(){return this},range(){return this},order(){return this},
@@ -175,16 +187,157 @@ test('A slow cover upload releases the UI and retry reuses the same in-flight re
   assert.equal(a.stats.uploads,1);assert.equal(a.stats.writes.length,1);
 });
 
-test('Magic-link success shows the destination and blocks immediate repeated sends',async()=>{
-  const h=harness(),a=api();ready(h,a.client);h.el('email').value='owner@example.com';
-  await h.run('sendLink({preventDefault(){}})');await h.run('sendLink({preventDefault(){}})');
-  assert.equal(a.stats.mail,1);assert.equal(h.el('loginDone').hidden,false);assert.equal(h.el('loginForm').hidden,true);assert.equal(h.el('loginSentEmail').textContent,'owner@example.com');assert.equal(h.el('resendLink').disabled,true);
-  h.advance(61000);await h.run('sendLink({preventDefault(){}})');assert.equal(a.stats.mail,2);
+function authReady(h,a,mode='signin'){
+  h.context.client=a.client;h.run(`sb=client;user=null;authReady=true;setAuthMode('${mode}');openLogin()`);
+  h.el('email').value='owner@example.com';
+}
+const MOCK_PASSWORD='mock-only-long-password-123';
+function newPassword(h){h.el('password').value=MOCK_PASSWORD;h.el('passwordConfirm').value=MOCK_PASSWORD}
+const submit=()=> 'submitAuth({preventDefault(){}})';
+
+test('Password sign-in uses the password SDK, never a magic-link email',async()=>{
+  const h=harness(),a=api();authReady(h,a);h.el('password').value=MOCK_PASSWORD;
+  await h.run(submit());assert.equal(a.stats.logins.length,1);assert.equal(a.stats.mail,0);assert.equal(a.stats.resets.length,0);
+  assert.equal(a.stats.logins[0].email,'owner@example.com');assert.equal(h.run('user.id'),OWNER);assert.equal(h.el('loginDialog').open,false);
+  assert.equal(h.el('password').value,'');assert(![...h.store.values()].join('').includes(MOCK_PASSWORD));
 });
 
-test('Authentication rate-limit errors are not shown as a broken login service',async()=>{
-  const h=harness(),a=api();a.client.auth.signInWithOtp=async()=>({error:{status:429,code:'over_email_send_rate_limit'}});ready(h,a.client);h.el('email').value='owner@example.com';
-  await h.run('sendLink({preventDefault(){}})');assert(h.el('loginStatus').textContent.includes('寄送次數較多'));assert.equal(h.el('sendLink').disabled,true);
+test('Existing shorter passwords are not blocked by the new-password policy',async()=>{
+  const h=harness(),a=api();authReady(h,a);h.el('password').value='old-short';
+  await h.run(submit());assert.equal(a.stats.logins.length,1);
+});
+
+test('Wrong credentials show a safe, useful error and clear password inputs',async()=>{
+  const h=harness(),a=api();a.client.auth.signInWithPassword=async()=>({error:{code:'invalid_credentials',message:'do not echo backend details'}});
+  authReady(h,a);h.el('password').value=MOCK_PASSWORD;await h.run(submit());
+  assert(h.el('loginStatus').textContent.includes('電郵或密碼不正確'));assert(!h.el('loginStatus').textContent.includes('backend'));
+  assert.equal(h.el('password').value,'');assert.equal(h.el('authFields').disabled,false);
+});
+
+test('Registration requires the user’s own legal consent',async()=>{
+  const h=harness(),a=api();authReady(h,a,'signup');newPassword(h);await h.run(submit());
+  assert.equal(a.stats.signups.length,0);assert(h.el('loginStatus').textContent.includes('親自同意'));assert.equal(h.el('signupConsent').checked,false);
+});
+
+test('New-password length and confirmation are checked before registration',async()=>{
+  const h=harness(),a=api();authReady(h,a,'signup');h.el('signupConsent').checked=true;
+  h.el('password').value='short';h.el('passwordConfirm').value='short';await h.run(submit());assert(h.el('loginStatus').textContent.includes('12'));
+  newPassword(h);h.el('passwordConfirm').value='different-long-password';await h.run(submit());assert(h.el('loginStatus').textContent.includes('不相同'));assert.equal(a.stats.signups.length,0);
+});
+
+test('Registration asks for email confirmation once and blocks immediate duplicate sends',async()=>{
+  const h=harness(),a=api();authReady(h,a,'signup');newPassword(h);h.el('signupConsent').checked=true;await h.run(submit());
+  assert.equal(a.stats.signups.length,1);assert.equal(a.stats.signups[0].options.emailRedirectTo,'https://aimade.world/');assert.equal(a.stats.mail,0);
+  assert.equal(h.el('loginDone').hidden,false);assert.equal(h.el('loginSentEmail').textContent,'owner@example.com');assert.equal(h.el('resendLink').disabled,true);
+  await h.run("requestAuthMail('signup','owner@example.com',true)");assert.equal(a.stats.resends.length,0);
+  h.advance(61000);await h.run("requestAuthMail('signup','owner@example.com',true)");assert.equal(a.stats.resends.length,1);assert.equal(a.stats.resends[0].type,'signup');
+  assert.equal(h.el('password').value,'');assert(![...h.store.values()].join('').includes(MOCK_PASSWORD));
+});
+
+test('Unverified email offers confirmation resend, not another passwordless sign-in',async()=>{
+  const h=harness(),a=api();a.client.auth.signInWithPassword=async()=>({error:{code:'email_not_confirmed'}});authReady(h,a);h.el('password').value=MOCK_PASSWORD;
+  await h.run(submit());assert.equal(h.run('authMail.kind'),'signup');assert(h.el('loginStatus').textContent.includes('驗證'));assert.equal(a.stats.mail,0);
+});
+
+test('Forgot / initial password setup reuses the account and does not reveal account existence',async()=>{
+  const h=harness(),a=api();authReady(h,a,'forgot');await h.run(submit());await h.run(submit());
+  assert.equal(a.stats.resets.length,1);assert.equal(a.stats.signups.length,0);assert.equal(a.stats.mail,0);
+  assert.equal(a.stats.resets[0][1].redirectTo,'https://aimade.world/?auth=recovery');assert(h.el('loginSentHelp').textContent.includes('若此電郵已註冊'));
+  assert(h.el('loginSentHelp').textContent.includes('另一裝置'));assert.equal(h.el('password').required,false);
+});
+
+test('Email rate limiting has a distinct message and resend cooldown',async()=>{
+  const h=harness(),a=api();a.client.auth.resetPasswordForEmail=async()=>({error:{status:429,code:'over_email_send_rate_limit'}});
+  authReady(h,a,'forgot');await h.run(submit());assert(h.el('loginStatus').textContent.includes('請求次數較多'));assert.equal(h.el('authSubmit').disabled,true);
+});
+
+test('A timed-out password sign-in releases controls without saving a password',async()=>{
+  const h=harness(),a=api();a.client.auth.signInWithPassword=()=>new Promise(()=>{});authReady(h,a);h.el('password').value=MOCK_PASSWORD;
+  const pending=h.run(submit());h.fireDelay(20000);await pending;
+  assert(h.el('loginStatus').textContent.includes('尚未確認'));assert.equal(h.el('authFields').disabled,false);assert.equal(h.el('password').value,'');
+});
+
+test('Switching auth modes clears passwords and never restores agreement',()=>{
+  const h=harness(),a=api();authReady(h,a,'signup');newPassword(h);h.el('signupConsent').checked=true;
+  h.run("setAuthMode('signin')");assert.equal(h.el('password').value,'');assert.equal(h.el('passwordConfirm').value,'');assert.equal(h.el('signupConsent').checked,false);
+  h.run("setAuthMode('forgot')");assert.equal(h.el('password').disabled,true);assert.equal(h.el('password').required,false);
+});
+
+test('Closing the dialog clears password fields and a visible password returns to masked',()=>{
+  const h=harness(),a=api();authReady(h,a);newPassword(h);h.run("passwordVisible=true;$('password').type='text';$('loginDialog').close()");
+  assert.equal(h.el('password').value,'');assert.equal(h.el('password').type,'password');
+});
+
+test('Password recovery verifies the session against Auth before allowing an update',async()=>{
+  const h=harness(),a=api();authReady(h,a);h.location.search='?auth=recovery';h.run(`user={id:'${OWNER}'};recoveryActive=true`);
+  await h.run(`prepareRecovery({user:{id:'${OWNER}'}})`);assert.equal(h.run('recoveryVerified'),true);assert.equal(h.el('email').disabled,true);
+  assert.equal(h.el('password').autocomplete,'new-password');assert.equal(h.el('authSubmit').disabled,false);
+});
+
+test('Recovery cannot update a password without the verified account',async()=>{
+  const h=harness(),a=api();authReady(h,a);h.run("authMode='recovery';recoveryActive=true;recoveryVerified=false");newPassword(h);
+  await h.run(submit());assert.equal(a.stats.updates.length,0);assert(h.el('loginStatus').textContent.includes('無效'));
+});
+
+test('Recovery rejects a mismatched / expired server identity',async()=>{
+  const h=harness(),a=api();a.client.auth.getUser=async()=>({data:{user:{id:'11111111-1111-4111-8111-111111111111'}},error:null});
+  authReady(h,a);h.run(`user={id:'${OWNER}'};recoveryActive=true`);h.location.search='?auth=recovery';
+  await h.run(`prepareRecovery({user:{id:'${OWNER}'}})`);assert.equal(h.run('recoveryVerified'),false);assert.equal(h.run('authMode'),'forgot');assert.equal(h.location.search,'');assert(h.el('loginStatus').textContent.includes('已過期'));
+});
+
+test('Password recovery preserves the existing UID, draft and safe return route',async()=>{
+  const h=harness({aimade_auth_return_v3:'#upload',aimade_drafts_v3:{version:3,create:{title:'保留的草稿'},edits:{},lastEdit:null}}),a=api();authReady(h,a);
+  h.run(`user={id:'${OWNER}'};recoveryActive=true`);h.location.search='?auth=recovery';await h.run(`prepareRecovery({user:{id:'${OWNER}'}})`);
+  newPassword(h);await h.run(submit());assert.equal(a.stats.updates.length,1);assert.deepEqual(Object.keys(a.stats.updates[0]),['password']);assert.equal(a.stats.signups.length,0);
+  assert.equal(h.run('user.id'),OWNER);assert.equal(h.location.search,'');assert.equal(h.location.hash,'#upload');assert.equal(h.el('loginDialog').open,false);assert.equal(h.run('drafts.create.title'),'保留的草稿');
+  assert(![...h.store.values()].join('').includes(MOCK_PASSWORD));
+});
+
+test('Signing out during recovery invalidates a pending session verification',async()=>{
+  const h=harness(),a=api();let resolve;const pending=new Promise(r=>resolve=r);a.client.auth.getUser=()=>pending;
+  authReady(h,a);h.run(`user={id:'${OWNER}'};recoveryActive=true`);const request=h.run(`prepareRecovery({user:{id:'${OWNER}'}})`);
+  await h.run("handleAuthState('SIGNED_OUT',null)");resolve({data:{user:{id:OWNER}},error:null});await request;
+  assert.equal(h.run('recoveryVerified'),false);assert.equal(h.run('user'),null);assert.equal(h.run('authMode'),'forgot');
+});
+
+
+
+
+
+
+
+
+
+
+
+test('Preview pages cannot submit real authentication requests',async()=>{
+  const h=harness(),a=api();authReady(h,a);h.location.origin='http://127.0.0.1:4173';h.el('password').value=MOCK_PASSWORD;
+  await h.run(submit());assert.equal(a.stats.logins.length,0);assert(h.el('loginStatus').textContent.includes('預覽頁'));
+});
+
+test('Auth callback token fragments are removed without exposing them as a return route',()=>{
+  const h=harness();h.location.hash='#access_token=mock-secret&refresh_token=mock-refresh&type=recovery';h.location.search='?auth=recovery';
+  h.run('cleanAuthUrl()');assert.equal(h.location.hash,'');assert.equal(h.location.search,'?auth=recovery');h.run('cleanAuthUrl(true)');assert.equal(h.location.search,'');
+});
+
+function initialAuth(h,a,session=null,error=null){
+  a.client.auth.onAuthStateChange=()=>({});a.client.auth.getSession=async()=>({data:{session},error});
+  h.context.window.supabase={createClient:()=>a.client};h.context.fetch=async()=>({ok:true,json:async()=>({external:{}})});h.run(initDefinition);
+}
+
+test('A recovery URL without a session opens a persistent, safe retry form',async()=>{
+  const h=harness(),a=api();h.location.search='?auth=recovery';initialAuth(h,a);await h.run('init()');
+  assert.equal(h.el('loginDialog').open,true);assert.equal(h.run('authMode'),'forgot');assert.equal(h.run('recoveryVerified'),false);assert(h.el('loginStatus').textContent.includes('已過期'));
+});
+
+test('Auth callback errors remain visible even when the SDK returns an error',async()=>{
+  const h=harness(),a=api();h.location.hash='#error=access_denied&error_description=private-provider-detail';initialAuth(h,a,null,{code:'bad_oauth_callback'});await h.run('init()');
+  assert.equal(h.location.hash,'');assert.equal(h.el('loginDialog').open,true);assert.equal(h.run('authMode'),'signin');assert(h.el('loginStatus').textContent.includes('登入未完成'));assert(!h.el('loginStatus').textContent.includes('private-provider-detail'));
+});
+
+test('A recovery callback does not get closed by ordinary session refresh',async()=>{
+  const h=harness(),a=api();h.location.search='?auth=recovery';h.location.hash='#access_token=mock-secret&type=recovery';initialAuth(h,a,{user:{id:OWNER}});await h.run('init()');
+  assert.equal(h.location.hash,'');assert.equal(h.el('loginDialog').open,true);assert.equal(h.run('authMode'),'recovery');assert.equal(h.run('recoveryVerified'),true);
 });
 
 test('Auth return routes cannot become external redirects or contain tokens',()=>{
@@ -209,4 +362,11 @@ test('A late like response cannot change the next account’s like state',async(
 test('Ordinary sign-out affects the current session, not every user device',async()=>{
   const h=harness(),a=api();let scope;a.client.auth.signOut=async options=>{scope=options.scope;return {error:null}};ready(h,a.client);
   await h.run('signOutCurrent()');assert.equal(scope,'local');assert.equal(h.run('user'),null);
+});
+
+test('Public authentication is email/password only, with no unconnected social buttons',()=>{
+  const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+  assert(!html.includes('oauth-'));assert(!html.includes('socialAuth'));
+  assert(!fullSource.includes('signInWithOAuth'));assert(!fullSource.includes('signInWithOtp'));
+  assert(html.includes('autocomplete="current-password"'));assert(html.includes('id="passwordConfirm"'));
 });

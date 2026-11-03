@@ -7,8 +7,8 @@ let lang=storage.get('aimade_lang','zh');if(!['zh','en'].includes(lang))lang='zh
 const words={
 navHome:['探索作品','Explore'],navSaved:['我的收藏','Saved'],navGuide:['分享指南','How to share'],navMine:['我的作品','My works'],signin:['登入','Sign in'],signout:['登出','Sign out'],share:['分享作品 ↗','Share a creation ↗'],
 hero:['別只看 AI 能做什麼，\n直接玩看看。','Don’t just see what AI can do.\nTry it for yourself.'],heroSub:['發現創作者做的小遊戲、實用工具和互動作品。找到喜歡的，就打開試試；做了新作品，也歡迎分享。','Discover little games, useful tools and interactive creations. Try something new. Made something yourself? Share it here.'],explore:['探索作品 ↓','Explore creations ↓'],noteTag:['MADE WITH AI. SHARED WITH YOU.','MADE WITH AI. SHARED WITH YOU.'],noteTitle:['一個小點子，\n也值得被看見。','Small ideas.\nWorth sharing.'],noteBody:['不需要是專業開發者。\n你做的第一個作品，也歡迎。','You don’t need to be a developer.\nYour first creation belongs here, too.'],join:['分享你的創作 ↗','Share yours ↗'],new:['最新發布','Newest'],hot:['近 30 天熱門','Popular this month'],pop:['最多讚','Most liked'],hasLink:['只看附有使用連結的作品','Only works with a link'],more:['載入更多作品','Load more'],stripTitle:['你做的下一件作品，放在這裡。','Your next creation belongs here.'],stripSub:['一個連結、一句介紹，就能開始分享。上傳前可先儲存草稿。','Start with a link and a short description. Save a draft before publishing.'],
-uploadTitle:['分享你的 AI 作品','Share your AI creation'],editTitle:['編輯作品','Edit creation'],uploadSub:['讓別人知道它可以做什麼，以及如何開始使用。發布後仍可編輯。','Explain what it does and how to get started. You can edit it after publishing.'],step1:['作品與連結','Work & link'],step2:['介紹與封面','Story & cover'],step3:['確認並發布','Review & publish'],category:['作品類型','Category'],access:['外部作品使用條件','External access'],accessUnknown:['未標示／請看作品說明','Not specified'],accessFree:['免費使用','Free to use'],accessLogin:['需外站登入','External sign-in'],accessTrial:['有限免費試用','Limited free trial'],accessDisplay:['僅展示','Showcase only'],link:['作品連結','Work URL'],linkHelp:['遊戲和工具請提供可開啟的網址；圖片、文字或 Prompt 可只分享內容。','For games and tools, provide a working URL. Images, writing and prompts can be shared without one.'],title:['作品名稱 *','Title *'],description:['一句用途與簡介 *','What does it do? *'],promptLabel:['可複製的 Prompt *','Copyable prompt *'],promptHelp:['只放你有權分享的內容，請勿包含密碼、API key 或個人資料。','Share only content you have permission to share. No passwords, API keys or personal data.'],displayName:['公開作者名稱 *','Public display name *'],tools:['使用的 AI 工具（選填）','AI tools used (optional)'],cover:['封面圖片（選填）','Cover image (optional)'],coverHelp:['PNG、JPG、WebP 或 GIF，最多 5MB。圖片不會跟文字草稿一起保存。每帳戶每日最多 20 次封面上傳，最多保留 50 張；達上限請聯絡我們。','PNG, JPG, WebP or GIF, up to 5MB. Files are not saved with your text draft. Up to 20 cover uploads/day and 50 stored per account; contact us if you reach the limit.'],removeCover:['移除現有封面','Remove existing cover'],mobileCheck:['我已在手機測試，作品可使用','I tested this work on mobile'],feedbackCheck:['歡迎試用建議／正在找測試者','Feedback and testers welcome'],rights:['我有權分享這份內容，並同意','I have permission to share this content and agree to the'],terms:['服務條款','Terms'],privacy:['隱私政策','Privacy'],publish:['確認並發布','Publish creation'],update:['儲存更新','Save changes'],saveDraft:['儲存草稿','Save draft'],clearDraft:['清除草稿','Clear draft'],beforeShare:['BEFORE YOU SHARE','BEFORE YOU SHARE'],tipsTitle:['讓人一眼看懂，\n再親手試試。','Make it clear.\nMake it worth a try.'],tip1:['名稱具體，例如「三分鐘專注計時器」。','Use a specific title, like “Three-minute focus timer”.'],tip2:['說明用途、操作方式及使用限制。','Describe the use case, instructions and any limits.'],tip3:['放一張真實畫面，不用誇大的宣傳圖。','Use an actual screenshot, not exaggerated promises.'],hostingNote:['目前提供作品展示和外部連結分享，不代管可執行程式，也不替作品支付 AI API 費用。','We showcase creations and external links. We do not host executable code or pay the AI API costs of shared works.'],draftNote:['草稿只存在這個瀏覽器。共用電腦使用後請清除草稿；請勿在草稿中放入秘密資料。','Drafts stay in this browser only. Clear them on shared devices, and never include secrets.'],guideTitle:['分享很簡單。','A small guide to sharing.'],guideSub:['AIMade 是作品的展示入口，不是 AI 模型訓練或程式託管服務。','AIMade is a discovery and showcase platform, not a model-training or code-hosting service.'],ready:['準備好分享了嗎？','Ready to share?'],guideEnd:['也可以先逛逛，找到下一個靈感。','Or explore first and find your next idea.'],tagline:['把創意變成現實，讓世界看見。','Turn ideas into reality. Share them with the world.'],contact:['聯絡我們','Contact'],loginTitle:['用電郵登入','Sign in with email'],loginSub:['瀏覽和開啟作品不需要登入。發布、按讚或管理自己的作品時才需要。','No sign-in needed to browse or open works. Sign in to publish, like or manage your creations.'],email:['電郵地址','Email address'],sendLink:['寄送登入連結','Send sign-in link'],report:['檢舉作品','Report work'],reportReason:['請說明侵權、詐騙或其他問題','Describe the infringement, scam or other issue'],sendReport:['提交檢舉','Submit report'],
-browseTitle:['來找一件好玩的作品','Find something worth a try'],browseSub:['免費瀏覽與分享。外部作品的使用條件依作者設定。','Free to browse and share. External works have their own access conditions.'],search:['想玩什麼？搜尋作品、用途或創作者…','Find a game, a useful tool or a creator…'],all:['全部作品','All creations'],feedback:['找人試玩','Testers welcome'],savedSub:['收藏儲存在這個瀏覽器，不會跨裝置同步。','Saved in this browser only; not synced across devices.'],mineSub:['管理、編輯及分享你發布的作品。','Manage, edit and share your published creations.'],loading:['正在載入作品…','Loading creations…'],loadError:['暫時無法載入作品','Couldn’t load creations'],loadErrorBody:['這是連線問題，不代表作品被刪除。請稍後重試；如持續發生，聯絡 hello@aimade.world。','A connection problem does not mean works were deleted. Retry, or contact hello@aimade.world if it continues.'],retry:['重新載入','Retry'],empty:['這裡還沒有作品','No creations here yet'],emptyBody:['歡迎分享你的第一件 AI 創作。','Share your first AI creation.'],noResults:['找不到符合的作品','No matching creations'],noResultsBody:['試試其他關鍵字，或清除篩選。','Try another keyword or clear the filters.'],reset:['清除篩選','Clear filters'],noSaved:['還沒有收藏','Nothing saved yet'],saveHelp:['按作品上的「收藏」，下次在這裡找到它。','Save a work to find it here next time.'],view:['作品介紹','Details'],play:['立即試玩 ↗','Play now ↗'],use:['開啟使用 ↗','Try it ↗'],watch:['觀看作品 ↗','Watch ↗'],listen:['聆聽作品 ↗','Listen ↗'],external:['外部網站','External website'],save:['收藏','Save'],saved:['已收藏','Saved'],like:['讚','Like'],mobile:['手機可用 · 作者標示','Mobile · author noted'],feedbackBadge:['歡迎試用建議','Feedback welcome'],authorLabels:['使用條件由作者提供，未經平台驗證。外部網站有各自的收費、隱私與登入規則。','Access labels are provided by the author, not verified by AIMade. External sites have their own pricing, privacy and sign-in rules.'],back:['← 返回探索','← Back to explore'],copyLink:['複製分享連結','Copy share link'],copyPrompt:['複製 Prompt','Copy prompt'],copied:['已複製','Copied'],copyFail:['未能自動複製，請手動複製網址或內容。','Copy failed. Please copy the URL or content manually.'],edit:['編輯作品','Edit work'],notFound:['找不到這件作品','Work not found'],notFoundBody:['作品可能已移除，或分享網址不正確。','The work may have been removed, or the URL is incorrect.'],needLogin:['請先登入；你的文字草稿會保留。','Sign in first. Your text draft will be kept.'],sending:['寄送中…','Sending…'],sent:['登入連結已寄出。請檢查收件箱和垃圾郵件；使用同一瀏覽器開啟連結後，可回到分享頁繼續。','Sign-in link sent. Check inbox and spam. Open it in the same browser, then return to the editor to continue.'],authFail:['登入服務暫時無法使用，請稍後重試。','Sign-in is temporarily unavailable. Please retry later.'],busy:['儲存中…','Saving…'],published:['作品已發布','Creation published'],updated:['作品已更新','Creation updated'],saveFail:['未能儲存。你的草稿仍在；請檢查網絡後重試。','Couldn’t save. Your draft is still here; check your connection and retry.'],badLink:['請輸入有效的 https:// 或 http:// 網址，不可包含登入密碼。','Enter a valid https:// or http:// URL without embedded credentials.'],needLink:['這類作品需要提供可使用的連結。','This type of work needs a working URL.'],needPrompt:['請填寫可分享的 Prompt。','Enter a prompt to share.'],badCover:['封面只接受 5MB 以下的 PNG、JPG、WebP 或 GIF。','Cover must be PNG, JPG, WebP or GIF, up to 5MB.'],draftSaved:['文字草稿已保存於這個瀏覽器（不含圖片）。','Text draft saved in this browser (not the image).'],draftFail:['瀏覽器無法保存草稿，請先自行複製內容。','This browser cannot save your draft. Copy your text before leaving.'],draftClear:['確定清除這個瀏覽器的草稿？不會刪除已發布作品。','Clear this browser’s draft? Published works will not be deleted.'],draftRestored:['已還原文字草稿；如有封面，請重新選取。','Text draft restored. Please reselect any cover file.'],reported:['已收到檢舉，管理員會查看。','Report received for administrator review.'],reportFail:['檢舉未送出，請重試或寄信至 hello@aimade.world。','Report not sent. Retry or email hello@aimade.world.'],likeFail:['操作失敗，讚數未變更。請稍後重試。','Could not update your like. Please retry.'],sessionFail:['登入連結無效或已過期，請重新取得連結。','Sign-in link invalid or expired. Request a new link.'],savedLimit:['這個瀏覽器最多保存 300 件收藏，請先取消部分收藏。','This browser supports 300 saved works. Remove some before saving more.'],leaveEdit:['目前有未提交的內容。已保存文字草稿，是否切換至另一件作品？','You have unsaved content. Text draft saved. Switch to another work?'],untitled:['未命名作品','Untitled work'],anonymous:['創作者','Creator'],cancel:['取消','Cancel'],archived:['已下架 · 不公開','Unpublished · not public'],archiveWork:['下架作品','Unpublish'],restoreWork:['恢復公開','Restore publication'],archiveConfirm:['下架後訪客無法查看作品頁，但已公開的封面網址仍可能有效。你可以在「我的作品」恢復公開。確定下架？','Unpublish this work? Visitors will no longer see its page, but previously public cover URLs may remain accessible. You can restore it from My works.']};
+uploadTitle:['分享你的 AI 作品','Share your AI creation'],editTitle:['編輯作品','Edit creation'],uploadSub:['讓別人知道它可以做什麼，以及如何開始使用。發布後仍可編輯。','Explain what it does and how to get started. You can edit it after publishing.'],step1:['作品與連結','Work & link'],step2:['介紹與封面','Story & cover'],step3:['確認並發布','Review & publish'],category:['作品類型','Category'],access:['外部作品使用條件','External access'],accessUnknown:['未標示／請看作品說明','Not specified'],accessFree:['免費使用','Free to use'],accessLogin:['需外站登入','External sign-in'],accessTrial:['有限免費試用','Limited free trial'],accessDisplay:['僅展示','Showcase only'],link:['作品連結','Work URL'],linkHelp:['遊戲和工具請提供可開啟的網址；圖片、文字或 Prompt 可只分享內容。','For games and tools, provide a working URL. Images, writing and prompts can be shared without one.'],title:['作品名稱 *','Title *'],description:['一句用途與簡介 *','What does it do? *'],promptLabel:['可複製的 Prompt *','Copyable prompt *'],promptHelp:['只放你有權分享的內容，請勿包含密碼、API key 或個人資料。','Share only content you have permission to share. No passwords, API keys or personal data.'],displayName:['公開作者名稱 *','Public display name *'],tools:['使用的 AI 工具（選填）','AI tools used (optional)'],cover:['封面圖片（選填）','Cover image (optional)'],coverHelp:['PNG、JPG、WebP 或 GIF，最多 5MB。圖片不會跟文字草稿一起保存。每帳戶每日最多 20 次封面上傳，最多保留 50 張；達上限請聯絡我們。','PNG, JPG, WebP or GIF, up to 5MB. Files are not saved with your text draft. Up to 20 cover uploads/day and 50 stored per account; contact us if you reach the limit.'],removeCover:['移除現有封面','Remove existing cover'],mobileCheck:['我已在手機測試，作品可使用','I tested this work on mobile'],feedbackCheck:['歡迎試用建議／正在找測試者','Feedback and testers welcome'],rights:['我有權分享這份內容，並同意','I have permission to share this content and agree to the'],terms:['服務條款','Terms'],privacy:['隱私政策','Privacy'],publish:['確認並發布','Publish creation'],update:['儲存更新','Save changes'],saveDraft:['儲存草稿','Save draft'],clearDraft:['清除草稿','Clear draft'],beforeShare:['BEFORE YOU SHARE','BEFORE YOU SHARE'],tipsTitle:['讓人一眼看懂，\n再親手試試。','Make it clear.\nMake it worth a try.'],tip1:['名稱具體，例如「三分鐘專注計時器」。','Use a specific title, like “Three-minute focus timer”.'],tip2:['說明用途、操作方式及使用限制。','Describe the use case, instructions and any limits.'],tip3:['放一張真實畫面，不用誇大的宣傳圖。','Use an actual screenshot, not exaggerated promises.'],hostingNote:['目前提供作品展示和外部連結分享，不代管可執行程式，也不替作品支付 AI API 費用。','We showcase creations and external links. We do not host executable code or pay the AI API costs of shared works.'],draftNote:['草稿只存在這個瀏覽器。共用電腦使用後請清除草稿；請勿在草稿中放入秘密資料。','Drafts stay in this browser only. Clear them on shared devices, and never include secrets.'],guideTitle:['分享很簡單。','A small guide to sharing.'],guideSub:['AIMade 是作品的展示入口，不是 AI 模型訓練或程式託管服務。','AIMade is a discovery and showcase platform, not a model-training or code-hosting service.'],ready:['準備好分享了嗎？','Ready to share?'],guideEnd:['也可以先逛逛，找到下一個靈感。','Or explore first and find your next idea.'],tagline:['把創意變成現實，讓世界看見。','Turn ideas into reality. Share them with the world.'],contact:['聯絡我們','Contact'],loginTitle:['用電郵登入','Sign in with email'],loginSub:['瀏覽和開啟作品不需要登入。發布、按讚或管理自己的作品時才需要。','No sign-in needed to browse or open works. Sign in to publish, like or manage your creations.'],email:['電郵地址','Email address'],report:['檢舉作品','Report work'],reportReason:['請說明侵權、詐騙或其他問題','Describe the infringement, scam or other issue'],sendReport:['提交檢舉','Submit report'],
+browseTitle:['來找一件好玩的作品','Find something worth a try'],browseSub:['免費瀏覽與分享。外部作品的使用條件依作者設定。','Free to browse and share. External works have their own access conditions.'],search:['想玩什麼？搜尋作品、用途或創作者…','Find a game, a useful tool or a creator…'],all:['全部作品','All creations'],feedback:['找人試玩','Testers welcome'],savedSub:['收藏儲存在這個瀏覽器，不會跨裝置同步。','Saved in this browser only; not synced across devices.'],mineSub:['管理、編輯及分享你發布的作品。','Manage, edit and share your published creations.'],loading:['正在載入作品…','Loading creations…'],loadError:['暫時無法載入作品','Couldn’t load creations'],loadErrorBody:['這是連線問題，不代表作品被刪除。請稍後重試；如持續發生，聯絡 hello@aimade.world。','A connection problem does not mean works were deleted. Retry, or contact hello@aimade.world if it continues.'],retry:['重新載入','Retry'],empty:['這裡還沒有作品','No creations here yet'],emptyBody:['歡迎分享你的第一件 AI 創作。','Share your first AI creation.'],noResults:['找不到符合的作品','No matching creations'],noResultsBody:['試試其他關鍵字，或清除篩選。','Try another keyword or clear the filters.'],reset:['清除篩選','Clear filters'],noSaved:['還沒有收藏','Nothing saved yet'],saveHelp:['按作品上的「收藏」，下次在這裡找到它。','Save a work to find it here next time.'],view:['作品介紹','Details'],play:['立即試玩 ↗','Play now ↗'],use:['開啟使用 ↗','Try it ↗'],watch:['觀看作品 ↗','Watch ↗'],listen:['聆聽作品 ↗','Listen ↗'],external:['外部網站','External website'],save:['收藏','Save'],saved:['已收藏','Saved'],like:['讚','Like'],mobile:['手機可用 · 作者標示','Mobile · author noted'],feedbackBadge:['歡迎試用建議','Feedback welcome'],authorLabels:['使用條件由作者提供，未經平台驗證。外部網站有各自的收費、隱私與登入規則。','Access labels are provided by the author, not verified by AIMade. External sites have their own pricing, privacy and sign-in rules.'],back:['← 返回探索','← Back to explore'],copyLink:['複製分享連結','Copy share link'],copyPrompt:['複製 Prompt','Copy prompt'],copied:['已複製','Copied'],copyFail:['未能自動複製，請手動複製網址或內容。','Copy failed. Please copy the URL or content manually.'],edit:['編輯作品','Edit work'],notFound:['找不到這件作品','Work not found'],notFoundBody:['作品可能已移除，或分享網址不正確。','The work may have been removed, or the URL is incorrect.'],needLogin:['請先登入；你的文字草稿會保留。','Sign in first. Your text draft will be kept.'],sending:['寄送中…','Sending…'],authFail:['登入服務暫時無法使用，請稍後重試。','Sign-in is temporarily unavailable. Please retry later.'],busy:['儲存中…','Saving…'],published:['作品已發布','Creation published'],updated:['作品已更新','Creation updated'],saveFail:['未能儲存。你的草稿仍在；請檢查網絡後重試。','Couldn’t save. Your draft is still here; check your connection and retry.'],badLink:['請輸入有效的 https:// 或 http:// 網址，不可包含登入密碼。','Enter a valid https:// or http:// URL without embedded credentials.'],needLink:['這類作品需要提供可使用的連結。','This type of work needs a working URL.'],needPrompt:['請填寫可分享的 Prompt。','Enter a prompt to share.'],badCover:['封面只接受 5MB 以下的 PNG、JPG、WebP 或 GIF。','Cover must be PNG, JPG, WebP or GIF, up to 5MB.'],draftSaved:['文字草稿已保存於這個瀏覽器（不含圖片）。','Text draft saved in this browser (not the image).'],draftFail:['瀏覽器無法保存草稿，請先自行複製內容。','This browser cannot save your draft. Copy your text before leaving.'],draftClear:['確定清除這個瀏覽器的草稿？不會刪除已發布作品。','Clear this browser’s draft? Published works will not be deleted.'],draftRestored:['已還原文字草稿；如有封面，請重新選取。','Text draft restored. Please reselect any cover file.'],reported:['已收到檢舉，管理員會查看。','Report received for administrator review.'],reportFail:['檢舉未送出，請重試或寄信至 hello@aimade.world。','Report not sent. Retry or email hello@aimade.world.'],likeFail:['操作失敗，讚數未變更。請稍後重試。','Could not update your like. Please retry.'],sessionFail:['登入連結無效或已過期，請重新取得連結。','Sign-in link invalid or expired. Request a new link.'],savedLimit:['這個瀏覽器最多保存 300 件收藏，請先取消部分收藏。','This browser supports 300 saved works. Remove some before saving more.'],leaveEdit:['目前有未提交的內容。已保存文字草稿，是否切換至另一件作品？','You have unsaved content. Text draft saved. Switch to another work?'],untitled:['未命名作品','Untitled work'],anonymous:['創作者','Creator'],cancel:['取消','Cancel'],archived:['已下架 · 不公開','Unpublished · not public'],archiveWork:['下架作品','Unpublish'],restoreWork:['恢復公開','Restore publication'],archiveConfirm:['下架後訪客無法查看作品頁，但已公開的封面網址仍可能有效。你可以在「我的作品」恢復公開。確定下架？','Unpublish this work? Visitors will no longer see its page, but previously public cover URLs may remain accessible. You can restore it from My works.']};
 Object.assign(words,{
   signoutHint:['只登出此瀏覽器的登入階段','Sign out of this browser session only'],
   coverPrivacy:['封面是公開檔案，請勿包含個人資料、密鑰或敏感畫面；下架作品不會自動刪除圖片。','Covers are public files. Do not include personal data, keys or sensitive screenshots. Unpublishing a creation does not delete its image.'],
@@ -17,7 +17,23 @@ Object.assign(words,{
   newCreation:['分享新作品','Share a new creation'],resumeEdit:['繼續上次編輯','Resume previous edit'],editDraftAvailable:['另有一份未提交的編輯草稿：','An unfinished edit is saved separately: '],editDraftRestored:['已還原這件作品的編輯草稿；尚未發布的圖片請重新選取。','Restored this creation’s edit draft. Reselect any image that was not uploaded.'],
   switchCover:['文字草稿已保留，但尚未上傳的圖片不會隨草稿保存。確定切換？','Your text draft is saved, but an image that has not been uploaded is not saved with it. Switch anyway?'],
   requiredFields:['請填寫作品名稱、用途簡介及公開作者名稱，內容不能只有空白。','Enter a title, description and public author name; whitespace alone is not enough.'],fieldTooLong:['部分內容超過長度限制，請檢查各欄位。','Some text exceeds the field limits. Please check the form.'],consentRequired:['發布前請閱讀並親自確認分享權利及服務條款。','Read and confirm your sharing rights and the terms before publishing.'],
-  loginSentTitle:['登入連結已寄出','Sign-in link sent'],loginSentHelp:['請到收件箱或垃圾郵件查看，並開啟最新一封登入信。請用同一個瀏覽器登入，文字草稿才會保留。','Check your inbox and spam folder, then open the latest sign-in email. Use this same browser to keep your text draft.'],changeEmail:['更改電郵地址','Change email'],resendLink:['重新寄送','Send again'],resendWait:['{seconds} 秒後可重寄','Send again in {seconds}s'],authRate:['寄送次數較多，請稍後再試；重複點擊不會加快收信。','Too many requests. Please wait before trying again; repeated clicks will not speed up delivery.'],authPending:['寄送尚未確認，請先檢查收件箱，避免重複寄送。','Delivery has not been confirmed yet. Check your inbox before requesting another link.']
+  loginTitle:['歡迎來到 AIMade','Welcome to AIMade'],loginSub:['登入後，分享作品、送出喜歡，或繼續你的創作。瀏覽作品不需要帳戶。','Sign in to share, like and manage your creations. Browsing needs no account.'],
+  signupTitle:['讓你的創意被看見','Give your ideas a place'],signupSub:['建立帳戶，分享你的第一件 AI 作品。首次註冊需驗證電郵，之後使用密碼登入。','Create an account and share your first AI creation. Verify your email once, then sign in with your password.'],
+  forgotTitle:['設定或重設密碼','Set or reset your password'],forgotSub:['輸入帳戶的電郵地址，我們會寄送一次性的密碼設定連結。曾用郵件連結登入的用戶，也可在這裡設定密碼，無需重新註冊。','Enter your account email for a one-time password setup link. Previously used email links? Set a password here without creating a new account.'],
+  recoveryTitle:['設定你的新密碼','Choose your new password'],recoverySub:['設定完成後，下次直接使用電郵與密碼登入，不必每次收取登入信。','Next time, sign in with your email and password—no sign-in email needed.'],
+  password:['密碼','Password'],newPassword:['新密碼','New password'],confirmPassword:['再次輸入密碼','Confirm password'],passwordHelp:['至少 12 個字元，建議使用不重複的長密碼。','Use at least 12 characters. A long, unique password is best.'],showPassword:['顯示密碼','Show password'],hidePassword:['隱藏密碼','Hide password'],
+  authSignin:['登入','Sign in'],authSignup:['建立帳戶','Create account'],authForgot:['寄送密碼設定信','Send password setup email'],authRecovery:['儲存新密碼','Save new password'],authWorking:['處理中…','Working…'],forgotLink:['忘記／設定密碼','Forgot / set password'],
+  noAccount:['還沒有帳戶？','New here?'],haveAccount:['已經有帳戶？','Already have an account?'],backSignin:['返回登入','Back to sign in'],signupLink:['註冊','Sign up'],
+  legacyPassword:['曾用郵件連結登入？使用原電郵設定一次密碼，原有作品會保留。','Used email links before? Set a password with the same email to keep your existing creations.'],
+  signupAgree:['我已閱讀並同意','I have read and agree to the'],signupConsentRequired:['請先閱讀並親自同意服務條款及隱私政策。','Please read and agree to the terms and privacy policy yourself.'],
+  and:['及','and'],
+  invalidLogin:['電郵或密碼不正確。若尚未設定密碼，請選擇「忘記／設定密碼」。','Email or password is incorrect. If you have not set a password yet, choose “Forgot / set password”.'],passwordShort:['新密碼至少需要 12 個字元。','Your new password needs at least 12 characters.'],passwordMismatch:['兩次輸入的密碼不相同，請重新確認。','The passwords do not match. Please check them.'],passwordWeak:['此密碼不符合安全要求，請使用更長且不重複的密碼。','This password does not meet security requirements. Use a longer, unique password.'],
+  signupMailTitle:['請完成電郵驗證','Check your email'],signupMailHelp:['如需驗證，你會收到確認信。完成後即可用電郵與密碼登入。若這個電郵已註冊，請直接登入或重設密碼。','If verification is needed, you will receive a confirmation email. Then use your email and password to sign in. Already registered? Sign in or reset your password instead.'],
+  resetMailTitle:['請查看密碼設定信','Check your password setup email'],resetMailHelp:['若此電郵已註冊，你會收到密碼設定信；請查看收件箱及垃圾郵件。連結只能使用一次。可在另一裝置設定，之後回來使用新密碼登入。','If an account exists for this email, you will receive a one-time password setup link. Check inbox and spam. You can set the password on another device, then sign in here with it.'],
+  confirmFirst:['請先完成電郵驗證，或重新寄送確認信。','Please verify your email first, or resend the confirmation email.'],changeEmail:['更改電郵地址','Change email'],resendLink:['重新寄送','Send again'],resendWait:['{seconds} 秒後可重寄','Send again in {seconds}s'],
+  authRate:['請求次數較多，請稍後再試；重複點擊不會加快收信。','Too many requests. Please wait before trying again; repeated clicks will not speed up delivery.'],authPending:['伺服器回應尚未確認。請先查看信箱或稍後重試，避免重複操作。','The response is not confirmed yet. Check your inbox or retry later to avoid duplicate requests.'],
+  recoveryChecking:['正在驗證密碼設定連結…','Verifying your password setup link…'],recoveryExpired:['密碼設定連結無效、已使用或已過期。請重新申請，不需要重新註冊。','This password setup link is invalid, used or expired. Request another one; no new account is needed.'],recoveryReauth:['為保障帳戶安全，請重新申請一封密碼設定信，並使用最新的連結。','For your security, request a new password setup email and use the latest link.'],passwordSaved:['密碼已設定，下次可直接使用電郵與密碼登入。','Password saved. Next time, use your email and password.'],
+  sessionFail:['登入未完成，或連結已失效。請重試；如需設定密碼，請選擇「忘記／設定密碼」。','Sign-in was not completed, or the link expired. Retry, or choose “Forgot / set password”.'],authPreview:['預覽頁不會執行帳戶操作，請到 aimade.world 使用正式登入。','Account actions are disabled in preview. Use aimade.world to sign in.']
 });
 const cats={app:['網頁 / App','Web / App'],game:['小遊戲','Games'],tool:['實用工具','Tools'],prompt:['Prompt','Prompts'],image:['圖片','Images'],video:['影片','Videos'],music:['音樂','Music'],design:['3D / 設計','3D / Design'],writing:['文字創作','Writing'],other:['其他','Other']};
 const t=k=>(words[k]||[k,k])[lang==='en'?1:0];
@@ -28,10 +44,10 @@ function safeUrl(x){try{const u=new URL(x);return ['https:','http:'].includes(u.
 function safeCover(x){const u=safeUrl(x);return u.startsWith(SB_URL+'/storage/v1/object/public/covers/')?u:''}
 const colors=['#ece3d2','#e4e9dc','#e9e2ed','#e4e9ec','#f0e1d8'];
 let sb=null,user=null,isAdmin=false,works=[],likes=new Set(),saved=new Set((Array.isArray(storage.get('aimade_saved'))?storage.get('aimade_saved'):[]).filter(uuid).slice(0,300)),mode='home',activeCat='all',search='',sort='new',onlyLink=false,offset=0,loading=false,hasMore=false,requestSeq=0,editId=null,pendingId=null,editingCover='',detailWork=null,reportId=null,dirty=false,previewUrl=null;
-const pageSize=24,cache=new Map();let detailSeq=0,authSeq=0,editSeq=0,authReady=false,editOwner=null,lastRouteHash='',mailBusy=false,mailCooldownUntil=0,mailTimer=null,stagedCoverFile=null,stagedCoverUrl='',coverUpload=null;
+const pageSize=24,cache=new Map();let detailSeq=0,authSeq=0,editSeq=0,authReady=false,editOwner=null,lastRouteHash='',mailCooldownUntil=0,mailTimer=null,stagedCoverFile=null,stagedCoverUrl='',coverUpload=null;
 let toastTimer,searchTimer,draftTimer;
 function toast(msg){$('toast').textContent=msg;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3500)}
-function applyLang(){document.documentElement.lang=lang==='zh'?'zh-Hant':'en';if(mode!=='detail')document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';document.querySelectorAll('[data-i]').forEach(el=>{el.textContent=t(el.dataset.i);if(['hero','noteTitle','noteBody','tipsTitle'].includes(el.dataset.i))el.style.whiteSpace='pre-line'});$('lang').textContent=lang==='zh'?'EN':'中文';$('search').placeholder=t('search');$('search').setAttribute('aria-label',t('search'));$('sort').setAttribute('aria-label',lang==='zh'?'作品排序':'Sort creations');const current=$('category').value||'app';$('category').innerHTML=Object.keys(cats).map(k=>`<option value="${k}">${cat(k)}</option>`).join('');$('category').value=current;$('description').placeholder=lang==='zh'?'它能幫誰做什麼？要怎樣開始？':'Who is it for? What can it do? How do you start?';renderFilters();renderAuth();renderFAQ();updateBrowseHeading();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');renderEditorContext();renderMailButton();for(const key of ['draftSaved','draftFail','draftRestored','editDraftRestored']){if(words[key].includes($('draftStatus').textContent)){$('draftStatus').textContent=t(key);break}}if(detailWork)renderDetail(detailWork);}
+function applyLang(){document.documentElement.lang=lang==='zh'?'zh-Hant':'en';if(mode!=='detail')document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';document.querySelectorAll('[data-i]').forEach(el=>{el.textContent=t(el.dataset.i);if(['hero','noteTitle','noteBody','tipsTitle'].includes(el.dataset.i))el.style.whiteSpace='pre-line'});$('lang').textContent=lang==='zh'?'EN':'中文';$('search').placeholder=t('search');$('search').setAttribute('aria-label',t('search'));$('sort').setAttribute('aria-label',lang==='zh'?'作品排序':'Sort creations');const current=$('category').value||'app';$('category').innerHTML=Object.keys(cats).map(k=>`<option value="${k}">${cat(k)}</option>`).join('');$('category').value=current;$('description').placeholder=lang==='zh'?'它能幫誰做什麼？要怎樣開始？':'Who is it for? What can it do? How do you start?';renderFilters();renderAuth();renderFAQ();updateBrowseHeading();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');renderEditorContext();renderAuthDialog();for(const key of ['draftSaved','draftFail','draftRestored','editDraftRestored']){if(words[key].includes($('draftStatus').textContent)){$('draftStatus').textContent=t(key);break}}if(detailWork)renderDetail(detailWork);}
 function renderAuth(){$('authButton').textContent=t(user?'signout':'signin');$('authButton').setAttribute('title',t(user?'signoutHint':'signin'));document.querySelector('[data-i=navMine]').hidden=!user;}
 function renderFilters(){const list=['all',...Object.keys(cats),'feedback'];$('filters').innerHTML=list.map(k=>`<button class="chip" data-cat="${k}" aria-pressed="${activeCat===k}">${esc(cats[k]?cat(k):t(k))}</button>`).join('')}
 function updateBrowseHeading(){$('hero').hidden=mode!=='home';$('browseTitle').textContent=t(mode==='saved'?'navSaved':mode==='mine'?'navMine':'browseTitle');$('browseSubtitle').textContent=t(mode==='saved'?'savedSub':mode==='mine'?'mineSub':'browseSub');}
@@ -69,39 +85,151 @@ function saveWork(id){if(saved.has(id))saved.delete(id);else{if(saved.size>=300)
 const pendingLikes=new Set();
 async function toggleLike(id){if(!user){openLogin();return}if(pendingLikes.has(id))return;pendingLikes.add(id);const owner=user.id;try{const was=likes.has(id);const q=was?sb.from('likes').delete().eq('work_id',id).eq('user_id',owner):sb.from('likes').insert({work_id:id,user_id:owner});const {error}=await timed(q);if(error)throw error;if(user?.id!==owner)return;if(was)likes.delete(id);else likes.add(id);const w=cache.get(id);if(w)w.likes_count=Math.max(0,w.likes_count+(was?-1:1));if(mode==='detail'&&detailWork?.id===id)renderDetail(w||detailWork);else renderGrid()}catch{toast(t('likeFail'))}finally{pendingLikes.delete(id)}}
 function validReturnHash(hash){if(typeof hash!=='string')return '#home';if(/^#(?:home|upload|mine|saved|guide)$/.test(hash))return hash;const [key,id]=hash.slice(1).split('/');return ['work','edit'].includes(key)&&uuid(id)&&hash==='#'+key+'/'+id?hash:'#home'}
-function renderMailButton(){
-  clearTimeout(mailTimer);const seconds=Math.max(0,Math.ceil((mailCooldownUntil-Date.now())/1000));
-  const waiting=t('resendWait').replace('{seconds}',String(seconds));
-  $('sendLink').disabled=$('resendLink').disabled=mailBusy||seconds>0;
-  $('sendLink').textContent=mailBusy?t('sending'):seconds?waiting:t('sendLink');
-  $('resendLink').textContent=mailBusy?t('sending'):seconds?waiting:t('resendLink');
-  if(seconds)mailTimer=setTimeout(renderMailButton,1000);
+// Passwords stay only in their input fields / the in-flight SDK call. Never persist them.
+const AUTH_ORIGIN='https://aimade.world';
+let authMode='signin',authBusy=false,authUiVersion=0,authMail=null,passwordVisible=false,
+  recoveryActive=false,recoveryVerified=false,recoveryUserId=null,recoveryRequest=0;
+function clearPasswordFields(){
+  $('password').value='';$('passwordConfirm').value='';passwordVisible=false;
+  $('password').type=$('passwordConfirm').type='password';
 }
-function openLogin(){if(!$('loginDialog').open)$('loginDialog').showModal();renderMailButton();if(!$('loginForm').hidden)$('email').focus()}
-async function sendLink(e){
-  e.preventDefault();if(mailBusy||Date.now()<mailCooldownUntil){renderMailButton();return}
-  if(!sb){$('loginStatus').textContent=t('authFail');return}
-  const email=$('email').value.trim();if(!$('email').checkValidity()||!email){$('email').reportValidity();return}
-  mailBusy=true;$('loginStatus').textContent='';renderMailButton();
-  if(mode==='upload')saveDraft(false);
-  storage.set('aimade_auth_return_v3',validReturnHash(location.hash||'#home'));
-  let timeout;try{
-    const response=sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+'/'}});
-    const {error}=await Promise.race([response,new Promise((_,reject)=>{timeout=setTimeout(()=>reject({pending:true}),20000)})]);
-    if(error)throw error;
-    $('loginForm').hidden=true;$('loginDone').hidden=false;$('loginSentEmail').textContent=email;
-    $('loginStatus').textContent=t('sent');mailCooldownUntil=Date.now()+60000;
+function authAllowed(){if(location.origin===AUTH_ORIGIN&&sb)return true;$('loginStatus').textContent=t(location.origin===AUTH_ORIGIN?'authFail':'authPreview');return false}
+function rememberAuthReturn(){
+  if(mode==='upload'&&dirty&&!saveDraft(false)){$('loginStatus').textContent=t('draftFail');return false}
+  storage.set('aimade_auth_return_v3',validReturnHash(location.hash||'#home'));return true;
+}
+function cleanAuthUrl(removeRecovery=false){
+  const u=new URL(location.pathname+location.search,location.origin);
+  if(removeRecovery&&u.searchParams.get('auth')==='recovery')u.searchParams.delete('auth');
+  const hash=location.hash,authHash=/(?:^#|&)(?:access_token|error|error_code|error_description|refresh_token)=/.test(hash);
+  history.replaceState(null,'',u.pathname+u.search+(authHash?'':hash));
+}
+function renderAuthDialog(){
+  clearTimeout(mailTimer);
+  const recovery=authMode==='recovery',signup=authMode==='signup',forgot=authMode==='forgot',done=!!authMail;
+  $('loginHeading').textContent=t(recovery?'recoveryTitle':signup?'signupTitle':forgot?'forgotTitle':'loginTitle');
+  $('loginSub').textContent=t(recovery?'recoverySub':signup?'signupSub':forgot?'forgotSub':'loginSub');
+  $('loginForm').hidden=done;$('loginDone').hidden=!done;
+  $('emailField').hidden=recovery;$('email').disabled=recovery;$('email').required=!recovery;
+  $('passwordField').hidden=forgot;$('password').disabled=forgot;$('password').required=!forgot;
+  $('password').autocomplete=signup||recovery?'new-password':'current-password';
+  $('password').minLength=signup||recovery?12:0;
+  if(signup||recovery)$('password').setAttribute('aria-describedby','passwordHelp');else $('password').removeAttribute('aria-describedby');
+  $('passwordLabel').textContent=t(signup||recovery?'newPassword':'password');
+  $('passwordConfirmField').hidden=!(signup||recovery);$('passwordConfirm').disabled=!(signup||recovery);$('passwordConfirm').required=signup||recovery;
+  $('passwordHelp').hidden=!(signup||recovery);
+  $('signupConsentRow').hidden=!signup;$('signupConsent').required=signup&&!done;
+  $('forgotPassword').hidden=authMode!=='signin';$('legacyPassword').hidden=authMode!=='signin'||done;
+  $('authFields').disabled=authBusy||(recovery&&!recoveryVerified);
+  $('authSubmit').disabled=authBusy||(recovery&&!recoveryVerified);
+  const seconds=Math.max(0,Math.ceil((mailCooldownUntil-Date.now())/1000));
+  const waiting=t('resendWait').replace('{seconds}',String(seconds));
+  if((forgot||signup)&&seconds&&!done)$('authSubmit').disabled=true;
+  $('authSubmit').textContent=authBusy?t('authWorking'):(forgot||signup)&&seconds?waiting:t('auth'+(recovery?'Recovery':signup?'Signup':forgot?'Forgot':'Signin'));
+  $('showPassword').textContent=t(passwordVisible?'hidePassword':'showPassword');$('showPassword').setAttribute('aria-pressed',String(passwordVisible));
+  $('authSwitch').hidden=recovery||done;
+  $('authSwitchLabel').textContent=signup?t('haveAccount'):forgot?'':t('noAccount');
+  $('authSwitchButton').textContent=t(signup||forgot?'backSignin':'signupLink');$('authSwitchButton').disabled=authBusy;
+  $('forgotPassword').disabled=authBusy;$('changeLoginEmail').disabled=authBusy;
+  $('resendLink').disabled=authBusy||seconds>0;$('resendLink').textContent=authBusy?t('sending'):seconds?waiting:t('resendLink');
+  if(authMail){$('loginSentTitle').textContent=t(authMail.kind==='signup'?'signupMailTitle':'resetMailTitle');$('loginSentHelp').textContent=t(authMail.kind==='signup'?'signupMailHelp':'resetMailHelp');$('loginSentEmail').textContent=authMail.email}
+  if(seconds)mailTimer=setTimeout(renderAuthDialog,1000);
+}
+function setAuthMode(next){
+  if(authBusy||!['signin','signup','forgot'].includes(next))return;
+  ++authUiVersion;authMode=next;authMail=null;clearPasswordFields();$('signupConsent').checked=false;$('loginStatus').textContent='';renderAuthDialog();$('email').focus();
+}
+function openLogin(){
+  if(!recoveryActive)authMode=['signin','signup','forgot'].includes(authMode)?authMode:'signin';
+  if(!$('loginDialog').open)$('loginDialog').showModal();renderAuthDialog();
+  if(authMode!=='recovery'&&!authMail)$('email').focus();
+}
+async function authDeadline(promise){let timer;try{return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject({pending:true}),20000)})])}finally{clearTimeout(timer)}}
+function authErrorKey(error){
+  if(error?.status===429||['over_email_send_rate_limit','over_request_rate_limit'].includes(error?.code))return 'authRate';
+  if(error?.pending)return 'authPending';
+  if(['invalid_credentials','user_not_found'].includes(error?.code))return 'invalidLogin';
+  if(error?.code==='weak_password')return 'passwordWeak';
+  if(['reauthentication_needed','reauthentication_not_valid','session_not_found','session_expired'].includes(error?.code))return 'recoveryReauth';
+  return 'authFail';
+}
+function mailResult(kind,email){authMail={kind,email};clearPasswordFields();renderAuthDialog()}
+async function requestAuthMail(kind,email,resend=false){
+  if(authBusy||Date.now()<mailCooldownUntil){renderAuthDialog();return}
+  if(!authAllowed()||!rememberAuthReturn())return;
+  const version=authUiVersion;authBusy=true;mailCooldownUntil=Date.now()+60000;$('loginStatus').textContent='';renderAuthDialog();
+  try{
+    const request=kind==='signup'&&resend?sb.auth.resend({type:'signup',email,options:{emailRedirectTo:AUTH_ORIGIN+'/'}}):sb.auth.resetPasswordForEmail(email,{redirectTo:AUTH_ORIGIN+'/?auth=recovery'});
+    const {error}=await authDeadline(request);if(error)throw error;
+    if(version===authUiVersion)mailResult(kind,email);
+  }catch(error){if(version===authUiVersion)$('loginStatus').textContent=t(authErrorKey(error))}
+  finally{authBusy=false;clearPasswordFields();renderAuthDialog()}
+}
+async function submitAuth(e){
+  e.preventDefault();if(authBusy)return;
+  const current=authMode,version=authUiVersion,email=$('email').value.trim();
+  if(!authAllowed())return;
+  if(current!=='recovery'&&(!email||!$('email').checkValidity())){$('email').reportValidity();return}
+  if(current==='forgot'){await requestAuthMail('recovery',email);return}
+  if(current==='signup'&&Date.now()<mailCooldownUntil){renderAuthDialog();return}
+  const password=$('password').value;
+  if(!password){$('password').reportValidity();return}
+  if(['signup','recovery'].includes(current)){
+    if(password.length<12){$('loginStatus').textContent=t('passwordShort');return}
+    if(password!==$('passwordConfirm').value){$('loginStatus').textContent=t('passwordMismatch');return}
+  }
+  if(current==='signup'&&!$('signupConsent').checked){$('loginStatus').textContent=t('signupConsentRequired');return}
+  if(current==='recovery'&&(!recoveryVerified||!user||user.id!==recoveryUserId)){$('loginStatus').textContent=t('recoveryExpired');return}
+  if(current!=='recovery'&&!rememberAuthReturn())return;
+  authBusy=true;$('loginStatus').textContent='';if(current==='signup')mailCooldownUntil=Date.now()+60000;renderAuthDialog();
+  try{
+    const request=current==='signin'?sb.auth.signInWithPassword({email,password}):current==='signup'?sb.auth.signUp({email,password,options:{emailRedirectTo:AUTH_ORIGIN+'/'}}):sb.auth.updateUser({password});
+    const {data,error}=await authDeadline(request);if(error)throw error;
+    if(current==='recovery'){
+      recoveryActive=false;recoveryVerified=false;recoveryUserId=null;++recoveryRequest;cleanAuthUrl(true);
+      if($('loginDialog').open)$('loginDialog').close();toast(t('passwordSaved'));
+      const next=storage.get('aimade_auth_return_v3');storage.remove('aimade_auth_return_v3');
+      if(next&&(!location.hash||location.hash==='#home')){history.replaceState(null,'',location.pathname+location.search+validReturnHash(next));route()}
+    }else if(data?.session)await refreshUser(data.session);
+    else if(current==='signup'&&version===authUiVersion)mailResult('signup',email);
+    else if(current==='signin'&&version===authUiVersion)$('loginStatus').textContent=t('authFail');
   }catch(error){
-    const limited=error?.status===429||['over_email_send_rate_limit','over_request_rate_limit'].includes(error?.code);
-    $('loginStatus').textContent=t(limited?'authRate':error?.pending?'authPending':'authFail');
-    if(limited||error?.pending)mailCooldownUntil=Date.now()+60000;
-  }finally{clearTimeout(timeout);mailBusy=false;renderMailButton()}
+    if(version===authUiVersion){
+      if(error?.code==='email_not_confirmed'&&current==='signin'){mailResult('signup',email);$('loginStatus').textContent=t('confirmFirst')}
+      else $('loginStatus').textContent=t(authErrorKey(error));
+      if(error?.status===429)mailCooldownUntil=Date.now()+60000;
+    }
+  }finally{authBusy=false;clearPasswordFields();renderAuthDialog()}
+}
+async function prepareRecovery(session){
+  if(!recoveryActive)return;
+  if(!session?.user){failRecovery();return}
+  if(recoveryUserId===session.user.id&&(recoveryVerified||authMode==='recovery'))return;
+  const request=++recoveryRequest;recoveryUserId=session.user.id;recoveryVerified=false;authMode='recovery';authMail=null;clearPasswordFields();
+  $('loginStatus').textContent=t('recoveryChecking');openLogin();
+  try{
+    const {data,error}=await authDeadline(sb.auth.getUser());
+    if(request!==recoveryRequest||!recoveryActive)return;
+    if(error||data?.user?.id!==recoveryUserId||user?.id!==recoveryUserId)throw Error();
+    recoveryVerified=true;$('loginStatus').textContent='';renderAuthDialog();$('password').focus();
+  }catch{if(request===recoveryRequest)failRecovery()}
+}
+function failRecovery(){
+  ++recoveryRequest;recoveryActive=false;recoveryVerified=false;recoveryUserId=null;cleanAuthUrl(true);
+  authMode='forgot';authMail=null;clearPasswordFields();$('loginStatus').textContent=t('recoveryExpired');openLogin();
+}
+async function handleAuthState(event,session){
+  if(event==='SIGNED_OUT'){
+    const wasRecovery=recoveryActive;recoveryActive=false;recoveryVerified=false;recoveryUserId=null;++recoveryRequest;
+    await refreshUser(null);if(wasRecovery)failRecovery();return;
+  }
+  await Promise.all([refreshUser(session),recoveryActive?prepareRecovery(session):Promise.resolve()]);
 }
 async function refreshUser(session){
   const seq=++authSeq,previousId=user?.id;user=session?.user||null;const currentId=user?.id;authReady=true;isAdmin=false;likes=new Set();renderAuth();
   if(user){
-    if($('loginDialog').open)$('loginDialog').close();
-    const next=storage.get('aimade_auth_return_v3');
+    if(!recoveryActive&&$('loginDialog').open)$('loginDialog').close();
+    const next=!recoveryActive&&storage.get('aimade_auth_return_v3');
     if(next){storage.remove('aimade_auth_return_v3');if(!location.hash||location.hash==='#home'){history.replaceState(null,'',location.pathname+location.search+validReturnHash(next));route()}}
     if(location.hash.startsWith('#edit/'))startEdit(location.hash.split('/')[1]);
     if(sb)try{
@@ -236,7 +364,7 @@ function renderFAQ(){const entries=lang==='zh'?[
 ['我可以分享什麼？','AI 協助製作的遊戲、網頁、工具、圖片、影片、音樂、Prompt、文字及設計都歡迎。請上傳你有權分享的內容，註明 AI 工具及限制，不得冒充原作者。'],
 ['如何讓大家試玩？','已有網站或遊戲網址：分享時貼上連結。訪客不需登入 AIMade 就能開啟外部作品。若外部網站需要登入或有免費額度限制，請在使用條件中標示。'],
 ['可以直接上傳 HTML 或 ZIP 嗎？','目前不提供可執行程式託管。請先在你自己的網站或支援的託管服務發布，再分享網址。我們不在主站執行使用者上傳的程式。'],
-['一定要登入才能瀏覽嗎？','不用。瀏覽、搜尋、開啟外部作品、複製 Prompt 都不需要登入。發布、按讚與檢舉才需要電郵登入。收藏只保存在目前瀏覽器。'],
+['一定要登入才能瀏覽嗎？','不用。瀏覽、搜尋、開啟外部作品、複製 Prompt 都不需要登入。發布、按讚與檢舉才需要登入帳戶。收藏只保存在目前瀏覽器。'],
 ['分享要付費嗎？','目前 AIMade 的瀏覽與分享免費，沒有交易或打賞功能。外部作品可能有自己的使用條件，請查看作者說明；本平台不支付作品的 AI API 或託管費用。'],
 ['草稿、編輯及下架怎樣處理？','填寫時會在本瀏覽器保存文字草稿，圖片需重新選取。發布後登入同一帳號，在「我的作品」或作品頁編輯、下架或恢復顯示。下架不會刪除圖片檔案；永久刪除內容或帳戶請聯絡 hello@aimade.world，我們會核實擁有權後處理。'],
 ['版權及違規內容怎樣處理？','AIMade 不取得你原有權利的所有權；AI 輸出是否受著作權保護，須視內容及適用法律而定。請確認你有權分享。內容公開不代表平台背書，違規內容會依檢舉及管理員審查處理。'],
@@ -245,9 +373,9 @@ function renderFAQ(){const entries=lang==='zh'?[
 ['What can I share?','Games, apps, tools, images, videos, music, prompts, writing and design made with AI assistance. Share only work you have permission to share, credit the tools and explain any limits.'],
 ['How can people try my work?','Publish your project on your own hosting service, then share its URL. Visitors can open external works without signing in to AIMade. Disclose external sign-in requirements and trial limits.'],
 ['Can I upload HTML or ZIP files?','Not yet. We do not host or execute user-submitted code on the main site. Share a URL to your hosted project instead.'],
-['Do visitors need an account?','No account is needed to browse, search, open external works or copy prompts. Publishing, likes and reports require email sign-in. Saved works stay in this browser only.'],
+['Do visitors need an account?','No account is needed to browse, search, open external works or copy prompts. Publishing, likes and reports require an account. Saved works stay in this browser only.'],
 ['Does sharing cost anything?','Browsing and sharing on AIMade are currently free, with no sales or tipping features. External projects may have their own costs and conditions. We do not cover their hosting or AI API bills.'],
-['How do drafts, editing and removal work?','Text drafts are stored in this browser. Reselect any cover file before publishing. Sign in with the same email to edit, unpublish or restore from My works. Unpublishing does not erase cover files. For permanent content or account deletion, email hello@aimade.world; ownership will be verified.'],
+['How do drafts, editing and removal work?','Text drafts are stored in this browser. Reselect any cover file before publishing. Sign in to the same account to edit, unpublish or restore from My works. Unpublishing does not erase cover files. For permanent content or account deletion, email hello@aimade.world; ownership will be verified.'],
 ['Who owns the rights?','AIMade does not take ownership of your existing rights. Whether AI output is protected depends on the content and applicable law. You must have permission to share it. Publication is not endorsement; reports are reviewed by administrators.'],
 ['How can I report a problem?','Use Report work after signing in, or email the work URL and details to hello@aimade.world. Be cautious about giving passwords, API keys or sensitive information to external sites.']
 ];$('faqItems').innerHTML=entries.map(([q,a])=>`<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('');}
@@ -282,19 +410,34 @@ $('search').addEventListener('input',()=>{search=$('search').value;clearTimeout(
 $('sort').addEventListener('change',()=>{sort=$('sort').value;loadWorks()});$('hasLink').addEventListener('change',()=>{onlyLink=$('hasLink').checked;loadWorks()});$('loadMore').addEventListener('click',()=>{if(loading)return;$('loadMore').disabled=true;loadWorks(false)});
 $('workForm').addEventListener('submit',submitWork);$('workForm').addEventListener('input',()=>{dirty=true;clearTimeout(draftTimer);draftTimer=setTimeout(()=>saveDraft(),500)});$('category').addEventListener('change',updatePrompt);$('cover').addEventListener('change',chooseCover);$('saveDraft').addEventListener('click',()=>saveDraft());$('clearDraft').addEventListener('click',()=>{if(publishing||!confirm(t('draftClear')))return;clearTimeout(draftTimer);if(!discardCurrentDraft()){toast(t('draftFail'));return}const wasEdit=!!editId;dirty=false;if(wasEdit){editId=null;editOwner=null;clearPreview();startEdit(location.hash.split('/')[1])}else restoreDraft();$('draftStatus').textContent='';$('formStatus').textContent=''});
 $('removeCover').addEventListener('change',()=>{if($('removeCover').checked)clearPreview();else if(editingCover){$('coverPreview').src=editingCover;$('coverPreview').hidden=false}});
-$('resendLink').addEventListener('click',sendLink);$('changeLoginEmail').addEventListener('click',()=>{$('loginDone').hidden=true;$('loginForm').hidden=false;$('loginStatus').textContent='';renderMailButton();$('email').focus()});
-$('loginForm').addEventListener('submit',sendLink);$('reportForm').addEventListener('submit',submitReport);window.addEventListener('hashchange',()=>{if(!location.hash.includes('access_token='))route()});window.addEventListener('beforeunload',()=>{if(dirty)saveDraft(false)});
+$('resendLink').addEventListener('click',()=>{if(authMail)requestAuthMail(authMail.kind,authMail.email,true)});
+$('changeLoginEmail').addEventListener('click',()=>setAuthMode(authMail?.kind==='signup'?'signup':'forgot'));
+$('authSwitchButton').addEventListener('click',()=>setAuthMode(authMode==='signin'?'signup':'signin'));
+$('backToSignin').addEventListener('click',()=>setAuthMode('signin'));
+$('forgotPassword').addEventListener('click',()=>setAuthMode('forgot'));
+$('showPassword').addEventListener('click',()=>{passwordVisible=!passwordVisible;$('password').type=$('passwordConfirm').type=passwordVisible?'text':'password';renderAuthDialog()});
+$('loginDialog').addEventListener('close',()=>{
+  ++authUiVersion;clearPasswordFields();$('signupConsent').checked=false;authMode='signin';authMail=null;$('loginStatus').textContent='';
+  if(recoveryActive){++recoveryRequest;recoveryActive=false;recoveryVerified=false;recoveryUserId=null;authMode='signin';cleanAuthUrl(true)}
+});
+$('loginForm').addEventListener('submit',submitAuth);$('reportForm').addEventListener('submit',submitReport);window.addEventListener('hashchange',()=>{if(!location.hash.includes('access_token='))route()});window.addEventListener('beforeunload',()=>{if(dirty)saveDraft(false)});
 applyLang();restoreDraft();persistDrafts(drafts);
 async function init(){
+  const params=new URLSearchParams(location.hash.slice(1)),authError=params.has('error')||params.has('error_description')||params.has('error_code');
+  const recoveryIntent=new URLSearchParams(location.search).get('auth')==='recovery'||params.get('type')==='recovery';
+  recoveryActive=recoveryIntent;
   try{if(!window.supabase)throw Error();sb=window.supabase.createClient(SB_URL,SB_KEY);
-    sb.auth.onAuthStateChange((event,session)=>{if(['SIGNED_IN','SIGNED_OUT','USER_UPDATED'].includes(event))setTimeout(()=>refreshUser(session),0)});
+    sb.auth.onAuthStateChange((event,session)=>{
+      if(event==='PASSWORD_RECOVERY')recoveryActive=true;
+      if(['SIGNED_IN','SIGNED_OUT','USER_UPDATED','PASSWORD_RECOVERY'].includes(event))setTimeout(()=>handleAuthState(event,session),0);
+    });
     const wid=new URLSearchParams(location.search).get('w');
     if(uuid(wid)&&!location.hash.includes('access_token='))history.replaceState(null,'',location.pathname+'#work/'+wid);
-    if(location.hash.includes('error_description')){history.replaceState(null,'',location.pathname);toast(t('sessionFail'))}
     route();
     const {data,error}=await sb.auth.getSession();if(error)throw error;
-    if(location.hash.includes('access_token=')){history.replaceState(null,'',location.pathname);route()}
-    await refreshUser(data.session);
-  }catch{authReady=true;if(!sb)route();else toast(t('authFail'));if(location.hash.startsWith('#edit/'))$('editorLoadStatus').textContent=t('authFail')}
+    cleanAuthUrl();
+    if(authError){const wasRecovery=recoveryActive;recoveryActive=false;await refreshUser(data.session);if(wasRecovery)failRecovery();else{setAuthMode('signin');$('loginStatus').textContent=t('sessionFail');openLogin()}return}
+    await handleAuthState('INITIAL_SESSION',data.session);
+  }catch{authReady=true;if(recoveryActive||recoveryIntent)failRecovery();else if(authError){cleanAuthUrl();setAuthMode('signin');$('loginStatus').textContent=t('sessionFail');openLogin()}else{if(!sb)route();else toast(t('authFail'))}if(location.hash.startsWith('#edit/'))$('editorLoadStatus').textContent=t('authFail')}
 }
 init();
