@@ -25,10 +25,11 @@ Object.assign(words,{
   authSignin:['登入','Sign in'],authSignup:['建立帳戶','Create account'],authForgot:['寄送密碼設定信','Send password setup email'],authRecovery:['儲存新密碼','Save new password'],authWorking:['處理中…','Working…'],forgotLink:['忘記／設定密碼','Forgot / set password'],
   noAccount:['還沒有帳戶？','New here?'],haveAccount:['已經有帳戶？','Already have an account?'],backSignin:['返回登入','Back to sign in'],signupLink:['註冊','Sign up'],
   legacyPassword:['曾用郵件連結登入？使用原電郵設定一次密碼，原有作品會保留。','Used email links before? Set a password with the same email to keep your existing creations.'],
+  signupExistingHint:['曾用郵件連結登入過 AIMade？請為原帳戶設定密碼，不必重新註冊。','Previously used AIMade email links? Set a password for your existing account instead of registering again.'],existingPasswordAction:['已有帳戶？設定／重設密碼','Existing account? Set / reset password'],legacyPasswordAction:['設定／重設密碼','Set / reset password'],resendVerification:['重寄驗證信','Resend verification email'],resendPasswordSetup:['重寄設定信','Resend setup email'],coverReady:['封面已選取，將於發布時上傳；尚未上傳的圖片不會隨文字草稿保存。','Cover selected. It will upload when you publish; an unuploaded file is not saved with your text draft.'],
   signupAgree:['我已閱讀並同意','I have read and agree to the'],signupConsentRequired:['請先閱讀並親自同意服務條款及隱私政策。','Please read and agree to the terms and privacy policy yourself.'],
   and:['及','and'],
   invalidLogin:['電郵或密碼不正確。若尚未設定密碼，請選擇「忘記／設定密碼」。','Email or password is incorrect. If you have not set a password yet, choose “Forgot / set password”.'],passwordShort:['新密碼至少需要 12 個字元。','Your new password needs at least 12 characters.'],passwordMismatch:['兩次輸入的密碼不相同，請重新確認。','The passwords do not match. Please check them.'],passwordWeak:['此密碼不符合安全要求，請使用更長且不重複的密碼。','This password does not meet security requirements. Use a longer, unique password.'],
-  signupMailTitle:['請完成電郵驗證','Check your email'],signupMailHelp:['如需驗證，你會收到確認信。完成後即可用電郵與密碼登入。若這個電郵已註冊，請直接登入或重設密碼。','If verification is needed, you will receive a confirmation email. Then use your email and password to sign in. Already registered? Sign in or reset your password instead.'],
+  signupMailTitle:['下一步：驗證或登入','Next: verify or sign in'],signupMailHelp:['為保障帳戶私隱，這個回覆不會透露電郵是否已註冊。新用戶請查看收件箱及垃圾郵件中的驗證信；曾登入過 AIMade 的用戶，請返回登入或設定／重設密碼，不用重新註冊。','For account privacy, this response does not reveal whether the email is already registered. New users: check inbox and spam for verification. Previously used AIMade? Sign in or set/reset your password instead of registering again.'],
   resetMailTitle:['請查看密碼設定信','Check your password setup email'],resetMailHelp:['若此電郵已註冊，你會收到密碼設定信；請查看收件箱及垃圾郵件。連結只能使用一次。可在另一裝置設定，之後回來使用新密碼登入。','If an account exists for this email, you will receive a one-time password setup link. Check inbox and spam. You can set the password on another device, then sign in here with it.'],
   confirmFirst:['請先完成電郵驗證，或重新寄送確認信。','Please verify your email first, or resend the confirmation email.'],changeEmail:['更改電郵地址','Change email'],resendLink:['重新寄送','Send again'],resendWait:['{seconds} 秒後可重寄','Send again in {seconds}s'],
   authRate:['請求次數較多，請稍後再試；重複點擊不會加快收信。','Too many requests. Please wait before trying again; repeated clicks will not speed up delivery.'],authPending:['伺服器回應尚未確認。請先查看信箱或稍後重試，避免重複操作。','The response is not confirmed yet. Check your inbox or retry later to avoid duplicate requests.'],
@@ -47,7 +48,7 @@ let sb=null,user=null,isAdmin=false,works=[],likes=new Set(),saved=new Set((Arra
 const pageSize=24,cache=new Map();let detailSeq=0,authSeq=0,editSeq=0,authReady=false,editOwner=null,lastRouteHash='',mailCooldownUntil=0,mailTimer=null,stagedCoverFile=null,stagedCoverUrl='',coverUpload=null;
 let toastTimer,searchTimer,draftTimer;
 function toast(msg){$('toast').textContent=msg;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3500)}
-function applyLang(){document.documentElement.lang=lang==='zh'?'zh-Hant':'en';if(mode!=='detail')document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';document.querySelectorAll('[data-i]').forEach(el=>{el.textContent=t(el.dataset.i);if(['hero','noteTitle','noteBody','tipsTitle'].includes(el.dataset.i))el.style.whiteSpace='pre-line'});$('lang').textContent=lang==='zh'?'EN':'中文';$('search').placeholder=t('search');$('search').setAttribute('aria-label',t('search'));$('sort').setAttribute('aria-label',lang==='zh'?'作品排序':'Sort creations');const current=$('category').value||'app';$('category').innerHTML=Object.keys(cats).map(k=>`<option value="${k}">${cat(k)}</option>`).join('');$('category').value=current;$('description').placeholder=lang==='zh'?'它能幫誰做什麼？要怎樣開始？':'Who is it for? What can it do? How do you start?';renderFilters();renderAuth();renderFAQ();updateBrowseHeading();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');renderEditorContext();renderAuthDialog();for(const key of ['draftSaved','draftFail','draftRestored','editDraftRestored']){if(words[key].includes($('draftStatus').textContent)){$('draftStatus').textContent=t(key);break}}if(detailWork)renderDetail(detailWork);}
+function applyLang(){document.documentElement.lang=lang==='zh'?'zh-Hant':'en';if(mode!=='detail')document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';document.querySelectorAll('[data-i]').forEach(el=>{el.textContent=t(el.dataset.i);if(['hero','noteTitle','noteBody','tipsTitle'].includes(el.dataset.i))el.style.whiteSpace='pre-line'});$('lang').textContent=lang==='zh'?'EN':'中文';$('search').placeholder=t('search');$('search').setAttribute('aria-label',t('search'));$('sort').setAttribute('aria-label',lang==='zh'?'作品排序':'Sort creations');const current=$('category').value||'app';$('category').innerHTML=Object.keys(cats).map(k=>`<option value="${k}">${cat(k)}</option>`).join('');$('category').value=current;$('description').placeholder=lang==='zh'?'它能幫誰做什麼？要怎樣開始？':'Who is it for? What can it do? How do you start?';renderFilters();renderAuth();renderFAQ();updateBrowseHeading();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');renderEditorContext();renderAuthDialog();for(const key of ['draftSaved','draftFail','draftRestored','editDraftRestored','coverReady']){if(words[key].includes($('draftStatus').textContent)){$('draftStatus').textContent=t(key);break}}if(detailWork)renderDetail(detailWork);}
 function renderAuth(){$('authButton').textContent=t(user?'signout':'signin');$('authButton').setAttribute('title',t(user?'signoutHint':'signin'));document.querySelector('[data-i=navMine]').hidden=!user;}
 function renderFilters(){const list=['all',...Object.keys(cats),'feedback'];$('filters').innerHTML=list.map(k=>`<button class="chip" data-cat="${k}" aria-pressed="${activeCat===k}">${esc(cats[k]?cat(k):t(k))}</button>`).join('')}
 function updateBrowseHeading(){$('hero').hidden=mode!=='home';$('browseTitle').textContent=t(mode==='saved'?'navSaved':mode==='mine'?'navMine':'browseTitle');$('browseSubtitle').textContent=t(mode==='saved'?'savedSub':mode==='mine'?'mineSub':'browseSub');}
@@ -88,7 +89,7 @@ function validReturnHash(hash){if(typeof hash!=='string')return '#home';if(/^#(?
 // Passwords stay only in their input fields / the in-flight SDK call. Never persist them.
 const AUTH_ORIGIN='https://aimade.world';
 let authMode='signin',authBusy=false,authUiVersion=0,authMail=null,passwordVisible=false,
-  recoveryActive=false,recoveryVerified=false,recoveryUserId=null,recoveryRequest=0;
+  recoveryActive=false,recoveryCallbackTab=false,recoveryVerified=false,recoveryUserId=null,recoveryRequest=0;
 function clearPasswordFields(){
   $('password').value='';$('passwordConfirm').value='';passwordVisible=false;
   $('password').type=$('passwordConfirm').type='password';
@@ -110,6 +111,9 @@ function renderAuthDialog(){
   $('loginHeading').textContent=t(recovery?'recoveryTitle':signup?'signupTitle':forgot?'forgotTitle':'loginTitle');
   $('loginSub').textContent=t(recovery?'recoverySub':signup?'signupSub':forgot?'forgotSub':'loginSub');
   $('loginForm').hidden=done;$('loginDone').hidden=!done;
+  $('signupExistingNotice').hidden=!signup||done;
+  $('setupExistingPassword').hidden=!authMail||authMail.kind!=='signup';
+  for(const id of ['signupExistingPassword','setupExistingPassword','legacyPasswordSetup'])$(id).disabled=authBusy;
   $('emailField').hidden=recovery;$('email').disabled=recovery;$('email').required=!recovery;
   $('passwordField').hidden=forgot;$('password').disabled=forgot;$('password').required=!forgot;
   $('password').autocomplete=signup||recovery?'new-password':'current-password';
@@ -131,13 +135,16 @@ function renderAuthDialog(){
   $('authSwitchLabel').textContent=signup?t('haveAccount'):forgot?'':t('noAccount');
   $('authSwitchButton').textContent=t(signup||forgot?'backSignin':'signupLink');$('authSwitchButton').disabled=authBusy;
   $('forgotPassword').disabled=authBusy;$('changeLoginEmail').disabled=authBusy;
-  $('resendLink').disabled=authBusy||seconds>0;$('resendLink').textContent=authBusy?t('sending'):seconds?waiting:t('resendLink');
+  $('resendLink').disabled=authBusy||seconds>0;$('resendLink').textContent=authBusy?t('sending'):seconds?waiting:t(authMail?.kind==='signup'?'resendVerification':'resendPasswordSetup');
   if(authMail){$('loginSentTitle').textContent=t(authMail.kind==='signup'?'signupMailTitle':'resetMailTitle');$('loginSentHelp').textContent=t(authMail.kind==='signup'?'signupMailHelp':'resetMailHelp');$('loginSentEmail').textContent=authMail.email}
   if(seconds)mailTimer=setTimeout(renderAuthDialog,1000);
 }
 function setAuthMode(next){
   if(authBusy||!['signin','signup','forgot'].includes(next))return;
   ++authUiVersion;authMode=next;authMail=null;clearPasswordFields();$('signupConsent').checked=false;$('loginStatus').textContent='';renderAuthDialog();$('email').focus();
+}
+function openExistingPasswordSetup(){
+  if(authBusy)return;const email=authMail?.email||$('email').value;setAuthMode('forgot');if(email)$('email').value=email;
 }
 function openLogin(){
   if(!recoveryActive)authMode=['signin','signup','forgot'].includes(authMode)?authMode:'signin';
@@ -186,7 +193,7 @@ async function submitAuth(e){
     const request=current==='signin'?sb.auth.signInWithPassword({email,password}):current==='signup'?sb.auth.signUp({email,password,options:{emailRedirectTo:AUTH_ORIGIN+'/'}}):sb.auth.updateUser({password});
     const {data,error}=await authDeadline(request);if(error)throw error;
     if(current==='recovery'){
-      recoveryActive=false;recoveryVerified=false;recoveryUserId=null;++recoveryRequest;cleanAuthUrl(true);
+      recoveryActive=false;recoveryCallbackTab=false;recoveryVerified=false;recoveryUserId=null;++recoveryRequest;cleanAuthUrl(true);
       if($('loginDialog').open)$('loginDialog').close();toast(t('passwordSaved'));
       const next=storage.get('aimade_auth_return_v3');storage.remove('aimade_auth_return_v3');
       if(next&&(!location.hash||location.hash==='#home')){history.replaceState(null,'',location.pathname+location.search+validReturnHash(next));route()}
@@ -196,6 +203,7 @@ async function submitAuth(e){
   }catch(error){
     if(version===authUiVersion){
       if(error?.code==='email_not_confirmed'&&current==='signin'){mailResult('signup',email);$('loginStatus').textContent=t('confirmFirst')}
+      else if(current==='signup'&&['user_already_exists','email_exists'].includes(error?.code))mailResult('signup',email);
       else $('loginStatus').textContent=t(authErrorKey(error));
       if(error?.status===429)mailCooldownUntil=Date.now()+60000;
     }
@@ -215,12 +223,16 @@ async function prepareRecovery(session){
   }catch{if(request===recoveryRequest)failRecovery()}
 }
 function failRecovery(){
-  ++recoveryRequest;recoveryActive=false;recoveryVerified=false;recoveryUserId=null;cleanAuthUrl(true);
+  ++recoveryRequest;recoveryActive=false;recoveryCallbackTab=false;recoveryVerified=false;recoveryUserId=null;cleanAuthUrl(true);
   authMode='forgot';authMail=null;clearPasswordFields();$('loginStatus').textContent=t('recoveryExpired');openLogin();
+}
+function onAuthEvent(event,session){
+  if(event==='PASSWORD_RECOVERY'&&recoveryCallbackTab)recoveryActive=true;
+  if(['SIGNED_IN','SIGNED_OUT','USER_UPDATED','PASSWORD_RECOVERY'].includes(event))setTimeout(()=>handleAuthState(event,session),0);
 }
 async function handleAuthState(event,session){
   if(event==='SIGNED_OUT'){
-    const wasRecovery=recoveryActive;recoveryActive=false;recoveryVerified=false;recoveryUserId=null;++recoveryRequest;
+    const wasRecovery=recoveryActive;recoveryActive=false;recoveryCallbackTab=false;recoveryVerified=false;recoveryUserId=null;++recoveryRequest;
     await refreshUser(null);if(wasRecovery)failRecovery();return;
   }
   await Promise.all([refreshUser(session),recoveryActive?prepareRecovery(session):Promise.resolve()]);
@@ -307,7 +319,7 @@ async function chooseCover(){
     if(file){toast(t('badCover'));$('cover').value=''}
     $('coverPreview').hidden=!editingCover||$('removeCover').checked;if(editingCover)$('coverPreview').src=editingCover;return;
   }
-  $('removeCover').checked=false;previewUrl=URL.createObjectURL(file);$('coverPreview').src=previewUrl;$('coverPreview').hidden=false;dirty=true;
+  $('removeCover').checked=false;previewUrl=URL.createObjectURL(file);$('coverPreview').src=previewUrl;$('coverPreview').hidden=false;dirty=true;$('draftStatus').textContent=t('coverReady');
 }
 function validCover(file){return file.size>0&&file.size<=5*1024*1024&&['image/png','image/jpeg','image/webp','image/gif'].includes(file.type)}
 async function deadline(promise,ms=20000){let timer;try{return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Response unconfirmed')),ms)})])}finally{clearTimeout(timer)}}
@@ -415,28 +427,26 @@ $('changeLoginEmail').addEventListener('click',()=>setAuthMode(authMail?.kind===
 $('authSwitchButton').addEventListener('click',()=>setAuthMode(authMode==='signin'?'signup':'signin'));
 $('backToSignin').addEventListener('click',()=>setAuthMode('signin'));
 $('forgotPassword').addEventListener('click',()=>setAuthMode('forgot'));
+for(const id of ['signupExistingPassword','setupExistingPassword','legacyPasswordSetup'])$(id).addEventListener('click',openExistingPasswordSetup);
 $('showPassword').addEventListener('click',()=>{passwordVisible=!passwordVisible;$('password').type=$('passwordConfirm').type=passwordVisible?'text':'password';renderAuthDialog()});
 $('loginDialog').addEventListener('close',()=>{
   ++authUiVersion;clearPasswordFields();$('signupConsent').checked=false;authMode='signin';authMail=null;$('loginStatus').textContent='';
-  if(recoveryActive){++recoveryRequest;recoveryActive=false;recoveryVerified=false;recoveryUserId=null;authMode='signin';cleanAuthUrl(true)}
+  if(recoveryActive){++recoveryRequest;recoveryActive=false;recoveryCallbackTab=false;recoveryVerified=false;recoveryUserId=null;authMode='signin';cleanAuthUrl(true)}
 });
 $('loginForm').addEventListener('submit',submitAuth);$('reportForm').addEventListener('submit',submitReport);window.addEventListener('hashchange',()=>{if(!location.hash.includes('access_token='))route()});window.addEventListener('beforeunload',()=>{if(dirty)saveDraft(false)});
 applyLang();restoreDraft();persistDrafts(drafts);
 async function init(){
   const params=new URLSearchParams(location.hash.slice(1)),authError=params.has('error')||params.has('error_description')||params.has('error_code');
   const recoveryIntent=new URLSearchParams(location.search).get('auth')==='recovery'||params.get('type')==='recovery';
-  recoveryActive=recoveryIntent;
+  recoveryActive=recoveryIntent;recoveryCallbackTab=recoveryIntent;
   try{if(!window.supabase)throw Error();sb=window.supabase.createClient(SB_URL,SB_KEY);
-    sb.auth.onAuthStateChange((event,session)=>{
-      if(event==='PASSWORD_RECOVERY')recoveryActive=true;
-      if(['SIGNED_IN','SIGNED_OUT','USER_UPDATED','PASSWORD_RECOVERY'].includes(event))setTimeout(()=>handleAuthState(event,session),0);
-    });
+    sb.auth.onAuthStateChange(onAuthEvent);
     const wid=new URLSearchParams(location.search).get('w');
     if(uuid(wid)&&!location.hash.includes('access_token='))history.replaceState(null,'',location.pathname+'#work/'+wid);
     route();
     const {data,error}=await sb.auth.getSession();if(error)throw error;
     cleanAuthUrl();
-    if(authError){const wasRecovery=recoveryActive;recoveryActive=false;await refreshUser(data.session);if(wasRecovery)failRecovery();else{setAuthMode('signin');$('loginStatus').textContent=t('sessionFail');openLogin()}return}
+    if(authError){const wasRecovery=recoveryActive;recoveryActive=false;recoveryCallbackTab=false;await refreshUser(data.session);if(wasRecovery)failRecovery();else{setAuthMode('signin');$('loginStatus').textContent=t('sessionFail');openLogin()}return}
     await handleAuthState('INITIAL_SESSION',data.session);
   }catch{authReady=true;if(recoveryActive||recoveryIntent)failRecovery();else if(authError){cleanAuthUrl();setAuthMode('signin');$('loginStatus').textContent=t('sessionFail');openLogin()}else{if(!sb)route();else toast(t('authFail'))}if(location.hash.startsWith('#edit/'))$('editorLoadStatus').textContent=t('authFail')}
 }

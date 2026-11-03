@@ -43,7 +43,7 @@ function harness(seed = {}) {
   });
   el('loginDone').hidden=true;
   vm.runInContext(source,context);
-  return {context,el,store,location,run:s=>vm.runInContext(s,context),advance:ms=>now+=ms,fireDelay(ms){for(const [id,timer]of [...timers])if(timer.ms===ms){timers.delete(id);timer.fn()}},failWrites(){failWrites=true}};
+  return {context,el,store,location,run:s=>vm.runInContext(s,context),advance:ms=>now+=ms,fireDelay(ms){const results=[];for(const [id,timer]of [...timers])if(timer.ms===ms){timers.delete(id);results.push(timer.fn())}return Promise.all(results)},failWrites(){failWrites=true}};
 }
 
 function api({work,writeError=null,roles}={}) {
@@ -369,4 +369,45 @@ test('Public authentication is email/password only, with no unconnected social b
   assert(!html.includes('oauth-'));assert(!html.includes('socialAuth'));
   assert(!fullSource.includes('signInWithOAuth'));assert(!fullSource.includes('signInWithOtp'));
   assert(html.includes('autocomplete="current-password"'));assert(html.includes('id="passwordConfirm"'));
+});
+
+test('Obfuscated repeated signup is not presented as a new account or delivered email',async()=>{
+  const h=harness(),a=api();a.client.auth.signUp=async()=>({data:{user:{identities:[]},session:null},error:null});
+  authReady(h,a,'signup');newPassword(h);h.el('signupConsent').checked=true;await h.run(submit());
+  assert.equal(h.el('loginSentTitle').textContent,'下一步：驗證或登入');assert(h.el('loginSentHelp').textContent.includes('不會透露'));
+  assert(!h.el('loginSentTitle').textContent.includes('已寄'));assert.equal(h.run('user'),null);assert.equal(h.el('setupExistingPassword').hidden,false);assert.equal(a.stats.resets.length,0);
+});
+
+test('An already-registered signup error has the same private, actionable next steps',async()=>{
+  const h=harness(),a=api();a.client.auth.signUp=async()=>({error:{code:'user_already_exists'}});
+  authReady(h,a,'signup');newPassword(h);h.el('signupConsent').checked=true;await h.run(submit());
+  assert.equal(h.el('loginDone').hidden,false);assert.equal(h.el('loginSentTitle').textContent,'下一步：驗證或登入');assert.equal(h.el('setupExistingPassword').hidden,false);
+});
+
+test('The existing-account action preserves email but never sends setup mail automatically',async()=>{
+  const h=harness(),a=api();authReady(h,a,'signup');h.run("mailResult('signup','owner@example.com');openExistingPasswordSetup()");
+  assert.equal(h.run('authMode'),'forgot');assert.equal(h.el('email').value,'owner@example.com');assert.equal(h.el('signupConsent').checked,false);assert.equal(a.stats.resets.length,0);
+  h.advance(61000);await h.run(submit());assert.equal(a.stats.resets.length,1);
+});
+
+test('Legacy password-setup controls do not run while an auth request is pending',()=>{
+  const h=harness(),a=api();authReady(h,a,'signup');h.run('authBusy=true;openExistingPasswordSetup()');assert.equal(h.run('authMode'),'signup');
+});
+
+test('A recovery broadcast signs the sender tab in without another password form',async()=>{
+  const h=harness(),a=api();authReady(h,a,'forgot');
+  h.run(`onAuthEvent('PASSWORD_RECOVERY',{user:{id:'${OWNER}'}})`);await h.fireDelay(0);
+  assert.equal(h.run('user.id'),OWNER);assert.equal(h.run('recoveryActive'),false);assert.equal(h.el('loginDialog').open,false);
+});
+
+test('The actual recovery callback tab still verifies Auth before showing reset controls',async()=>{
+  const h=harness(),a=api();authReady(h,a);h.run('recoveryCallbackTab=true');
+  h.run(`onAuthEvent('PASSWORD_RECOVERY',{user:{id:'${OWNER}'}})`);await h.fireDelay(0);
+  assert.equal(h.run('recoveryVerified'),true);assert.equal(h.run('authMode'),'recovery');assert.equal(h.el('loginDialog').open,true);
+  newPassword(h);await h.run(submit());assert.equal(h.run('recoveryCallbackTab'),false);assert.equal(h.el('loginDialog').open,false);
+});
+
+test('Choosing a cover replaces the stale reselect warning without claiming server upload',async()=>{
+  const h=harness(),a=api();ready(h,a.client);h.el('draftStatus').textContent='已還原文字草稿；尚未上傳的封面請重新選取。';h.el('cover').files=[{size:500,type:'image/png'}];
+  await h.run('chooseCover()');assert.equal(a.stats.uploads,0);assert(h.el('draftStatus').textContent.includes('將於發布時上傳'));assert.equal(h.el('coverPreview').hidden,false);
 });

@@ -21,9 +21,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700;900&display=swap" rel="stylesheet">
 <link rel="canonical" href="https://aimade.world/">
-<link rel="stylesheet" href="assets/app.css?v=20261103-auth2">
+<link rel="stylesheet" href="assets/app.css?v=20261103-auth3">
 <script defer src="assets/supabase-2.118.0.min.js"></script>
-<script defer src="assets/app.js?v=20261103-auth2"></script>
+<script defer src="assets/app.js?v=20261103-auth3"></script>
 </head><body>
 <a class="skip" href="#main">跳至內容 / Skip to content</a>
 <header><div class="wrap nav">
@@ -60,6 +60,7 @@
 <a class="auth-brand" href="#home" data-close="loginDialog" aria-label="AIMade"><span aria-hidden="true">A.</span> AIMade</a>
 <h2 id="loginHeading">歡迎來到 AIMade</h2><p id="loginSub">登入後，繼續你的創作。</p>
 <form id="loginForm">
+<div id="signupExistingNotice" class="auth-existing-note" hidden><p data-i="signupExistingHint">曾用郵件連結登入過 AIMade？請為原帳戶設定密碼，不必重新註冊。</p><button type="button" class="text-link" id="signupExistingPassword" data-i="legacyPasswordAction">設定／重設密碼</button></div>
 <fieldset id="authFields" class="editor-fields">
 <div class="field" id="emailField"><label for="email" data-i="email">電郵地址</label><input id="email" name="email" required type="email" autocomplete="username" maxlength="254" inputmode="email"></div>
 <div class="field" id="passwordField"><div class="password-label"><label for="password" id="passwordLabel">密碼</label><button type="button" class="text-link" id="showPassword" aria-pressed="false">顯示密碼</button></div><input id="password" name="password" required type="password" autocomplete="current-password" aria-describedby="passwordHelp"><small id="passwordHelp" data-i="passwordHelp" hidden>至少 12 個字元，建議使用不重複的長密碼。</small></div>
@@ -70,9 +71,9 @@
 <button class="text-link forgot-password" type="button" id="forgotPassword" data-i="forgotLink">忘記／設定密碼</button>
 </form>
 <p id="loginStatus" class="form-status" role="status" aria-live="polite"></p>
-<div id="loginDone" class="login-done" hidden><div class="success-mark" aria-hidden="true">✓</div><h3 id="loginSentTitle">請查看信箱</h3><p id="loginSentEmail" class="sent-email"></p><p id="loginSentHelp"></p><div class="actions"><button class="btn" type="button" id="resendLink">重新寄送</button><button class="text-link" type="button" id="changeLoginEmail" data-i="changeEmail">更改電郵地址</button></div><button class="text-link back-signin" type="button" id="backToSignin" data-i="backSignin">返回登入</button></div>
+<div id="loginDone" class="login-done" hidden><div class="success-mark" aria-hidden="true">✓</div><h3 id="loginSentTitle">請查看信箱</h3><p id="loginSentEmail" class="sent-email"></p><p id="loginSentHelp"></p><button type="button" class="btn primary" id="setupExistingPassword" data-i="existingPasswordAction" hidden>已有帳戶？設定／重設密碼</button><div class="actions"><button class="btn" type="button" id="resendLink">重新寄送</button><button class="text-link" type="button" id="changeLoginEmail" data-i="changeEmail">更改電郵地址</button></div><button class="text-link back-signin" type="button" id="backToSignin" data-i="backSignin">返回登入</button></div>
 <p class="auth-switch" id="authSwitch"><span id="authSwitchLabel">還沒有帳戶？</span> <button class="text-link" type="button" id="authSwitchButton">註冊</button></p>
-<p class="auth-legacy" id="legacyPassword" data-i="legacyPassword">曾用郵件連結登入？使用原電郵設定一次密碼，原有作品會保留。</p>
+<div class="auth-legacy" id="legacyPassword"><span data-i="legacyPassword">曾用郵件連結登入？使用原電郵設定一次密碼，原有作品會保留。</span><button type="button" class="text-link" id="legacyPasswordSetup" data-i="legacyPasswordAction">設定／重設密碼</button></div>
 </dialog>
 <dialog id="reportDialog" aria-labelledby="reportHeading"><button type="button" class="close" data-close="reportDialog" aria-label="關閉 / Close">×</button><h2 id="reportHeading" data-i="report">檢舉作品</h2><form id="reportForm"><div class="field"><label for="reportReason" data-i="reportReason">請說明侵權、詐騙或其他問題</label><textarea id="reportReason" required maxlength="1000"></textarea></div><button class="btn primary" type="submit" data-i="sendReport">提交檢舉</button><p id="reportStatus" role="status"></p></form></dialog>
 <div id="toast" class="toast" role="status" hidden></div><noscript><div class="wrap notice">作品探索需要 JavaScript。請啟用 JavaScript，或聯絡 hello@aimade.world 取得協助。</div></noscript>
