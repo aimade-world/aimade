@@ -3,7 +3,7 @@
 Free discovery and sharing of AI-assisted creations. Live: https://aimade.world/
 
 ## Architecture
-- GitHub Pages static site: `index.html`, `assets/app.css`, `assets/app.js`.
+- GitHub Pages static site: `index.html`, `assets/app.css`, `assets/app.js`, `assets/captcha.js`.
 - Supabase Auth (email/password, one-time email verification and password recovery), Postgres RLS and public `covers` bucket.
 - Supabase JS 2.118.0 is vendored with its MIT license. The pinned package manifest/lockfile supports `npm audit`; the browser uses the vendored UMD file. No secret/service-role key belongs in this repository.
 - Client hash routes; `?w=<uuid>` supports copied work links. Social crawlers still see the generic site card, not per-work previews.
@@ -19,7 +19,7 @@ Preview uses the production read API. Auth writes are blocked unless the page or
 
 ## Drafts and sign-in flow
 - Current product decision: email/password only. No Google, Apple or X buttons, OAuth credentials, public personal Gmail, or hidden third-party login placeholders.
-- `aimade_drafts_v3` keeps the new-creation draft separate from per-work edit drafts. The previous `aimade_draft_v2` is migrated only after a successful local write; it is not discarded on a failed migration.
+- `aimade_drafts_v4:<account UUID>` separates each account's new-creation and per-work edit drafts. Guests use a separate scope. Old v2/v3 data is retained; an ownerless legacy creation draft is not assigned to the next signed-in account. A legacy edit may be imported only after its owner is verified. Account switches hide the previous account's draft without deleting it. These browser-local drafts are neither encrypted nor synced; clear site data on shared devices.
 - Entering Share opens the new-creation draft, not the last edited published work. A notice links to the last saved edit. Edit data is loaded only after the authenticated owner is verified, and stale edit responses cannot replace a newer route.
 - Signup responses never claim an account was created or a verification email was delivered: a previously confirmed account can return an obfuscated response. Sign-in, signup and the signup response all link clearly to password setup for legacy email-link users. No public email-existence lookup was added.
 - `PASSWORD_RECOVERY` broadcasts update other tabs to signed-in without opening another reset form. Only the actual recovery callback tab may open that form; completing or cancelling clears the callback marker.
@@ -32,8 +32,17 @@ Preview uses the production read API. Auth writes are blocked unless the page or
 - Legal consent is never restored from a draft. Required trimmed text is checked before a file upload. Publishing locks the form, retains the pending creation ID and reuses completed/in-flight cover uploads on retry.
 - The automated flow tests use stubbed Auth, Storage and database clients. They do not prove real email delivery or a complete production publication. Those require an owner-assisted end-to-end test.
 
+## CAPTCHA
+- Cloudflare Turnstile is enabled in Supabase Auth as well as the frontend. The public sitekey belongs in the HTML; the secret belongs only in the provider's server configuration, never Git, frontend files, logs or screenshots.
+- Sign-in, signup, recovery email and verification-email resend each require a fresh single-use token. The widget loads on opening the auth dialog; stale tokens, missing modules and widget errors fail closed with a retry path. Tokens stay in page memory only.
+- The authenticated password-recovery callback does not require an extra CAPTCHA. Do not disable email verification or alter existing accounts to work around CAPTCHA failures.
+- On 2026-11-04, eight live missing/invalid-token probes were rejected with `captcha_failed`, and the owner completed a real human-verification/password-login round trip. The ordinary account's saved draft returned after sign-in. Automated checks total 98; they are not a penetration test or a guarantee against all bots.
+- Recheck the live domain allowlist and server secret after any widget change. Production auth writes stay limited to the exact production origin; do not weaken that guard for local preview.
+
 ## Database
 The November 2 recovery migrations under `supabase/migrations/` have been applied to the existing project. They are **one-time migrations**, not a fresh-install schema or scripts to rerun blindly.
+
+`20261104_storage_listing_and_retired_views.sql` was also applied. The retired browser page-view insert policy now denies writes in addition to the revoked INSERT grants. Cover listing is restricted to each authenticated owner's folder or an existing administrator. The bucket stays public so published image URLs still load. Known public URLs can still be downloaded: this is not DRM or complete erasure after unpublishing. A transaction checked anonymous/ordinary/admin listing and unchanged work/storage data before commit.
 
 `work_catalog` uses `security_invoker=true`; never change it to a definer view. Owners can edit and reversibly unpublish. Administrators can inspect reports through the Supabase dashboard. Unpublishing is not erasure of public cover objects.
 
@@ -43,7 +52,7 @@ The November 2 recovery migrations under `supabase/migrations/` have been applie
 - Free backend projects can pause when inactive. Check provider alerts; a paid no-pause plan needs the owner's approval.
 - Cover limits are 5MB/file, allowed raster formats, owner-folder-only insert, best-effort 20 uploads/day and 50 stored/account. The count policy can race under concurrency and does not stop multi-account abuse.
 - Work/report limits are 20 per account per 24h. Reports are administrator-only. Browser page-view writes are retired because the former anonymous endpoint was unlimited.
-- Add CAPTCHA and monitor usage before a large public promotion. Do not create artificial traffic as a substitute for reliable hosting.
+- CAPTCHA is enabled; continue monitoring usage before and during promotion. It reduces abuse but does not replace rate limits, quotas or moderation. Do not create artificial traffic as a substitute for reliable hosting.
 - Keep regular private DB/Auth/storage backups and test restores. Application JSON exports are not full backups. Never upload those exports here.
 - Review provider MFA, DNS/domain renewal, dependency updates, reports and orphaned images periodically.
 
