@@ -38,7 +38,7 @@ function harness(seed = {}) {
     setTimeout(fn,ms){const id=++timerId;timers.set(id,{fn,ms});return id},clearTimeout(id){timers.delete(id)},
     localStorage:{getItem:k=>store.get(k)??null,setItem(k,v){if(failWrites)throw Error('Quota');store.set(k,v)},removeItem(k){store.delete(k)}},
     document:{getElementById:el,querySelector:()=>el('query'),querySelectorAll:()=>[],addEventListener(){},documentElement:{},title:''},
-    window:{addEventListener(){},scrollTo(){}},location,navigator:{},
+    window:{addEventListener(){},scrollTo(){},AIMadeCaptcha:{ready:()=>true,takeToken:()=> 'mock-captcha-token',sync(){},clear(){}}},location,navigator:{},
     history:{replaceState(_,__,url){const u=new URL(url,location.origin);location.pathname=u.pathname;location.search=u.search;location.hash=u.hash}},confirm:()=>true
   });
   el('loginDone').hidden=true;
@@ -513,4 +513,39 @@ test('Cleared legacy edits never reappear when the owner reopens the work',async
 test('A malformed legacy edit cannot change the target work identifier',async()=>{
  const h=harness({aimade_drafts_v3:{version:3,create:null,edits:{[WORK]:{editId:MEMBER,owner:OWNER,title:'Wrong target'}}}}),a=api({work:{id:WORK,owner:OWNER,title:'Verified live work'}});ready(h,a.client);h.location.hash='#edit/'+WORK;
  await h.run(`startEdit('${WORK}')`);assert.equal(h.el('title').value,'Verified live work');assert.equal(h.run('editId'),WORK);
+});
+
+
+test('All unauthenticated auth endpoints carry a CAPTCHA token',async()=>{
+  for(const mode of ['signin','signup','forgot']){
+    const h=harness(),a=api();authReady(h,a,mode);newPassword(h);h.el('signupConsent').checked=true;
+    await h.run(submit());
+    const sent=mode==='signin'?a.stats.logins[0].options:mode==='signup'?a.stats.signups[0].options:a.stats.resets[0][1];
+    assert.equal(sent.captchaToken,'mock-captcha-token');
+    if(mode==='signup'){h.advance(61000);await h.run("requestAuthMail('signup','owner@example.com',true)");assert.equal(a.stats.resends[0].options.captchaToken,'mock-captcha-token')}
+    assert(![...h.store.values()].join('').includes('mock-captcha-token'));
+  }
+});
+test('Missing CAPTCHA fails closed for sign-in, signup, reset and resend',async()=>{
+  for(const mode of ['signin','signup','forgot']){
+    const h=harness(),a=api();authReady(h,a,mode);newPassword(h);h.el('signupConsent').checked=true;
+    h.context.window.AIMadeCaptcha={ready:()=>false,takeToken:()=>null,sync(){},clear(){}};
+    h.run('renderAuthDialog()');assert.equal(h.el('authSubmit').disabled,true);await h.run(submit());
+    assert.equal(a.stats.logins.length+a.stats.signups.length+a.stats.resets.length,0);assert(h.el('loginStatus').textContent.includes('安全驗證'));
+    await h.run("requestAuthMail('signup','owner@example.com',true)");assert.equal(a.stats.resends.length,0);
+  }
+});
+test('Missing CAPTCHA module cannot bypass verification',async()=>{
+  const h=harness(),a=api();authReady(h,a);delete h.context.window.AIMadeCaptcha;h.el('password').value=MOCK_PASSWORD;
+  await h.run(submit());assert.equal(a.stats.logins.length,0);
+});
+test('Verified recovery updates password without requesting a new CAPTCHA token',async()=>{
+  const h=harness(),a=api();authReady(h,a);h.run(`user={id:'${OWNER}'};recoveryActive=true`);
+  await h.run(`prepareRecovery({user:{id:'${OWNER}'}})`);newPassword(h);
+  h.context.window.AIMadeCaptcha.takeToken=()=>{throw Error('must not consume')};await h.run(submit());assert.equal(a.stats.updates.length,1);
+});
+test('Backend CAPTCHA failures are actionable and do not expose server messages',async()=>{
+  const h=harness(),a=api();a.client.auth.signInWithPassword=async()=>({error:{code:'captcha_failed',message:'private'}});
+  authReady(h,a);h.el('password').value=MOCK_PASSWORD;await h.run(submit());
+  assert(h.el('loginStatus').textContent.includes('安全驗證未通過'));assert(!h.el('loginStatus').textContent.includes('private'));
 });

@@ -5,6 +5,7 @@ const $=id=>document.getElementById(id);
 const storage={get(k,f=null){try{const v=localStorage.getItem(k);return v===null?f:JSON.parse(v)}catch{return f}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}},remove(k){try{localStorage.removeItem(k)}catch{}}};
 let lang=storage.get('aimade_lang','zh');if(!['zh','en'].includes(lang))lang='zh';
 const words={
+captchaRequired:['請先完成安全驗證；如未顯示，請按重新載入驗證。','Complete the security check first. If it is not visible, reload verification.'],captchaFailed:['安全驗證未通過或已過期，請完成新的驗證後重試。','Security verification failed or expired. Complete a new check and try again.'],
 navHome:['探索作品','Explore'],navSaved:['我的收藏','Saved'],navGuide:['分享指南','How to share'],navMine:['我的作品','My works'],signin:['登入','Sign in'],signout:['登出','Sign out'],share:['分享作品 ↗','Share a creation ↗'],
 hero:['別只看 AI 能做什麼，\n直接玩看看。','Don’t just see what AI can do.\nTry it for yourself.'],heroSub:['發現創作者做的小遊戲、實用工具和互動作品。找到喜歡的，就打開試試；做了新作品，也歡迎分享。','Discover little games, useful tools and interactive creations. Try something new. Made something yourself? Share it here.'],explore:['探索作品 ↓','Explore creations ↓'],noteTag:['MADE WITH AI. SHARED WITH YOU.','MADE WITH AI. SHARED WITH YOU.'],noteTitle:['一個小點子，\n也值得被看見。','Small ideas.\nWorth sharing.'],noteBody:['不需要是專業開發者。\n你做的第一個作品，也歡迎。','You don’t need to be a developer.\nYour first creation belongs here, too.'],join:['分享你的創作 ↗','Share yours ↗'],new:['最新發布','Newest'],hot:['近 30 天新作 · 最多讚','New in 30 days · most liked'],pop:['最多讚','Most liked'],hasLink:['只看附有使用連結的作品','Only works with a link'],more:['載入更多作品','Load more'],stripTitle:['你做的下一件作品，放在這裡。','Your next creation belongs here.'],stripSub:['一個連結、一句介紹，就能開始分享。上傳前可先儲存草稿。','Start with a link and a short description. Save a draft before publishing.'],
 uploadTitle:['分享你的 AI 作品','Share your AI creation'],editTitle:['編輯作品','Edit creation'],uploadSub:['讓別人知道它可以做什麼，以及如何開始使用。發布後仍可編輯。','Explain what it does and how to get started. You can edit it after publishing.'],step1:['作品與連結','Work & link'],step2:['介紹與封面','Story & cover'],step3:['確認並發布','Review & publish'],category:['作品類型','Category'],access:['外部作品使用條件','External access'],accessUnknown:['未標示／請看作品說明','Not specified'],accessFree:['免費使用','Free to use'],accessLogin:['需外站登入','External sign-in'],accessTrial:['有限免費試用','Limited free trial'],accessDisplay:['僅展示','Showcase only'],link:['作品連結','Work URL'],linkHelp:['遊戲和工具請提供可開啟的網址；圖片、文字或 Prompt 可只分享內容。','For games and tools, provide a working URL. Images, writing and prompts can be shared without one.'],title:['作品名稱 *','Title *'],description:['一句用途與簡介 *','What does it do? *'],promptLabel:['可複製的 Prompt *','Copyable prompt *'],promptHelp:['只放你有權分享的內容，請勿包含密碼、API key 或個人資料。','Share only content you have permission to share. No passwords, API keys or personal data.'],displayName:['公開作者名稱 *','Public display name *'],tools:['使用的 AI 工具（選填）','AI tools used (optional)'],cover:['封面圖片（選填）','Cover image (optional)'],coverHelp:['PNG、JPG、WebP 或 GIF，最多 5MB。圖片不會跟文字草稿一起保存。每帳戶每日最多 20 次封面上傳，最多保留 50 張；達上限請聯絡我們。','PNG, JPG, WebP or GIF, up to 5MB. Files are not saved with your text draft. Up to 20 cover uploads/day and 50 stored per account; contact us if you reach the limit.'],removeCover:['移除現有封面','Remove existing cover'],mobileCheck:['我已在手機測試，作品可使用','I tested this work on mobile'],feedbackCheck:['歡迎試用建議／正在找測試者','Feedback and testers welcome'],rights:['我有權分享這份內容，並同意','I have permission to share this content and agree to the'],terms:['服務條款','Terms'],privacy:['隱私政策','Privacy'],publish:['確認並發布','Publish creation'],update:['儲存更新','Save changes'],saveDraft:['儲存草稿','Save draft'],clearDraft:['清除草稿','Clear draft'],beforeShare:['BEFORE YOU SHARE','BEFORE YOU SHARE'],tipsTitle:['讓人一眼看懂，\n再親手試試。','Make it clear.\nMake it worth a try.'],tip1:['名稱具體，例如「三分鐘專注計時器」。','Use a specific title, like “Three-minute focus timer”.'],tip2:['說明用途、操作方式及使用限制。','Describe the use case, instructions and any limits.'],tip3:['放一張真實畫面，不用誇大的宣傳圖。','Use an actual screenshot, not exaggerated promises.'],hostingNote:['目前提供作品展示和外部連結分享，不代管可執行程式，也不替作品支付 AI API 費用。','We showcase creations and external links. We do not host executable code or pay the AI API costs of shared works.'],draftNote:['草稿只存在這個瀏覽器。共用電腦使用後請清除草稿；請勿在草稿中放入秘密資料。','Drafts stay in this browser only. Clear them on shared devices, and never include secrets.'],guideTitle:['分享很簡單。','A small guide to sharing.'],guideSub:['AIMade 是作品的展示入口，不是 AI 模型訓練或程式託管服務。','AIMade is a discovery and showcase platform, not a model-training or code-hosting service.'],ready:['準備好分享了嗎？','Ready to share?'],guideEnd:['也可以先逛逛，找到下一個靈感。','Or explore first and find your next idea.'],tagline:['把創意變成現實，讓世界看見。','Turn ideas into reality. Share them with the world.'],contact:['聯絡我們','Contact'],loginTitle:['用電郵登入','Sign in with email'],loginSub:['瀏覽和開啟作品不需要登入。發布、按讚或管理自己的作品時才需要。','No sign-in needed to browse or open works. Sign in to publish, like or manage your creations.'],email:['電郵地址','Email address'],report:['檢舉作品','Report work'],reportReason:['請說明侵權、詐騙或其他問題','Describe the infringement, scam or other issue'],sendReport:['提交檢舉','Submit report'],
@@ -113,6 +114,17 @@ function cleanAuthUrl(removeRecovery=false){
   const hash=location.hash,authHash=/(?:^#|&)(?:access_token|error|error_code|error_description|refresh_token)=/.test(hash);
   history.replaceState(null,'',u.pathname+u.search+(authHash?'':hash));
 }
+function updateAuthCaptchaControls(){
+  const recovery=authMode==='recovery',cooldown=Date.now()<mailCooldownUntil;
+  const blocked=!window.AIMadeCaptcha?.ready();
+  $('authSubmit').disabled=authBusy||(recovery?!recoveryVerified:blocked)||(['signup','forgot'].includes(authMode)&&cooldown);
+  $('resendLink').disabled=authBusy||cooldown||blocked;
+}
+function takeAuthCaptcha(){
+  const token=window.AIMadeCaptcha?.takeToken();
+  if(!token){$('loginStatus').textContent=t('captchaRequired');return null}
+  return token;
+}
 function renderAuthDialog(){
   clearTimeout(mailTimer);
   const recovery=authMode==='recovery',signup=authMode==='signup',forgot=authMode==='forgot',done=!!authMail;
@@ -145,10 +157,13 @@ function renderAuthDialog(){
   $('forgotPassword').disabled=authBusy;$('changeLoginEmail').disabled=authBusy;
   $('resendLink').disabled=authBusy||seconds>0;$('resendLink').textContent=authBusy?t('sending'):seconds?waiting:t(authMail?.kind==='signup'?'resendVerification':'resendPasswordSetup');
   if(authMail){$('loginSentTitle').textContent=t(authMail.kind==='signup'?'signupMailTitle':'resetMailTitle');$('loginSentHelp').textContent=t(authMail.kind==='signup'?'signupMailHelp':'resetMailHelp');$('loginSentEmail').textContent=authMail.email}
+  window.AIMadeCaptcha?.sync({visible:!!$('loginDialog').open&&!recovery,lang,busy:authBusy,onChange:updateAuthCaptchaControls});
+  updateAuthCaptchaControls();
   if(seconds)mailTimer=setTimeout(renderAuthDialog,1000);
 }
 function setAuthMode(next){
   if(authBusy||!['signin','signup','forgot'].includes(next))return;
+  window.AIMadeCaptcha?.clear();
   ++authUiVersion;authMode=next;authMail=null;clearPasswordFields();$('signupConsent').checked=false;$('loginStatus').textContent='';renderAuthDialog();$('email').focus();
 }
 function openExistingPasswordSetup(){
@@ -162,6 +177,7 @@ function openLogin(){
 async function authDeadline(promise){let timer;try{return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject({pending:true}),20000)})])}finally{clearTimeout(timer)}}
 function authErrorKey(error){
   if(error?.status===429||['over_email_send_rate_limit','over_request_rate_limit'].includes(error?.code))return 'authRate';
+  if(['captcha_failed','captcha_verification_failed'].includes(error?.code))return 'captchaFailed';
   if(error?.pending)return 'authPending';
   if(['invalid_credentials','user_not_found'].includes(error?.code))return 'invalidLogin';
   if(error?.code==='weak_password')return 'passwordWeak';
@@ -172,9 +188,10 @@ function mailResult(kind,email){authMail={kind,email};clearPasswordFields();rend
 async function requestAuthMail(kind,email,resend=false){
   if(authBusy||Date.now()<mailCooldownUntil){renderAuthDialog();return}
   if(!authAllowed()||!rememberAuthReturn())return;
+  const captchaToken=takeAuthCaptcha();if(!captchaToken)return;
   const version=authUiVersion;authBusy=true;mailCooldownUntil=Date.now()+60000;$('loginStatus').textContent='';renderAuthDialog();
   try{
-    const request=kind==='signup'&&resend?sb.auth.resend({type:'signup',email,options:{emailRedirectTo:AUTH_ORIGIN+'/'}}):sb.auth.resetPasswordForEmail(email,{redirectTo:AUTH_ORIGIN+'/?auth=recovery'});
+    const request=kind==='signup'&&resend?sb.auth.resend({type:'signup',email,options:{emailRedirectTo:AUTH_ORIGIN+'/',captchaToken}}):sb.auth.resetPasswordForEmail(email,{redirectTo:AUTH_ORIGIN+'/?auth=recovery',captchaToken});
     const {error}=await authDeadline(request);if(error)throw error;
     if(version===authUiVersion)mailResult(kind,email);
   }catch(error){if(version===authUiVersion)$('loginStatus').textContent=t(authErrorKey(error))}
@@ -196,9 +213,10 @@ async function submitAuth(e){
   if(current==='signup'&&!$('signupConsent').checked){$('loginStatus').textContent=t('signupConsentRequired');return}
   if(current==='recovery'&&(!recoveryVerified||!user||user.id!==recoveryUserId)){$('loginStatus').textContent=t('recoveryExpired');return}
   if(current!=='recovery'&&!rememberAuthReturn())return;
+  const captchaToken=current==='recovery'?null:takeAuthCaptcha();if(current!=='recovery'&&!captchaToken)return;
   authBusy=true;$('loginStatus').textContent='';if(current==='signup')mailCooldownUntil=Date.now()+60000;renderAuthDialog();
   try{
-    const request=current==='signin'?sb.auth.signInWithPassword({email,password}):current==='signup'?sb.auth.signUp({email,password,options:{emailRedirectTo:AUTH_ORIGIN+'/'}}):sb.auth.updateUser({password});
+    const request=current==='signin'?sb.auth.signInWithPassword({email,password,options:{captchaToken}}):current==='signup'?sb.auth.signUp({email,password,options:{emailRedirectTo:AUTH_ORIGIN+'/',captchaToken}}):sb.auth.updateUser({password});
     const {data,error}=await authDeadline(request);if(error)throw error;
     if(current==='recovery'){
       recoveryActive=false;recoveryCallbackTab=false;recoveryVerified=false;recoveryUserId=null;++recoveryRequest;cleanAuthUrl(true);
@@ -468,6 +486,7 @@ $('forgotPassword').addEventListener('click',()=>setAuthMode('forgot'));
 for(const id of ['signupExistingPassword','setupExistingPassword','legacyPasswordSetup'])$(id).addEventListener('click',openExistingPasswordSetup);
 $('showPassword').addEventListener('click',()=>{passwordVisible=!passwordVisible;$('password').type=$('passwordConfirm').type=passwordVisible?'text':'password';renderAuthDialog()});
 $('loginDialog').addEventListener('close',()=>{
+  window.AIMadeCaptcha?.clear();
   ++authUiVersion;clearPasswordFields();$('signupConsent').checked=false;authMode='signin';authMail=null;$('loginStatus').textContent='';
   if(recoveryActive){++recoveryRequest;recoveryActive=false;recoveryCallbackTab=false;recoveryVerified=false;recoveryUserId=null;authMode='signin';cleanAuthUrl(true)}
 });

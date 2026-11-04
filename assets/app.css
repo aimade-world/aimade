@@ -13,3 +13,5 @@ nav .mobile-share{display:none}@media(max-width:620px){nav .mobile-share{display
 .auth-existing-note{background:var(--soft);border-left:2px solid var(--accent);border-radius:5px;padding:12px 14px;margin:0 0 20px}.auth-dialog .auth-existing-note p{font-size:12px;line-height:1.8;margin:0 0 5px}.auth-existing-note button,.auth-legacy button{font-size:12px}.auth-legacy button{display:block;margin-top:6px}.auth-dialog #setupExistingPassword{margin:6px 0 2px;width:100%;white-space:normal}
 
 .account-status{margin-top:24px;padding:14px 18px;background:var(--soft);border:1px solid var(--line);border-radius:8px;font-size:12px;overflow-wrap:anywhere}.account-status>div{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.account-status .badge{margin:0}.account-status small{display:block;color:var(--muted);margin-top:3px}
+
+.auth-captcha{margin:18px 0 22px;min-width:0}.auth-captcha .help{margin:8px 0;font-size:12px}.auth-captcha [id=authCaptchaWidget]{min-height:65px;max-width:100%}.auth-captcha .text-link{font-size:12px}
