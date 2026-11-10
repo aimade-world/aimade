@@ -15,3 +15,17 @@ nav .mobile-share{display:none}@media(max-width:620px){nav .mobile-share{display
 .account-status{margin-top:24px;padding:14px 18px;background:var(--soft);border:1px solid var(--line);border-radius:8px;font-size:12px;overflow-wrap:anywhere}.account-status>div{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.account-status .badge{margin:0}.account-status small{display:block;color:var(--muted);margin-top:3px}
 
 .auth-captcha{margin:18px 0 22px;min-width:0}.auth-captcha .help{margin:8px 0;font-size:12px}.auth-captcha [id=authCaptchaWidget]{min-height:65px;max-width:100%}.auth-captcha .text-link{font-size:12px}
+
+/* Room to tap on small screens and touch devices, without changing account flows. */
+@media(max-width:620px),(pointer:coarse){
+  .btn,.btn.small,.chip,.close{min-width:44px;min-height:44px}
+  .text-link{min-height:44px;display:inline-flex;align-items:center}
+  .section-title .text-link{display:inline-flex}
+  .forgot-password{display:flex;width:max-content;max-width:100%}
+  nav a,.footer a{display:inline-flex;align-items:center;min-height:44px}
+  .filter-bottom label,.check{min-height:44px;align-items:center}
+  .filter-bottom label{display:inline-flex;gap:8px}
+  .check input[type=checkbox]{flex-shrink:0}
+  .auth-consent{align-items:flex-start}
+  .auth-consent input{margin-top:5px}
+}

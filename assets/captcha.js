@@ -12,7 +12,9 @@
     error:['安全驗證無法載入。請檢查網絡、允許 challenges.cloudflare.com，然後重試。','Verification is unavailable. Check your connection, allow challenges.cloudflare.com, then retry.']
   };
   let visible=false,lang='zh',busy=false,state='loading',widget=null,generation=0,token='',expires=0,expiryTimer=null;
-  let loadPromise=null,script=null,onChange=()=>{};
+  let loadPromise=null,script=null,onChange=()=>{},widgetSize='compact';
+  // Flexible Turnstile still needs 300px; compact fits narrow dialog content.
+  const fittingSize=()=>$('authCaptchaWidget').clientWidth>=300?'flexible':'compact';
   function notify(){
     $('authCaptcha').hidden=!visible;
     $('authCaptchaStatus').textContent=copy[state][lang==='en'?1:0];
@@ -45,8 +47,9 @@
       const ts=await load();if(current!==generation||!visible||busy)return;
       status('waiting');
       const expire=()=>{if(current!==generation)return;token='';expires=0;clearTimeout(expiryTimer);status('expired')};
+      widgetSize=fittingSize();
       widget=ts.render($('authCaptchaWidget'),{
-        sitekey,theme:'light',size:'flexible',language:lang==='en'?'en':'zh-tw',action:'auth',
+        sitekey,theme:'light',size:widgetSize,language:lang==='en'?'en':'zh-tw',action:'auth',
         'response-field':false,'refresh-expired':'manual','refresh-timeout':'manual',retry:'never',
         callback(value){if(current!==generation||!visible||busy)return;token=typeof value==='string'?value:'';expires=Date.now()+290000;clearTimeout(expiryTimer);expiryTimer=setTimeout(expire,290000);status(token?'ready':'error')},
         'expired-callback':expire,'timeout-callback':expire,
@@ -69,4 +72,7 @@
     clear(){visible=false;drop();state='loading';notify()}
   };
   $('authCaptchaRetry').addEventListener('click',()=>{if(visible&&!busy)void mount()});
+  window.addEventListener('resize',()=>{
+    if(visible&&!busy&&widget!==null&&fittingSize()!==widgetSize)void mount();
+  });
 })();

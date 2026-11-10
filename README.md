@@ -31,6 +31,7 @@ Preview uses the production read API. Auth writes are blocked unless the page or
 - Ordinary sign-out explicitly uses the local scope, so it does not unexpectedly sign the user out on every other device.
 - Legal consent is never restored from a draft. Required trimmed text is checked before a file upload. Publishing locks the form, retains the pending creation ID and reuses completed/in-flight cover uploads on retry.
 - The automated flow tests use stubbed Auth, Storage and database clients. They do not prove real email delivery or a complete production publication. Those require an owner-assisted end-to-end test.
+- November 10 prelaunch UI: expired email callbacks without a recovery marker now open the password-email request form with a clear explanation, never an unverified new-password form. Callback/provider details remain hidden. Auth status appears before the verification widget. Main buttons, category controls and action links have at least 44px height on small screens/touch devices.
 
 ## CAPTCHA
 - Cloudflare Turnstile is enabled in Supabase Auth as well as the frontend. The public sitekey belongs in the HTML; the secret belongs only in the provider's server configuration, never Git, frontend files, logs or screenshots.
@@ -38,11 +39,14 @@ Preview uses the production read API. Auth writes are blocked unless the page or
 - The authenticated password-recovery callback does not require an extra CAPTCHA. Do not disable email verification or alter existing accounts to work around CAPTCHA failures.
 - On 2026-11-04, eight live missing/invalid-token probes were rejected with `captcha_failed`, and the owner completed a real human-verification/password-login round trip. The ordinary account's saved draft returned after sign-in. Automated checks total 98; they are not a penetration test or a guarantee against all bots.
 - Recheck the live domain allowlist and server secret after any widget change. Production auth writes stay limited to the exact production origin; do not weaken that guard for local preview.
+- The widget uses the official compact layout when its container is narrower than 300px; flexible layout otherwise. Crossing that boundary while idle remounts the widget and invalidates the old token. No sitekey, server secret, challenge requirement or token lifetime was changed. Current offline suite: 106 checks (15 frontend plus 91 flow/CAPTCHA tests).
 
 ## Database
 The November 2 recovery migrations under `supabase/migrations/` have been applied to the existing project. They are **one-time migrations**, not a fresh-install schema or scripts to rerun blindly.
 
 `20261104_storage_listing_and_retired_views.sql` was also applied. The retired browser page-view insert policy now denies writes in addition to the revoked INSERT grants. Cover listing is restricted to each authenticated owner's folder or an existing administrator. The bucket stays public so published image URLs still load. Known public URLs can still be downloaded: this is not DRM or complete erasure after unpublishing. A transaction checked anonymous/ordinary/admin listing and unchanged work/storage data before commit.
+
+On November 10, a separately approved production repair replaced the recursive INSERT quota subquery with `aimade_internal.own_cover_quota_ok()`: zero arguments, current `auth.uid()` only, boolean result, fixed empty search path, controlled postgres SECURITY DEFINER, no anon EXECUTE. `aimade_internal` is not an exposed Data API schema. Existing ownership checks, cover limits, public bucket and all original work/admin rows were preserved. The guarded applied SQL and before/after evidence are retained in the owner's private project outputs, not automatically rerun by a frontend deploy. Postgres future default grants were narrowed; managed `supabase_admin` defaults and dashboard auto-exposure settings were not changed. Review grants/RLS whenever creating a new table or function, including through the dashboard. The old one-time quota migration alone does not represent this repaired state.
 
 `work_catalog` uses `security_invoker=true`; never change it to a definer view. Owners can edit and reversibly unpublish. Administrators can inspect reports through the Supabase dashboard. Unpublishing is not erasure of public cover objects.
 

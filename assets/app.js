@@ -36,7 +36,7 @@ Object.assign(words,{
   resetMailTitle:['請查看密碼設定信','Check your password setup email'],resetMailHelp:['若此電郵已註冊，你會收到密碼設定信；請查看收件箱及垃圾郵件。連結只能使用一次。可在另一裝置設定，之後回來使用新密碼登入。','If an account exists for this email, you will receive a one-time password setup link. Check inbox and spam. You can set the password on another device, then sign in here with it.'],
   confirmFirst:['請先完成電郵驗證，或重新寄送確認信。','Please verify your email first, or resend the confirmation email.'],changeEmail:['更改電郵地址','Change email'],resendLink:['重新寄送','Send again'],resendWait:['{seconds} 秒後可重寄','Send again in {seconds}s'],
   authRate:['請求次數較多，請稍後再試；重複點擊不會加快收信。','Too many requests. Please wait before trying again; repeated clicks will not speed up delivery.'],authPending:['伺服器回應尚未確認。請先查看信箱或稍後重試，避免重複操作。','The response is not confirmed yet. Check your inbox or retry later to avoid duplicate requests.'],
-  recoveryChecking:['正在驗證密碼設定連結…','Verifying your password setup link…'],recoveryExpired:['密碼設定連結無效、已使用或已過期。請重新申請，不需要重新註冊。','This password setup link is invalid, used or expired. Request another one; no new account is needed.'],recoveryReauth:['為保障帳戶安全，請重新申請一封密碼設定信，並使用最新的連結。','For your security, request a new password setup email and use the latest link.'],passwordSaved:['密碼已設定，下次可直接使用電郵與密碼登入。','Password saved. Next time, use your email and password.'],
+  authLinkExpired:['電郵驗證連結已失效、已使用或已過期。若要設定密碼，請在下方重新寄送設定信，並開啟最新一封。不需要重新註冊。','This email link is invalid, used or expired. To set a password, request a fresh setup email below and open the latest message. No new account is needed.'],recoveryChecking:['正在驗證密碼設定連結…','Verifying your password setup link…'],recoveryExpired:['密碼設定連結無效、已使用或已過期。請重新申請，不需要重新註冊。','This password setup link is invalid, used or expired. Request another one; no new account is needed.'],recoveryReauth:['為保障帳戶安全，請重新申請一封密碼設定信，並使用最新的連結。','For your security, request a new password setup email and use the latest link.'],passwordSaved:['密碼已設定，下次可直接使用電郵與密碼登入。','Password saved. Next time, use your email and password.'],
   sessionFail:['登入未完成，或連結已失效。請重試；如需設定密碼，請選擇「忘記／設定密碼」。','Sign-in was not completed, or the link expired. Retry, or choose “Forgot / set password”.'],authPreview:['預覽頁不會執行帳戶操作，請到 aimade.world 使用正式登入。','Account actions are disabled in preview. Use aimade.world to sign in.']
 });
 const cats={app:['網頁 / App','Web / App'],game:['小遊戲','Games'],tool:['實用工具','Tools'],prompt:['Prompt','Prompts'],image:['圖片','Images'],video:['影片','Videos'],music:['音樂','Music'],design:['3D / 設計','3D / Design'],writing:['文字創作','Writing'],other:['其他','Other']};
@@ -251,6 +251,10 @@ async function prepareRecovery(session){
 function failRecovery(){
   ++recoveryRequest;recoveryActive=false;recoveryCallbackTab=false;recoveryVerified=false;recoveryUserId=null;cleanAuthUrl(true);
   authMode='forgot';authMail=null;clearPasswordFields();$('loginStatus').textContent=t('recoveryExpired');openLogin();
+}
+function showAuthCallbackError(expired){
+  cleanAuthUrl();setAuthMode(expired?'forgot':'signin');
+  $('loginStatus').textContent=t(expired?'authLinkExpired':'sessionFail');openLogin();
 }
 function onAuthEvent(event,session){
   if(event==='PASSWORD_RECOVERY'&&recoveryCallbackTab)recoveryActive=true;
@@ -494,6 +498,7 @@ $('loginForm').addEventListener('submit',submitAuth);$('reportForm').addEventLis
 applyLang();restoreDraft();persistDrafts(drafts);
 async function init(){
   const params=new URLSearchParams(location.hash.slice(1)),authError=params.has('error')||params.has('error_description')||params.has('error_code');
+  const expiredAuthLink=params.get('error_code')==='otp_expired';
   const recoveryIntent=new URLSearchParams(location.search).get('auth')==='recovery'||params.get('type')==='recovery';
   recoveryActive=recoveryIntent;recoveryCallbackTab=recoveryIntent;
   try{if(!window.supabase)throw Error();sb=window.supabase.createClient(SB_URL,SB_KEY);
@@ -503,8 +508,8 @@ async function init(){
     route();
     const {data,error}=await sb.auth.getSession();if(error)throw error;
     cleanAuthUrl();
-    if(authError){const wasRecovery=recoveryActive;recoveryActive=false;recoveryCallbackTab=false;await refreshUser(data.session);if(wasRecovery)failRecovery();else{setAuthMode('signin');$('loginStatus').textContent=t('sessionFail');openLogin()}return}
+    if(authError){const wasRecovery=recoveryActive;recoveryActive=false;recoveryCallbackTab=false;await refreshUser(data.session);if(wasRecovery)failRecovery();else showAuthCallbackError(expiredAuthLink);return}
     await handleAuthState('INITIAL_SESSION',data.session);
-  }catch{authReady=true;if(recoveryActive||recoveryIntent)failRecovery();else if(authError){cleanAuthUrl();setAuthMode('signin');$('loginStatus').textContent=t('sessionFail');openLogin()}else{if(!sb)route();else toast(t('authFail'))}if(location.hash.startsWith('#edit/'))$('editorLoadStatus').textContent=t('authFail')}
+  }catch{authReady=true;if(recoveryActive||recoveryIntent)failRecovery();else if(authError)showAuthCallbackError(expiredAuthLink);else{if(!sb)route();else toast(t('authFail'))}if(location.hash.startsWith('#edit/'))$('editorLoadStatus').textContent=t('authFail')}
 }
 init();

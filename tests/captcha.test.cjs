@@ -1,11 +1,11 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
 const source=fs.readFileSync(path.join(__dirname,'../assets/captcha.js'),'utf8');
-function harness({loaded=true,key='public-test-key'}={}){
+function harness({loaded=true,key='public-test-key',width=400}={}){
   const nodes=new Map(),timers=new Map();let now=0,id=0,options,removed=0,renders=0,script;
-  const el=id=>{if(!nodes.has(id))nodes.set(id,{textContent:'',hidden:true,disabled:false,addEventListener(n,fn){this[n]=fn}});return nodes.get(id)};
+  const el=id=>{if(!nodes.has(id))nodes.set(id,{textContent:'',hidden:true,disabled:false,clientWidth:width,addEventListener(n,fn){this[n]=fn}});return nodes.get(id)};
   const ts={render(node,p){options=p;renders++;return 'widget-'+renders},remove(){removed++}};
   class Clock extends Date{static now(){return now}}
-  const window={};if(loaded)window.turnstile=ts;
+  const window={addEventListener(n,fn){this['on'+n]=fn}};if(loaded)window.turnstile=ts;
   vm.runInNewContext(source,{window,Date:Clock,document:{getElementById:el,querySelector:()=>({content:key}),createElement:()=>({remove(){this.removed=true}}),head:{appendChild(s){script=s}}},
     setTimeout(fn,ms){const n=++id;timers.set(n,{fn,ms});return n},clearTimeout(n){timers.delete(n)}});
   const sync=(opts={})=>window.AIMadeCaptcha.sync({visible:true,lang:'zh',busy:false,...opts});
@@ -54,4 +54,24 @@ test('Public page allows only the official CAPTCHA script and frame host',()=>{
   assert(html.includes("script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com;"));
   assert(!html.includes("script-src 'self' 'unsafe-inline'"));assert(html.includes('0x4AAAAAAFyvQs5mB-t3aKTN'));
   assert(!source.includes('localStorage'));assert(!source.includes('console.'));
+});
+
+test('Narrow CAPTCHA uses compact size; wide container keeps flexible size',async()=>{
+  for(const [width,size] of [[0,'compact'],[210,'compact'],[299,'compact'],[300,'flexible'],[390,'flexible']]){
+    const h=harness({width});h.sync();await tick();assert.equal(h.opts.size,size);
+    assert.equal(h.opts['response-field'],false);assert.equal(h.api.ready(),false);
+  }
+});
+test('Crossing the size boundary remounts and invalidates the previous token',async()=>{
+  const h=harness();h.sync();await tick();const old=h.opts;old.callback('old-token');
+  h.el('authCaptchaWidget').clientWidth=210;h.window.onresize();await tick();
+  assert.equal(h.opts.size,'compact');assert.equal(h.renders,2);assert.equal(h.api.ready(),false);
+  old.callback('late-token');assert.equal(h.api.takeToken(),null);
+  h.window.onresize();await tick();assert.equal(h.renders,2);
+});
+test('Resizing never mounts a hidden or busy CAPTCHA',async()=>{
+  const h=harness();h.window.onresize();await tick();assert.equal(h.renders,0);
+  h.sync();await tick();h.sync({busy:true});h.el('authCaptchaWidget').clientWidth=210;
+  h.window.onresize();await tick();assert.equal(h.renders,1);
+  h.api.clear();h.window.onresize();await tick();assert.equal(h.renders,1);
 });

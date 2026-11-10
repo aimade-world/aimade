@@ -549,3 +549,23 @@ test('Backend CAPTCHA failures are actionable and do not expose server messages'
   authReady(h,a);h.el('password').value=MOCK_PASSWORD;await h.run(submit());
   assert(h.el('loginStatus').textContent.includes('安全驗證未通過'));assert(!h.el('loginStatus').textContent.includes('private'));
 });
+
+// Regression cases for expired recovery callbacks without a redirect marker.
+test('Expired dashboard callback opens resend form, never reset controls',async()=>{
+ for(const sdkError of [null,{code:'otp_expired'}]){
+  const h=harness(),a=api();h.location.hash='#error=access_denied&error_code=otp_expired&error_description=private-detail';initialAuth(h,a,null,sdkError);await h.run('init()');
+  assert.equal(h.run('authMode'),'forgot');assert.equal(h.el('loginDialog').open,true);assert.equal(h.run('recoveryVerified'),false);assert.equal(h.location.hash,'');assert(h.el('loginStatus').textContent.includes('已過期'));assert(!h.el('loginStatus').textContent.includes('private-detail'));assert.equal(a.stats.updates.length,0);
+ }
+});
+test('Expired callback with old session does not authorize password update',async()=>{
+ const h=harness(),a=api();h.location.hash='#error=access_denied&error_code=otp_expired';initialAuth(h,a,{user:{id:OWNER}});await h.run('init()');assert.equal(h.run('authMode'),'forgot');assert.equal(h.run('recoveryVerified'),false);assert.equal(a.stats.updates.length,0);
+});
+test('Valid dashboard recovery without query marker still opens reset form',async()=>{
+ const h=harness(),a=api();h.location.hash='#access_token=fake-fixture&type=recovery';initialAuth(h,a,{user:{id:OWNER}});await h.run('init()');assert.equal(h.run('authMode'),'recovery');assert.equal(h.run('recoveryVerified'),true);assert.equal(h.el('loginDialog').open,true);
+});
+test('Explicit recovery redirect without session cannot update password',async()=>{
+ const h=harness(),a=api();h.location.search='?auth=recovery';initialAuth(h,a);await h.run('init()');assert.equal(h.run('authMode'),'forgot');assert.equal(h.run('recoveryVerified'),false);
+});
+test('Unrelated callback error keeps generic signin error and hides provider detail',async()=>{
+ const h=harness(),a=api();h.location.hash='#error=access_denied&error_description=private-detail';initialAuth(h,a);await h.run('init()');assert.equal(h.run('authMode'),'signin');assert(!h.el('loginStatus').textContent.includes('private-detail'));
+});
