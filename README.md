@@ -9,6 +9,15 @@ Free discovery and sharing of AI-assisted creations. Live: https://aimade.world/
 - Client hash routes; `?w=<uuid>` supports copied work links. Social crawlers still see the generic site card, not per-work previews.
 - No transactions, tipping, hosted executable code, third-party ad tracking, or AI API proxy.
 
+## Interface
+- November 10 redesign: white ground, one action colour, and one tint per work type. Fonts are Noto Sans TC (400/700/900) plus Space Grotesk 700; the former four families are gone. Icons are inline SVG, so the CSP is unchanged.
+- A work without a cover, or whose image fails to load, shows its type tint and icon instead of a shared placeholder.
+- The work page puts the main action (open the link, or copy the Prompt) beside the title. At 620px and below it is pinned to the bottom, and `route()` sets `data-mode` on `<html>` so the stylesheet can hide the tab bar there.
+- On phones `#nav` is a fixed bottom tab bar; the hamburger menu and its script were removed. Works render as compact rows.
+- Less common work types sit behind the "更多分類" chip until opened or active.
+- "你可能也想看" on the work page reads up to three other public works from `work_catalog` (same type first). It is optional and fails silently.
+- Not part of this redesign because they need backend work: on-site feedback or comments, filling the form from a pasted link, and per-work share previews.
+
 ## Local preview and checks
 ```
 python -m http.server 4173 --bind 127.0.0.1
@@ -39,7 +48,7 @@ Preview uses the production read API. Auth writes are blocked unless the page or
 - The authenticated password-recovery callback does not require an extra CAPTCHA. Do not disable email verification or alter existing accounts to work around CAPTCHA failures.
 - On 2026-11-04, eight live missing/invalid-token probes were rejected with `captcha_failed`, and the owner completed a real human-verification/password-login round trip. The ordinary account's saved draft returned after sign-in. Automated checks total 98; they are not a penetration test or a guarantee against all bots.
 - Recheck the live domain allowlist and server secret after any widget change. Production auth writes stay limited to the exact production origin; do not weaken that guard for local preview.
-- The widget uses the official compact layout when its container is narrower than 300px; flexible layout otherwise. Crossing that boundary while idle remounts the widget and invalidates the old token. No sitekey, server secret, challenge requirement or token lifetime was changed. Current offline suite: 106 checks (15 frontend plus 91 flow/CAPTCHA tests).
+- The widget uses the official compact layout when its container is narrower than 300px; flexible layout otherwise. Crossing that boundary while idle remounts the widget and invalidates the old token. No sitekey, server secret, challenge requirement or token lifetime was changed. Current offline suite: 108 checks (17 frontend plus 91 flow/CAPTCHA tests).
 
 ## Database
 The November 2 recovery migrations under `supabase/migrations/` have been applied to the existing project. They are **one-time migrations**, not a fresh-install schema or scripts to rerun blindly.
