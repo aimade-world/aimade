@@ -98,10 +98,42 @@ function accessLabel(w){const k={free:'accessFree',login:'accessLogin',trial:'ac
 function card(w){const url=safeUrl(w.link),title=esc(w.title||t('untitled')),name=w.owner_name||t('anonymous'),savedOn=saved.has(w.id),liked=likes.has(w.id);return `<article class="card"><a href="#work/${w.id}" class="cover-link" aria-label="${title}">${cover(w)}${w.details.feedback===true?`<span class="cover-tag">${esc(t('feedback'))}</span>`:''}</a><div class="card-body"><div class="card-meta"><b class="t-${kind(w)}">${esc(cat(w.category))}</b>${[accessLabel(w),w.archived?t('archived'):''].filter(Boolean).map(s=>`<span>${esc(s)}</span>`).join('')}</div><h3><a href="#work/${w.id}">${title}</a></h3><p class="card-desc">${esc(w.description||'')}</p><div class="byline"><span class="avatar" aria-hidden="true">${esc(initial(name))}</span><span class="author">${esc(name)}</span></div></div><div class="card-footer"><button class="icon-btn ${liked?'liked':''}" data-action="like" data-id="${w.id}" aria-label="${esc(t('like'))}" aria-pressed="${liked}">${icon('heart')}${w.likes_count?`<span>${w.likes_count}</span>`:''}</button><button class="icon-btn ${savedOn?'saved':''}" data-action="save" data-id="${w.id}" aria-label="${esc(t(savedOn?'saved':'save'))}" aria-pressed="${savedOn}">${icon('bookmark')}</button>${url?`<a class="pill" href="${esc(url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(launchLabel(w))} · ${title} · ${esc(t('external'))}">${esc(launchLabel(w))}</a>`:`<a class="pill" href="#work/${w.id}">${esc(t(w.category==='prompt'?'viewPrompt':'view'))}</a>`}</div></article>`}
 function renderGrid(){const filtered=search||activeCat!=='all'||onlyLink||sort==='hot';$('grid').innerHTML=works.length?works.map(card).join(''):empty(filtered?'noResults':'empty',filtered?'noResultsBody':'emptyBody',filtered?'reset':'upload',filtered?'reset':'share');fixImages()}
 function fixImages(){document.querySelectorAll('.cover img').forEach(img=>img.addEventListener('error',()=>img.remove(),{once:true}));}
-// Up to three other public works: same type first, otherwise the most liked. Optional, so failures stay silent.
-async function loadRelated(w,seq){try{const pick=async same=>{let q=sb.from('work_catalog').select('*').eq('archived',false);if(same)q=q.eq('category',w.category);const {data,error}=await timed(q.order('likes_count',{ascending:false}).order('created_at',{ascending:false}).order('id').range(0,3));if(error)throw error;return (data||[]).map(normalize).filter(x=>uuid(x.id)&&x.id!==w.id).slice(0,3)};let rows=await pick(true);if(!rows.length)rows=await pick(false);if(seq!==detailSeq||mode!=='detail'||detailWork?.id!==w.id)return;detailRelated=rows;$('related').innerHTML=relatedList();$('related').hidden=!rows.length;fixImages()}catch{}}
+// Same ranking, smaller public projection. Cache only in memory, per account, for 30 seconds.
+const RELATED_FIELDS='id,title,category,owner_name,cover_url',RELATED_TTL=30000,RELATED_CACHE_LIMIT=24;
+const relatedCache=new Map();let relatedRequest=null;
+function cancelRelated(){if(relatedRequest){relatedRequest.controller.abort();relatedRequest=null}}
+async function loadRelated(w,seq){
+  const scope=scopeFor(user?.id),key=scope+':'+w.id+':'+w.category;
+  const current=()=>seq===detailSeq&&mode==='detail'&&detailWork?.id===w.id&&scopeFor(user?.id)===scope;
+  if(!sb||!uuid(w.id)||!current())return;
+  cancelRelated();
+  const show=rows=>{if(!current())return;detailRelated=rows;$('related').innerHTML=relatedList();$('related').hidden=!rows.length;fixImages()};
+  const cached=relatedCache.get(key);
+  if(cached&&cached.expires>Date.now()){show(cached.rows);return}
+  relatedCache.delete(key);
+  const request={controller:new AbortController()};relatedRequest=request;
+  const timer=setTimeout(()=>request.controller.abort(),15000);
+  const active=()=>!request.controller.signal.aborted&&relatedRequest===request&&current();
+  try{
+    const pick=async same=>{
+      let q=sb.from('work_catalog').select(RELATED_FIELDS).eq('archived',false).neq('id',w.id);
+      if(same)q=q.eq('category',w.category);
+      const {data,error}=await q.order('likes_count',{ascending:false}).order('created_at',{ascending:false}).order('id').range(0,2).abortSignal(request.controller.signal);
+      if(error)throw error;
+      return (data||[]).filter(x=>uuid(x.id)&&x.id!==w.id).slice(0,3).map(normalize);
+    };
+    let rows=await pick(true);
+    if(!active())return;
+    if(!rows.length)rows=await pick(false);
+    if(!active())return;
+    relatedCache.set(key,{rows,expires:Date.now()+RELATED_TTL});
+    while(relatedCache.size>RELATED_CACHE_LIMIT)relatedCache.delete(relatedCache.keys().next().value);
+    show(rows);
+  }catch{/* Optional recommendations must not block the work page. Do not cache failures. */}
+  finally{clearTimeout(timer);if(relatedRequest===request)relatedRequest=null}
+}
 function relatedList(){return detailRelated.length?`<h2>${esc(t('related'))}</h2>`+detailRelated.map(x=>`<a href="#work/${x.id}">${cover(x)}<span><strong>${esc(x.title||t('untitled'))}</strong><small>${esc(cat(x.category))} · ${esc(x.owner_name||t('anonymous'))}</small></span></a>`).join(''):''}
-async function loadDetail(id){const seq=++detailSeq;detailWork=null;detailRelated=[];$('detail').innerHTML=`<p role="status">${esc(t('loading'))}</p>`;if(!uuid(id)){$('detail').innerHTML=empty('notFound','notFoundBody','home','explore');return}try{if(!sb)throw Error();const {data,error}=await timed(sb.from('work_catalog').select('*').eq('id',id).maybeSingle());if(error)throw error;if(seq!==detailSeq)return;if(!data){$('detail').innerHTML=empty('notFound','notFoundBody','home','explore');return}if(mode!=='detail'||seq!==detailSeq)return;detailWork=normalize(data);cache.set(id,detailWork);renderDetail(detailWork);loadRelated(detailWork,seq)}catch{if(seq!==detailSeq)return;$('detail').innerHTML=empty('loadError','loadErrorBody','retry-detail','retry',true)}}
+async function loadDetail(id){cancelRelated();const seq=++detailSeq;detailWork=null;detailRelated=[];$('detail').innerHTML=`<p role="status">${esc(t('loading'))}</p>`;if(!uuid(id)){$('detail').innerHTML=empty('notFound','notFoundBody','home','explore');return}try{if(!sb)throw Error();const {data,error}=await timed(sb.from('work_catalog').select('*').eq('id',id).maybeSingle());if(error)throw error;if(seq!==detailSeq)return;if(!data){$('detail').innerHTML=empty('notFound','notFoundBody','home','explore');return}if(mode!=='detail'||seq!==detailSeq)return;detailWork=normalize(data);cache.set(id,detailWork);renderDetail(detailWork);loadRelated(detailWork,seq)}catch{if(seq!==detailSeq)return;$('detail').innerHTML=empty('loadError','loadErrorBody','retry-detail','retry',true)}}
 function renderDetail(w){
   const url=safeUrl(w.link),canEdit=user&&user.id===w.owner,name=w.owner_name||t('anonymous'),liked=likes.has(w.id),savedOn=saved.has(w.id);
   const prompt=w.category==='prompt'&&typeof w.details.prompt==='string'?w.details.prompt:'',tools=typeof w.details.tools==='string'?w.details.tools:'';
@@ -293,6 +325,7 @@ async function refreshUser(session){
   const seq=++authSeq,previousId=user?.id,nextUser=session?.user||null,nextScope=scopeFor(nextUser?.id),switching=editorScope!==nextScope;
   let draftOk=true;
   if(switching){clearTimeout(draftTimer);if(dirty)draftOk=saveDraft(false);++editSeq;++editorEpoch;}
+  if(previousId!==nextUser?.id){cancelRelated();relatedCache.clear();detailRelated=[];}
   user=nextUser;const currentId=user?.id;authReady=true;
   if(switching){restoreDraft();if(!draftOk)toast(t('draftMemoryOnly'));else if(previousId||dirty)toast(t('draftAccountChanged'));}
   isAdmin=false;adminRoleState=currentId?'checking':'unknown';likes=new Set();renderAuth();
@@ -445,6 +478,7 @@ async function submitWork(e){
     const payload={owner,owner_name:d.displayName.trim(),title:d.title.trim(),description:d.description.trim(),category:d.category,link:safeUrl(url)||null,cover_url:cover,details:{access:d.access,mobile:d.mobile,feedback:d.feedback,tools:d.tools.trim(),prompt:d.category==='prompt'?d.prompt.trim():''}};
     const result=submittedEditId?await timed(sb.from('works').update(payload).eq('id',submittedEditId).eq('owner',owner).select('id').single(),20000):await timed(sb.from('works').upsert({...payload,id:pendingId,price:0,accept_tips:false},{onConflict:'id'}).select('id').single(),20000);
     if(result.error)throw result.error;if(user?.id!==owner||editorEpoch!==submittedEpoch)return;const id=result.data.id;
+    relatedCache.clear();
     storage.set('aimade_display_v4:'+owner,payload.owner_name);clearTimeout(draftTimer);discardCurrentDraft();dirty=false;toast(t(submittedEditId?'updated':'published'));
     $('workForm').reset();restoreDraft();$('draftStatus').textContent='';location.hash='work/'+id;
   }catch{
@@ -452,7 +486,7 @@ async function submitWork(e){
     if(user?.id===owner&&editorEpoch===submittedEpoch){$('formStatus').textContent=t('saveFail');saveDraft(false);}
   }finally{publishing=false;$('editorFields').disabled=false;$('publish').disabled=false;$('publish').textContent=t(editId?'update':'publish')}
 }
-async function archiveWork(id){if(!user||!detailWork||detailWork.id!==id||detailWork.owner!==user.id)return;const target=!detailWork.archived;if(target&&!confirm(t('archiveConfirm')))return;try{const {data,error}=await timed(sb.from('works').update({archived:target}).eq('id',id).eq('owner',user.id).select('id').single());if(error||!data)throw Error();loadDetail(id)}catch{toast(t('saveFail'))}}
+async function archiveWork(id){if(!user||!detailWork||detailWork.id!==id||detailWork.owner!==user.id)return;const target=!detailWork.archived;if(target&&!confirm(t('archiveConfirm')))return;try{const {data,error}=await timed(sb.from('works').update({archived:target}).eq('id',id).eq('owner',user.id).select('id').single());if(error||!data)throw Error();relatedCache.clear();loadDetail(id)}catch{toast(t('saveFail'))}}
 async function submitReport(e){e.preventDefault();if(!user||!sb){openLogin();return}const b=e.target.querySelector('button[type=submit]');b.disabled=true;try{const {error}=await timed(sb.from('reports').insert({work_id:reportId,reporter:user.id,reason:$('reportReason').value.trim().slice(0,1000)}));if(error)throw error;$('reportDialog').close();toast(t('reported'))}catch{$('reportStatus').textContent=t('reportFail')}finally{b.disabled=false}}
 function renderFAQ(){const entries=lang==='zh'?[
 ['我可以分享什麼？','AI 協助製作的遊戲、網頁、工具、圖片、影片、音樂、Prompt、文字及設計都歡迎。請上傳你有權分享的內容，註明 AI 工具及限制，不得冒充原作者。'],
@@ -481,6 +515,7 @@ function route(){
     history.replaceState(null,'',location.pathname+location.search+(lastRouteHash||'#home'));return;
   }
   if(mode==='upload'&&dirty&&!['upload','edit'].includes(key))saveDraft(false);
+  cancelRelated();
   ['browsePage','uploadPage','detailPage','guidePage'].forEach(k=>$(k).hidden=true);
   document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';
   if(key==='work'){++editSeq;mode='detail';$('detailPage').hidden=false;loadDetail(id)}

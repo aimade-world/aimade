@@ -16,6 +16,8 @@ Free discovery and sharing of AI-assisted creations. Live: https://aimade.world/
 - On phones `#nav` is a fixed bottom tab bar; the hamburger menu and its script were removed. Works render as compact rows.
 - Less common work types sit behind the "更多分類" chip until opened or active.
 - "你可能也想看" on the work page reads up to three other public works from `work_catalog` (same type first). It is optional and fails silently.
+- Narrow-phone follow-up: at 360px and below the card actions use a full-width row; action rows can wrap instead of overflowing or shrinking the 44px touch targets. The cover, colours, typography and wider layouts keep the redesign.
+- Related queries select only `id,title,category,owner_name,cover_url`, exclude the current work on the server and request at most three rows. The existing most-liked/newest/id ranking and same-type-first fallback are unchanged. A bounded 24-entry, per-account memory cache lasts 30 seconds, including empty results; failures are not cached. Navigation/account changes cancel optional requests, one 15-second budget covers both queries, and own successful publication/edit/unpublication clears the cache. Other users' changes may take up to that cache TTL to appear on a revisit. No persisted cache, schema change or new API permission was added. Computed like-count sorting can still become expensive at scale; measure it before adding indexes/materialized counts.
 - Not part of this redesign because they need backend work: on-site feedback or comments, filling the form from a pasted link, and per-work share previews.
 
 ## Local preview and checks
@@ -48,7 +50,7 @@ Preview uses the production read API. Auth writes are blocked unless the page or
 - The authenticated password-recovery callback does not require an extra CAPTCHA. Do not disable email verification or alter existing accounts to work around CAPTCHA failures.
 - On 2026-11-04, eight live missing/invalid-token probes were rejected with `captcha_failed`, and the owner completed a real human-verification/password-login round trip. The ordinary account's saved draft returned after sign-in. Automated checks total 98; they are not a penetration test or a guarantee against all bots.
 - Recheck the live domain allowlist and server secret after any widget change. Production auth writes stay limited to the exact production origin; do not weaken that guard for local preview.
-- The widget uses the official compact layout when its container is narrower than 300px; flexible layout otherwise. Crossing that boundary while idle remounts the widget and invalidates the old token. No sitekey, server secret, challenge requirement or token lifetime was changed. Current offline suite: 108 checks (17 frontend plus 91 flow/CAPTCHA tests).
+- The widget uses the official compact layout when its container is narrower than 300px; flexible layout otherwise. Crossing that boundary while idle remounts the widget and invalidates the old token. No sitekey, server secret, challenge requirement or token lifetime was changed. Current offline suite: 126 checks (17 frontend, 91 flow/CAPTCHA and 18 related-query/layout checks). Browser geometry checks remain separate from these stub/source checks.
 
 ## Database
 The November 2 recovery migrations under `supabase/migrations/` have been applied to the existing project. They are **one-time migrations**, not a fresh-install schema or scripts to rerun blindly.
