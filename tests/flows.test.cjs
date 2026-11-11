@@ -74,7 +74,55 @@ function api({work,writeError=null,roles}={}) {
 }
 
 function ready(h,client){h.context.client=client;h.run(`sb=client;user={id:'${OWNER}'};authReady=true;mode='upload';restoreDraft()`);h.location.hash='#upload'}
-function validForm(h){h.run("fillEditor({category:'prompt',title:'作品介紹助手',description:'將真實作品資料整理成介紹。',prompt:'請只使用我提供的資料，不要捏造功能。',displayName:'AIMade Team',tools:'ChatGPT'})");h.el('rights').checked=true}
+function validForm(h){h.run("fillEditor({category:'prompt',title:'作品介紹助手',description:'將真實作品資料整理成介紹，先填寫作品用途及使用方法，再核對所有輸出內容是否符合事實。',prompt:'請只使用我提供的資料，不要捏造功能。',displayName:'AIMade Team',tools:'ChatGPT'})");h.el('rights').checked=true}
+
+for(const title of ['a','中','12','１２','١٢','!!!',' 中 ','\u200b中\u200b'])test('Publication rejects weak title '+JSON.stringify(title),async()=>{
+  const h=harness(),a=api();ready(h,a.client);validForm(h);h.el('title').value=title;
+  await h.run('submitWork({preventDefault(){}})');assert.equal(a.stats.writes.length,0);assert.equal(a.stats.uploads,0);assert.equal(h.el('formStatus').textContent,h.run("t('titleQuality')"));
+});
+for(const title of ['中文','AI','遊戲2','１２遊戲','テスト','테스트','αβ'])test('Publication accepts letter-based title '+title,()=>{
+  const h=harness();validForm(h);h.el('title').value=title;assert.equal(h.run('validateWork(draftData(),true)'),'');
+});
+test('Description minimum counts non-whitespace code points, not padding',()=>{
+  const h=harness();validForm(h);for(const description of ['中'.repeat(29),'中'+' '.repeat(80),'中'+'\u200b'.repeat(80)]){h.el('description').value=description;assert.equal(h.run('validateWork(draftData(),true)'),'descriptionQuality')}
+  h.el('description').value='中'.repeat(30);assert.equal(h.run('validateWork(draftData(),true)'),'');h.run('updateQualityHints()');assert(h.el('descriptionCount').textContent.includes('30'));
+});
+function moderationApi(result={data:{id:WORK},error:null}){
+  const calls=[];
+  return {calls,client:{from(table){const call={table,filters:[]};calls.push(call);return {select(...p){call.select=p;return this},update(p){call.payload=p;return this},delete(){call.delete=true;return this},eq(...p){call.filters.push(['eq',...p]);return this},neq(...p){call.filters.push(['neq',...p]);return this},is(...p){call.filters.push(['is',...p]);return this},or(...p){call.filters.push(['or',...p]);return this},order(){return this},range(...p){call.range=p;return this},maybeSingle(){return this},abortSignal(signal){call.signal=signal;return typeof result==='function'?result(call):Promise.resolve(result)}}}}};
+}
+function moderator(h,client,w={}){ready(h,client);h.context.w={id:WORK,owner:'00000000-0000-4000-8000-000000000099',title:'另一位作者的作品',category:'prompt',archived:true,moderation_status:'hidden',moderated_at:null,...w};h.run("isAdmin=true;adminRoleState='admin';mode='admin';adminRows=[w]");h.location.hash='#admin'}
+test('Admin My works still queries only the signed-in owner and excludes Trash',async()=>{
+  const a=moderationApi({data:[{id:WORK,owner:OWNER},{id:'00000000-0000-4000-8000-000000000099',owner:'other'}],count:2}),h=harness();moderator(h,a.client);h.run("mode='mine'");await h.run('loadWorks()');assert(a.calls[0].filters.some(x=>x[1]==='owner'&&x[2]===OWNER));assert(a.calls[0].filters.some(x=>x[1]==='moderation_status'&&x[2]==='trash'));assert.equal(h.run('works.length'),1);
+});
+test('Guests and ordinary members cannot load the moderator queue or open actions',async()=>{
+  for(const member of [false,true]){const h=harness(),a=moderationApi();ready(h,a.client);h.run(`mode='admin';isAdmin=false;adminRoleState='member';${member?'':'user=null;'}`);await h.run('loadAdmin()');assert.equal(a.calls.length,0);await h.run(`openModeration('${WORK}','restore')`);assert.equal(h.run('adminPending'),null)}
+});
+test('Moderator queue loads archived works across owners with bounded pagination',async()=>{
+  const h=harness(),a=moderationApi({data:[],count:0});moderator(h,a.client);await h.run('loadAdmin()');assert(!a.calls[0].filters.some(x=>x[1]==='owner'));assert(a.calls[0].filters.some(x=>x[1]==='archived'&&x[2]===true));assert.deepEqual(a.calls[0].range,[0,23]);
+});
+test('Moderator row escapes titles and only trash exposes permanent deletion',()=>{
+  const h=harness();h.run("user={id:'x'}");const html=h.run(`adminRow({id:'${WORK}',title:'<img onerror="bad()">',owner_name:'<script>bad()</script>',archived:true,moderation_status:'hidden'})`);assert(!html.includes('<script>'));assert(html.includes('&lt;img'));assert(!html.includes('data-kind="delete"'));
+});
+test('Moderator republish only changes visibility fields with stale-state guards',async()=>{
+  const h=harness(),a=moderationApi(call=>Promise.resolve(call.table==='works'?{data:{id:WORK}}:{data:[],count:0}));moderator(h,a.client);h.run(`openModeration('${WORK}','restore')`);await h.run('submitModeration({preventDefault(){}})');const c=a.calls[0];assert.deepEqual({...c.payload},{archived:false,moderation_status:'clear'});assert(c.filters.some(x=>x[1]==='id'&&x[2]===WORK));assert(c.filters.some(x=>x[1]==='title'));assert(c.filters.some(x=>x[1]==='moderated_at'));assert(!('owner'in c.payload));
+});
+test('Permanent deletion requires Trash and exact typed title',async()=>{
+  const h=harness(),a=moderationApi();moderator(h,a.client);h.run(`openModeration('${WORK}','delete')`);assert.equal(h.run('adminPending'),null);h.run("adminRows[0].moderation_status='trash'");h.run(`openModeration('${WORK}','delete')`);await h.run('submitModeration({preventDefault(){}})');assert.equal(a.calls.length,0);h.el('deleteConfirm').value='wrong';await h.run('submitModeration({preventDefault(){}})');assert.equal(a.calls.length,0);
+  h.el('deleteConfirm').value='另一位作者的作品';await h.run('submitModeration({preventDefault(){}})');assert.equal(a.calls[0].delete,true);assert(a.calls[0].filters.some(x=>x[1]==='moderation_status'&&x[2]==='trash'));
+});
+test('Stale moderation never claims success or automatically retries',async()=>{
+  const h=harness(),a=moderationApi({data:null,error:null});moderator(h,a.client);h.run(`openModeration('${WORK}','restore')`);await h.run('submitModeration({preventDefault(){}})');assert.equal(h.run('adminPending'),null);assert.equal(h.el('moderationStatus').textContent,h.run("t('adminStale')"));await h.run('submitModeration({preventDefault(){}})');assert.equal(a.calls.length,1);
+});
+test('Preview origins never mutate moderation data',async()=>{
+  const h=harness(),a=moderationApi();moderator(h,a.client);h.location.origin='http://localhost:4182';h.run(`openModeration('${WORK}','restore')`);await h.run('submitModeration({preventDefault(){}})');assert.equal(a.calls.length,0);
+});
+test('Authors cannot trigger restore on moderator-hidden works',async()=>{
+  const h=harness(),a=api();ready(h,a.client);h.run(`detailWork={id:'${WORK}',owner:'${OWNER}',archived:true,moderation_status:'hidden'}`);await h.run(`archiveWork('${WORK}')`);assert.equal(a.stats.writes.length,0);
+});
+test('Late moderator list cannot render after leaving its route',async()=>{
+  let finish;const h=harness(),a=moderationApi(()=>new Promise(r=>finish=r));moderator(h,a.client);const wait=h.run('loadAdmin()');h.run("location.hash='#guide';route()");finish({data:[h.context.w],count:1});await wait;assert.equal(h.el('adminList').innerHTML,'');
+});
 
 test('Legacy edit draft is preserved separately, not restored as a new creation',()=>{
   const h=harness({aimade_draft_v2:{editId:WORK,title:'尚未提交的修改',description:'保留此內容'}});

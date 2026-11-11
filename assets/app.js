@@ -41,6 +41,11 @@ Object.assign(words,{
   sessionFail:['登入未完成，或連結已失效。請重試；如需設定密碼，請選擇「忘記／設定密碼」。','Sign-in was not completed, or the link expired. Retry, or choose “Forgot / set password”.'],authPreview:['預覽頁不會執行帳戶操作，請到 aimade.world 使用正式登入。','Account actions are disabled in preview. Use aimade.world to sign in.']
 });
 const cats={app:['網頁 / App','Web / App'],game:['小遊戲','Games'],tool:['實用工具','Tools'],prompt:['Prompt','Prompts'],image:['圖片','Images'],video:['影片','Videos'],music:['音樂','Music'],design:['3D / 設計','3D / Design'],writing:['文字創作','Writing'],other:['其他','Other']};
+
+Object.assign(words,{
+  adminTitle:['管理作品','Manage all works'],adminSub:['管理所有作者的作品；這裡與「我的作品」分開。舊紀錄未記錄下架操作者，不會假定是管理員下架。','Moderate all creators, separately from My works. Old records do not identify who unpublished them.'],adminOnly:['只有管理員可以進入此頁。','Only administrators can access this page.'],adminAll:['全部','All'],adminPublic:['公開中','Published'],adminArchived:['已下架','Unpublished'],adminTrash:['垃圾桶','Trash'],adminEmpty:['沒有符合的作品。','No matching works.'],adminSearch:['搜尋作品或作者','Search works or creators'],adminRefresh:['重新整理','Refresh'],adminMore:['載入更多','Load more'],adminNote:['下架不會變更作品擁有人。刪除分兩步：先移至垃圾桶，再輸入完整作品名稱確認永久刪除。封面檔案不會自動刪除。','Moderation never changes ownership. Deletion takes two steps: move to Trash, then type the exact title to confirm permanent deletion. Cover files are not automatically removed.'],adminLegacy:['作者下架／舊紀錄','Author-unpublished / legacy'],adminHidden:['管理員下架','Admin-unpublished'],adminHide:['下架作品','Unpublish'],adminRestore:['重新上架','Republish'],adminMoveTrash:['移至垃圾桶','Move to Trash'],adminRecover:['還原至已下架','Restore as unpublished'],adminDelete:['永久刪除','Delete permanently'],adminConfirm:['確認操作','Confirm action'],adminDone:['管理操作已完成。','Moderation completed.'],adminStale:['作品狀態已變更或權限不足。請重新整理後核對，不會自動重試。','The state changed or permission was denied. Refresh and review; nothing will be retried automatically.'],adminFail:['操作未能確認完成。請先重新整理核對作品狀態，再決定是否重試。','The outcome could not be confirmed. Refresh and check the state before retrying.'],moderatedNotice:['這件作品已由管理員下架或移至垃圾桶，作者不能自行恢復公開。如需協助，請聯絡 hello@aimade.world。','An administrator removed this work from public view. Authors cannot republish it. Contact hello@aimade.world for help.'],adminHideHelp:['下架後訪客將看不到作品。作者不能自行重上架；擁有人與內容保持不變。','Visitors will no longer see this work. Its author cannot republish it; ownership and content stay unchanged.'],adminRestoreHelp:['這會讓作品重新公開，包括原先由作者下架的作品。請先確認內容及作者意願。','This makes the work public again, including author-unpublished works. Check the content and the author’s intent first.'],adminTrashHelp:['移至垃圾桶後仍會保留資料，不會公開，也不會出現在作者的「我的作品」。可還原至已下架清單。','Data is retained but hidden publicly and from My works. You can restore it to the unpublished list.'],adminRecoverHelp:['只移回已下架清單，不會立即公開。','Returns to the unpublished list without publishing.'],adminDeleteHelp:['永久刪除此作品，以及資料庫關聯刪除的讚與檢舉紀錄，無法在網站復原。已公開的封面網址可能仍可使用。此動作不會刪除作者帳戶或其他作品。','Permanently deletes this work and cascade-linked likes/reports. This cannot be undone in the website. Existing public cover URLs may remain accessible. The author account and other works are not deleted.'],deleteConfirmLabel:['輸入完整作品名稱以確認','Type the exact work title to confirm'],mineSub:['這裡只列出你自己發布的作品。管理其他作者請使用「管理作品」。','Only creations published by this account. Administrators manage other creators separately.'],description:['用途與作品簡介 *','Purpose and description *'],titleHelp:['2–120 個字元，至少含一個文字，不能只有數字或符號；最少字數不計空白。','2–120 characters, including a letter; not just numbers or symbols. Minimum excludes whitespace.'],descriptionHelp:['至少 30 個非空白字元，最多 2,000 字元。請說明用途、怎樣使用及限制。','At least 30 non-whitespace characters; up to 2,000 total. Explain the purpose, instructions and limits.'],titleQuality:['作品名稱至少 2 個非空白字元，並包含文字，不能只有數字或符號。','Use at least 2 non-whitespace title characters, including a letter—not just numbers or symbols.'],descriptionQuality:['用途與作品簡介至少需要 30 個非空白字元，請補充用途、使用方式或限制。','The description needs at least 30 non-whitespace characters. Add its purpose, instructions or limitations.']
+});
+
 const t=k=>(words[k]||[k,k])[lang==='en'?1:0];
 const cat=k=>(cats[k]||cats.other)[lang==='en'?1:0];
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -58,17 +63,18 @@ const initial=s=>[...String(s).trim()][0]||'A';
 function cover(w,cls='',alt=''){const src=safeCover(w.cover_url);return `<span class="cover t-${kind(w)}${cls&&' '+cls}">${icon(kind(w))}${src?`<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy">`:''}</span>`}
 const mainCats=['all','game','tool','app','prompt','image','feedback'];
 let sb=null,user=null,isAdmin=false,adminRoleState='unknown',works=[],likes=new Set(),saved=new Set((Array.isArray(storage.get('aimade_saved'))?storage.get('aimade_saved'):[]).filter(uuid).slice(0,300)),mode='home',activeCat='all',search='',sort='new',onlyLink=false,offset=0,loading=false,hasMore=false,requestSeq=0,editId=null,pendingId=null,editingCover='',detailWork=null,reportId=null,dirty=false,previewUrl=null;
-const pageSize=24,cache=new Map();let detailSeq=0,authSeq=0,editSeq=0,authReady=false,editOwner=null,lastRouteHash='',mailCooldownUntil=0,mailTimer=null,stagedCoverFile=null,stagedCoverUrl='',coverUpload=null;
+const pageSize=24,cache=new Map();
+let adminRows=[],adminFilter='archived',adminSearch='',adminOffset=0,adminMore=false,adminLoading=false,adminSeq=0,adminPending=null,adminBusy=false,adminSearchTimer;let detailSeq=0,authSeq=0,editSeq=0,authReady=false,editOwner=null,lastRouteHash='',mailCooldownUntil=0,mailTimer=null,stagedCoverFile=null,stagedCoverUrl='',coverUpload=null;
 let toastTimer,searchTimer,draftTimer,moreCats=false,detailRelated=[];
 function toast(msg){$('toast').textContent=msg;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3500)}
-function applyLang(){document.documentElement.lang=lang==='zh'?'zh-Hant':'en';if(mode!=='detail')document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';document.querySelectorAll('[data-i]').forEach(el=>{el.textContent=t(el.dataset.i);if(['hero','tipsTitle'].includes(el.dataset.i))el.style.whiteSpace='pre-line'});$('lang').textContent=lang==='zh'?'EN':'中文';$('search').placeholder=t('search');$('search').setAttribute('aria-label',t('search'));$('sort').setAttribute('aria-label',lang==='zh'?'作品排序':'Sort creations');const current=$('category').value||'app';$('category').innerHTML=Object.keys(cats).map(k=>`<option value="${k}">${cat(k)}</option>`).join('');$('category').value=current;$('description').placeholder=lang==='zh'?'它能幫誰做什麼？要怎樣開始？':'Who is it for? What can it do? How do you start?';renderFilters();renderAuth();renderFAQ();updateBrowseHeading();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');renderEditorContext();renderAuthDialog();for(const key of ['draftSaved','draftFail','draftRestored','editDraftRestored','coverReady']){if(words[key].includes($('draftStatus').textContent)){$('draftStatus').textContent=t(key);break}}if(detailWork)renderDetail(detailWork);}
+function applyLang(){document.documentElement.lang=lang==='zh'?'zh-Hant':'en';if(mode!=='detail')document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';document.querySelectorAll('[data-i]').forEach(el=>{el.textContent=t(el.dataset.i);if(['hero','tipsTitle'].includes(el.dataset.i))el.style.whiteSpace='pre-line'});$('lang').textContent=lang==='zh'?'EN':'中文';$('search').placeholder=t('search');$('search').setAttribute('aria-label',t('search'));$('sort').setAttribute('aria-label',lang==='zh'?'作品排序':'Sort creations');const current=$('category').value||'app';$('category').innerHTML=Object.keys(cats).map(k=>`<option value="${k}">${cat(k)}</option>`).join('');$('category').value=current;$('description').placeholder=lang==='zh'?'它能幫誰做什麼？要怎樣開始？':'Who is it for? What can it do? How do you start?';renderFilters();renderAuth();renderFAQ();updateBrowseHeading();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');renderEditorContext();renderAuthDialog();for(const key of ['draftSaved','draftFail','draftRestored','editDraftRestored','coverReady']){if(words[key].includes($('draftStatus').textContent)){$('draftStatus').textContent=t(key);break}}if(detailWork)renderDetail(detailWork);updateQualityHints();renderAdminTabs();}
 function renderAccount(){
   const show=!!user&&['mine','upload'].includes(mode);
   $('accountStatus').hidden=!show;
   $('accountEmail').textContent=show?(user.email||''):'';
   $('accountRole').textContent=show?t({checking:'roleChecking',admin:'roleAdmin',member:'roleMember',unknown:'roleUnknown'}[adminRoleState]||'roleUnknown'):'';
 }
-function renderAuth(){$('authButton').textContent=t(user?'signout':'signin');$('authButton').setAttribute('title',t(user?'signoutHint':'signin'));$('navMine').hidden=!user;renderAccount();renderEditorContext();}
+function renderAuth(){$('authButton').textContent=t(user?'signout':'signin');$('authButton').setAttribute('title',t(user?'signoutHint':'signin'));$('navMine').hidden=!user;$('adminShortcut').hidden=!user||!isAdmin;renderAccount();renderEditorContext();}
 // Less common types stay behind one chip until asked for, or until one of them is the active filter.
 function renderFilters(){const rest=Object.keys(cats).filter(k=>!mainCats.includes(k)),open=moreCats||rest.includes(activeCat);$('filters').innerHTML=(open?[...mainCats,...rest]:mainCats).map(k=>`<button class="chip" data-cat="${k}" aria-pressed="${activeCat===k}">${esc(cats[k]?cat(k):t(k))}</button>`).join('')+(open?'':`<button class="chip" data-action="more-cats">${esc(t('moreCats'))}</button>`)}
 function updateBrowseHeading(){$('hero').hidden=mode!=='home';$('discover').hidden=mode==='home';$('browseTitle').textContent=t(mode==='saved'?'navSaved':mode==='mine'?'navMine':'browseTitle');$('browseSubtitle').textContent=t(mode==='saved'?'savedSub':mode==='mine'?'mineSub':'browseSub');}
@@ -82,7 +88,7 @@ async function loadWorks(reset=true){
     if(mode==='mine'&&!user){$('grid').innerHTML=empty('navMine','needLogin','login','signin');$('status').textContent='';return}
     if(mode==='saved'&&!saved.size){$('grid').innerHTML=empty('noSaved','saveHelp','home','explore');$('status').textContent='';return}
     let q=sb.from('work_catalog').select('*',{count:'exact'});
-    if(mode==='mine')q=q.eq('owner',user.id);else q=q.eq('archived',false);if(mode==='saved')q=q.in('id',[...saved]);
+    if(mode==='mine')q=q.eq('owner',user.id).neq('moderation_status','trash');else q=q.eq('archived',false);if(mode==='saved')q=q.in('id',[...saved]);
     if(cats[activeCat])q=q.eq('category',activeCat);if(activeCat==='feedback')q=q.eq('details->>feedback','true');
     if(onlyLink)q=q.not('link','is',null).neq('link','');
     const term=search.replace(/[%_*(),.\\"']/g,' ').trim().replace(/\s+/g,' ').slice(0,100);
@@ -90,7 +96,7 @@ async function loadWorks(reset=true){
     if(sort==='hot')q=q.gte('created_at',new Date(Date.now()-30*86400000).toISOString());
     q=sort==='new'?q.order('created_at',{ascending:false}).order('id'):q.order('likes_count',{ascending:false}).order('created_at',{ascending:false}).order('id');
     const {data,error,count}=await timed(q.range(offset,offset+pageSize-1));if(error)throw error;if(seq!==requestSeq)return;
-    const rows=(data||[]).map(normalize);rows.forEach(w=>cache.set(w.id,w));works=reset?rows:[...works,...rows];offset+=rows.length;hasMore=offset<(count??offset);renderGrid();$('status').textContent=lang==='zh'?`${count??works.length} 件作品`:`${count??works.length} ${(count??works.length)===1?'creation':'creations'}`;$('loadMore').hidden=!hasMore;$('loadMore').textContent=t('more');
+    const rows=(data||[]).filter(w=>mode!=='mine'||w.owner===user?.id).map(normalize);rows.forEach(w=>cache.set(w.id,w));works=reset?rows:[...works,...rows];offset+=rows.length;hasMore=offset<(count??offset);renderGrid();$('status').textContent=lang==='zh'?`${count??works.length} 件作品`:`${count??works.length} ${(count??works.length)===1?'creation':'creations'}`;$('loadMore').hidden=!hasMore;$('loadMore').textContent=t('more');
   }catch(e){if(seq!==requestSeq)return;console.warn('Works could not be loaded');$('status').textContent=t('loadError');if(reset)$('grid').innerHTML=empty('loadError','loadErrorBody','retry','retry',true);else{$('loadMore').hidden=false;$('loadMore').textContent=t('retry')}}finally{if(seq===requestSeq){loading=false;$('loadMore').disabled=false}}
 }
 function launchLabel(w){return t(w.category==='game'?'play':w.category==='video'||w.category==='image'?'watch':w.category==='music'?'listen':'use')}
@@ -141,14 +147,14 @@ function renderDetail(w){
   const main=url?`<a class="btn primary big" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(launchLabel(w))}</a>`:prompt?`<button class="btn primary big" data-action="copy-prompt">${icon('copy')}${esc(t('copyPrompt'))}</button>`:'';
   const facts=[[t('factAccess'),accessLabel(w)||t('accessUnknown')],w.details.mobile===true&&[t('factDevice'),t('mobile')],tools&&[t('toolsUsed'),tools],[t('factDate'),new Date(w.created_at).toLocaleDateString(lang==='zh'?'zh-Hant':'en')]].filter(Boolean);
   document.title=`${w.title} · AIMade`;
-  $('detail').innerHTML=`<a class="back" href="#home">${esc(t('back'))}</a><div class="detail-top"><div class="detail-media">${cover(w,'big',w.title)}</div><div class="detail-info"><div class="tags"><span class="tag t-${kind(w)}">${esc(cat(w.category))}</span>${w.details.feedback===true?`<span class="tag warm">${esc(t('feedback'))}</span>`:''}${w.archived?`<span class="tag">${esc(t('archived'))}</span>`:''}</div><h1>${esc(w.title)}</h1><div class="byline"><span class="avatar" aria-hidden="true">${esc(initial(name))}</span><strong>${esc(name)}</strong></div>${main}${url?`<p class="cta-note">${esc(t('newTab'))}</p>`:''}<div class="detail-actions"><button class="btn ${liked?'liked':''}" data-action="like" data-id="${w.id}" aria-label="${esc(t('like'))}" aria-pressed="${liked}">${icon('heart')}${w.likes_count||esc(t('like'))}</button><button class="btn ${savedOn?'saved':''}" data-action="save" data-id="${w.id}" aria-pressed="${savedOn}">${icon('bookmark')}${esc(t(savedOn?'saved':'save'))}</button><button class="btn" data-action="copy-link" data-id="${w.id}" aria-label="${esc(t('copyLink'))}">${icon('link')}${esc(t('shareLink'))}</button></div>${canEdit?`<div class="owner-actions"><a class="btn" href="#edit/${w.id}">${esc(t('edit'))}</a><button class="btn" data-action="archive" data-id="${w.id}">${esc(t(w.archived?'restoreWork':'archiveWork'))}</button></div>`:''}</div></div><div class="detail-body"><div class="detail-main"><h2>${esc(t('view'))}</h2><div class="description">${esc(w.description)}</div>${prompt?`<h2>Prompt</h2><pre>${esc(prompt)}</pre><button class="btn" data-action="copy-prompt">${icon('copy')}${esc(t('copyPrompt'))}</button>`:''}</div><aside class="detail-side"><dl class="facts">${facts.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl><p class="fine">${esc(t('authorLabels'))}</p><button class="text-link" data-action="report" data-id="${w.id}">${esc(t('report'))}</button>${isAdmin?`<p class="help">${lang==='zh'?'管理員：檢舉與內容管理請使用 Supabase 後台。':'Administrator: review reports and moderate content in Supabase.'}</p>`:''}<section class="related" id="related"${detailRelated.length?'':' hidden'}>${relatedList()}</section></aside></div>${main?`<div class="detail-bar">${main}</div>`:''}`;
+  $('detail').innerHTML=`<a class="back" href="#home">${esc(t('back'))}</a><div class="detail-top"><div class="detail-media">${cover(w,'big',w.title)}</div><div class="detail-info"><div class="tags"><span class="tag t-${kind(w)}">${esc(cat(w.category))}</span>${w.details.feedback===true?`<span class="tag warm">${esc(t('feedback'))}</span>`:''}${w.archived?`<span class="tag">${esc(t('archived'))}</span>`:''}</div><h1>${esc(w.title)}</h1><div class="byline"><span class="avatar" aria-hidden="true">${esc(initial(name))}</span><strong>${esc(name)}</strong></div>${main}${url?`<p class="cta-note">${esc(t('newTab'))}</p>`:''}<div class="detail-actions"><button class="btn ${liked?'liked':''}" data-action="like" data-id="${w.id}" aria-label="${esc(t('like'))}" aria-pressed="${liked}">${icon('heart')}${w.likes_count||esc(t('like'))}</button><button class="btn ${savedOn?'saved':''}" data-action="save" data-id="${w.id}" aria-pressed="${savedOn}">${icon('bookmark')}${esc(t(savedOn?'saved':'save'))}</button><button class="btn" data-action="copy-link" data-id="${w.id}" aria-label="${esc(t('copyLink'))}">${icon('link')}${esc(t('shareLink'))}</button></div>${canEdit?`<div class="owner-actions"><a class="btn" href="#edit/${w.id}">${esc(t('edit'))}</a>${!isAdmin&&(!w.moderation_status||w.moderation_status==='clear')?`<button class="btn" data-action="archive" data-id="${w.id}">${esc(t(w.archived?'restoreWork':'archiveWork'))}</button>`:''}</div>`:''}</div></div><div class="detail-body"><div class="detail-main"><h2>${esc(t('view'))}</h2><div class="description">${esc(w.description)}</div>${prompt?`<h2>Prompt</h2><pre>${esc(prompt)}</pre><button class="btn" data-action="copy-prompt">${icon('copy')}${esc(t('copyPrompt'))}</button>`:''}</div><aside class="detail-side"><dl class="facts">${facts.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl><p class="fine">${esc(t('authorLabels'))}</p><button class="text-link" data-action="report" data-id="${w.id}">${esc(t('report'))}</button>${isAdmin?`<p><a class="btn" href="#admin">${esc(t('adminTitle'))}</a></p>`:''}${w.moderation_status==='hidden'||w.moderation_status==='trash'?`<p class="notice">${esc(t('moderatedNotice'))}</p>`:''}<section class="related" id="related"${detailRelated.length?'':' hidden'}>${relatedList()}</section></aside></div>${main?`<div class="detail-bar">${main}</div>`:''}`;
   fixImages();
 }
 async function copy(text){try{await navigator.clipboard.writeText(text);toast(t('copied'))}catch{toast(t('copyFail'))}}
 function saveWork(id){if(saved.has(id))saved.delete(id);else{if(saved.size>=300){toast(t('savedLimit'));return}saved.add(id)}if(!storage.set('aimade_saved',[...saved]))toast(t('draftFail'));if(mode==='detail'&&detailWork)renderDetail(detailWork);else if(mode==='saved')loadWorks();else renderGrid()}
 const pendingLikes=new Set();
 async function toggleLike(id){if(!user){openLogin();return}if(pendingLikes.has(id))return;pendingLikes.add(id);const owner=user.id;try{const was=likes.has(id);const q=was?sb.from('likes').delete().eq('work_id',id).eq('user_id',owner):sb.from('likes').insert({work_id:id,user_id:owner});const {error}=await timed(q);if(error)throw error;if(user?.id!==owner)return;if(was)likes.delete(id);else likes.add(id);const w=cache.get(id);if(w)w.likes_count=Math.max(0,w.likes_count+(was?-1:1));if(mode==='detail'&&detailWork?.id===id)renderDetail(w||detailWork);else renderGrid()}catch{toast(t('likeFail'))}finally{pendingLikes.delete(id)}}
-function validReturnHash(hash){if(typeof hash!=='string')return '#home';if(/^#(?:home|upload|mine|saved|guide)$/.test(hash))return hash;const [key,id]=hash.slice(1).split('/');return ['work','edit'].includes(key)&&uuid(id)&&hash==='#'+key+'/'+id?hash:'#home'}
+function validReturnHash(hash){if(typeof hash!=='string')return '#home';if(/^#(?:home|upload|mine|saved|guide|admin)$/.test(hash))return hash;const [key,id]=hash.slice(1).split('/');return ['work','edit'].includes(key)&&uuid(id)&&hash==='#'+key+'/'+id?hash:'#home'}
 // Passwords stay only in their input fields / the in-flight SDK call. Never persist them.
 const AUTH_ORIGIN='https://aimade.world';
 let authMode='signin',authBusy=false,authUiVersion=0,authMail=null,passwordVisible=false,
@@ -328,7 +334,9 @@ async function refreshUser(session){
   if(previousId!==nextUser?.id){cancelRelated();relatedCache.clear();detailRelated=[];}
   user=nextUser;const currentId=user?.id;authReady=true;
   if(switching){restoreDraft();if(!draftOk)toast(t('draftMemoryOnly'));else if(previousId||dirty)toast(t('draftAccountChanged'));}
-  isAdmin=false;adminRoleState=currentId?'checking':'unknown';likes=new Set();renderAuth();
+  ++requestSeq;++detailSeq;++adminSeq;adminRows=[];adminPending=null;if($('moderationDialog').open)$('moderationDialog').close();$('adminList').innerHTML='';
+  if(previousId!==currentId){works=[];cache.clear();if(mode==='mine')$('grid').innerHTML='';if(mode==='detail'){detailWork=null;$('detail').innerHTML=`<p role="status">${esc(t('loading'))}</p>`;}}
+  isAdmin=false;adminRoleState=currentId?'checking':'unknown';likes=new Set();renderAuth();if(mode==='admin')loadAdmin();
   if(user){
     if(!recoveryActive&&$('loginDialog').open)$('loginDialog').close();
     const next=!recoveryActive&&storage.get('aimade_auth_return_v3');
@@ -342,8 +350,8 @@ async function refreshUser(session){
     else adminRoleState='unknown';
   }
   if(seq!==authSeq)return;renderAuth();
-  if(mode==='detail'){if(previousId!==currentId)loadDetail(location.hash.split('/')[1]);else if(detailWork)renderDetail(detailWork)}
-  if(['home','mine','saved'].includes(mode))loadWorks();
+  if(mode==='detail'){if(previousId!==currentId||!detailWork)loadDetail(location.hash.split('/')[1]);else renderDetail(detailWork)}
+  if(['home','mine','saved'].includes(mode))loadWorks();if(mode==='admin')loadAdmin();
   if(!user&&location.hash.startsWith('#edit/'))startEdit(location.hash.split('/')[1]);
 }
 async function signOutCurrent(){const {error}=await sb.auth.signOut({scope:'local'});if(error)throw error;await refreshUser(null)}
@@ -403,7 +411,7 @@ function fillEditor(d){
   $('mobile').checked=!!d.mobile;$('feedback').checked=!!d.feedback;editId=uuid(d.editId)?d.editId:null;editOwner=uuid(d.owner)?d.owner:null;pendingId=uuid(d.pendingId)?d.pendingId:null;editingCover=safeCover(d.editingCover);clearPreview();
   $('removeCover').checked=!!d.removeCover;
   if(editingCover){$('coverPreview').src=editingCover;$('coverPreview').hidden=$('removeCover').checked}
-  $('removeCoverRow').hidden=!editingCover;$('rights').checked=false;updatePrompt();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');renderEditorContext();
+  $('removeCoverRow').hidden=!editingCover;$('rights').checked=false;updatePrompt();$('editorTitle').textContent=t(editId?'editTitle':'uploadTitle');$('publish').textContent=t(editId?'update':'publish');renderEditorContext();updateQualityHints();
 }
 function restoreDraft(){editorScope=scopeFor(user?.id);drafts=readDrafts();persistDrafts(drafts);const d=drafts.create;$('workForm').reset();fillEditor(d||{});dirty=false;$('draftStatus').textContent=d?t('draftRestored'):'';$('formStatus').textContent=''}
 function updatePrompt(){$('promptField').hidden=$('category').value!=='prompt';$('prompt').required=$('category').value==='prompt';}
@@ -447,6 +455,8 @@ let publishing=false;
 function validateWork(d,consent){
   if(!d.title.trim()||!d.description.trim()||!d.displayName.trim())return 'requiredFields';
   if(d.title.trim().length>120||d.description.trim().length>2000||d.displayName.trim().length>40||d.tools.trim().length>160||d.prompt.length>6000||d.link.length>2000)return 'fieldTooLong';
+  if(!validTitle(d.title))return 'titleQuality';
+  if(textSize(d.description)<30)return 'descriptionQuality';
   if(d.category==='prompt'&&!d.prompt.trim())return 'needPrompt';
   if(!consent)return 'consentRequired';return '';
 }
@@ -481,13 +491,77 @@ async function submitWork(e){
     relatedCache.clear();
     storage.set('aimade_display_v4:'+owner,payload.owner_name);clearTimeout(draftTimer);discardCurrentDraft();dirty=false;toast(t(submittedEditId?'updated':'published'));
     $('workForm').reset();restoreDraft();$('draftStatus').textContent='';location.hash='work/'+id;
-  }catch{
+  }catch(error){
     /* A delayed server response may have committed. Keep the cover and pending ID for safe retry. */
-    if(user?.id===owner&&editorEpoch===submittedEpoch){$('formStatus').textContent=t('saveFail');saveDraft(false);}
+    if(user?.id===owner&&editorEpoch===submittedEpoch){$('formStatus').textContent=t(error?.message?.includes('aimade_title_quality')?'titleQuality':error?.message?.includes('aimade_description_quality')?'descriptionQuality':'saveFail');saveDraft(false);}
   }finally{publishing=false;$('editorFields').disabled=false;$('publish').disabled=false;$('publish').textContent=t(editId?'update':'publish')}
 }
-async function archiveWork(id){if(!user||!detailWork||detailWork.id!==id||detailWork.owner!==user.id)return;const target=!detailWork.archived;if(target&&!confirm(t('archiveConfirm')))return;try{const {data,error}=await timed(sb.from('works').update({archived:target}).eq('id',id).eq('owner',user.id).select('id').single());if(error||!data)throw Error();relatedCache.clear();loadDetail(id)}catch{toast(t('saveFail'))}}
+async function archiveWork(id){if(!user||!detailWork||detailWork.id!==id||detailWork.owner!==user.id||isAdmin||!['clear',undefined].includes(detailWork.moderation_status))return;const target=!detailWork.archived;if(target&&!confirm(t('archiveConfirm')))return;try{const {data,error}=await timed(sb.from('works').update({archived:target}).eq('id',id).eq('owner',user.id).select('id').single());if(error||!data)throw Error();relatedCache.clear();loadDetail(id)}catch{toast(t('saveFail'))}}
 async function submitReport(e){e.preventDefault();if(!user||!sb){openLogin();return}const b=e.target.querySelector('button[type=submit]');b.disabled=true;try{const {error}=await timed(sb.from('reports').insert({work_id:reportId,reporter:user.id,reason:$('reportReason').value.trim().slice(0,1000)}));if(error)throw error;$('reportDialog').close();toast(t('reported'))}catch{$('reportStatus').textContent=t('reportFail')}finally{b.disabled=false}}
+function textSize(value){return Array.from(String(value||'').replace(/[\s\u0085\u200b\ufeff]/gu,'')).length}
+function validTitle(value){return textSize(value)>=2&&/\p{L}/u.test(value)}
+function updateQualityHints(){
+  const title=$('title').value,description=$('description').value;
+  $('title').setCustomValidity?.(title&&!validTitle(title)?t('titleQuality'):'');
+  $('description').setCustomValidity?.(description&&textSize(description)<30?t('descriptionQuality'):'');
+  $('titleCount').textContent=lang==='zh'?`${textSize(title)} 個非空白字元 · 最少 2`:`${textSize(title)} non-whitespace characters · minimum 2`;
+  $('descriptionCount').textContent=lang==='zh'?`${textSize(description)} 個非空白字元 · 最少 30`:`${textSize(description)} non-whitespace characters · minimum 30`;
+}
+function renderAdminTabs(){
+  $('adminTabs').innerHTML=['all','public','archived','trash'].map(value=>`<button class="chip" type="button" data-admin-filter="${value}" aria-pressed="${adminFilter===value}">${esc(t({all:'adminAll',public:'adminPublic',archived:'adminArchived',trash:'adminTrash'}[value]))}</button>`).join('');
+}
+function adminState(w){return w.moderation_status==='trash'?'adminTrash':w.moderation_status==='hidden'?'adminHidden':w.archived?'adminLegacy':'adminPublic'}
+function allowedAdminAction(w,action){return action==='hide'?!w.archived:action==='restore'||action==='trash'?w.archived&&w.moderation_status!=='trash':action==='recover'||action==='delete'?w.moderation_status==='trash':false}
+function adminRow(w){
+  const actions=w.moderation_status==='trash'?['recover','delete']:w.archived?['restore','trash']:['hide'];
+  return `<article class="admin-row"><div><span class="badge">${esc(t(adminState(w)))}</span><h2><a href="#work/${w.id}">${esc(w.title||t('untitled'))}</a></h2><p>${esc(w.owner_name||t('anonymous'))} · ${esc(cat(w.category))}${w.owner===user?.id?` · ${esc(t('navMine'))}`:''}</p></div><div class="actions">${actions.map(action=>`<button class="btn ${action==='delete'?'danger':''}" data-action="admin-action" data-kind="${action}" data-id="${w.id}">${esc(t({hide:'adminHide',restore:'adminRestore',trash:'adminMoveTrash',recover:'adminRecover',delete:'adminDelete'}[action]))}</button>`).join('')}</div></article>`;
+}
+async function loadAdmin(reset=true){
+  const seq=++adminSeq,owner=user?.id;adminLoading=true;$('adminMore').hidden=true;$('adminControls').hidden=!user||!isAdmin;
+  if(reset){adminOffset=0;adminRows=[];$('adminList').innerHTML=''}
+  if(!authReady||adminRoleState==='checking'){$('adminStatus').textContent=t('roleChecking');adminLoading=false;return}
+  if(!user||!isAdmin){$('adminStatus').textContent=t(adminRoleState==='unknown'&&user?'roleUnknown':'adminOnly');adminLoading=false;return}
+  $('adminStatus').textContent=t('loading');renderAdminTabs();
+  try{
+    let q=sb.from('work_catalog').select('id,owner,owner_name,title,category,archived,moderation_status,moderated_at,created_at',{count:'exact'});
+    if(adminFilter==='public')q=q.eq('archived',false);
+    if(adminFilter==='archived')q=q.eq('archived',true).neq('moderation_status','trash');
+    if(adminFilter==='trash')q=q.eq('moderation_status','trash');
+    const term=adminSearch.replace(/[%_*(),.\\"']/g,' ').trim().replace(/\s+/g,' ').slice(0,100);
+    if(term)q=q.or(`title.ilike.%${term}%,owner_name.ilike.%${term}%`);
+    const {data,error,count}=await timed(q.order('created_at',{ascending:false}).order('id').range(adminOffset,adminOffset+pageSize-1));
+    if(seq!==adminSeq||mode!=='admin'||user?.id!==owner||!isAdmin)return;
+    if(error)throw error;const rows=(data||[]).filter(w=>uuid(w.id));adminRows=reset?rows:[...adminRows,...rows];adminOffset+=rows.length;adminMore=adminOffset<(count??adminOffset);
+    $('adminList').innerHTML=adminRows.length?adminRows.map(adminRow).join(''):`<p class="notice">${esc(t('adminEmpty'))}</p>`;
+    $('adminStatus').textContent=lang==='zh'?`${count??adminRows.length} 件作品`:`${count??adminRows.length} works`;$('adminMore').hidden=!adminMore;
+  }catch{if(seq===adminSeq&&mode==='admin'){$('adminStatus').textContent=t('loadError');if(reset)$('adminList').innerHTML=empty('loadError','loadErrorBody','admin-retry','retry',true);else $('adminMore').hidden=false}}
+  finally{if(seq===adminSeq){adminLoading=false;$('adminMore').disabled=false}}
+}
+function openModeration(id,action){
+  if(!user||!isAdmin||mode!=='admin'||adminBusy)return;const w=adminRows.find(row=>row.id===id);if(!w||!allowedAdminAction(w,action))return;
+  adminPending={work:{...w},action,actor:user.id};$('moderationHeading').textContent=t({hide:'adminHide',restore:'adminRestore',trash:'adminMoveTrash',recover:'adminRecover',delete:'adminDelete'}[action]);
+  $('moderationWorkTitle').textContent=w.title;$('moderationHelp').textContent=t({hide:'adminHideHelp',restore:'adminRestoreHelp',trash:'adminTrashHelp',recover:'adminRecoverHelp',delete:'adminDeleteHelp'}[action]);
+  $('deleteConfirm').value='';$('deleteConfirmField').hidden=action!=='delete';$('deleteConfirm').required=action==='delete';$('deleteConfirm').disabled=action!=='delete';$('moderationStatus').textContent='';$('moderationSubmit').disabled=action==='delete';$('moderationCancel').disabled=false;$('moderationDialog').showModal();
+}
+async function submitModeration(e){
+  e.preventDefault();const item=adminPending;
+  if(adminBusy||!item||!sb||!user||!isAdmin||mode!=='admin'||user.id!==item.actor||!allowedAdminAction(item.work,item.action))return;
+  if(location.origin!=='https://aimade.world'){$('moderationStatus').textContent=t('adminOnly');return}
+  if(item.action==='delete'&&$('deleteConfirm').value!==item.work.title)return;
+  adminBusy=true;$('moderationSubmit').disabled=true;$('moderationCancel').disabled=true;$('deleteConfirm').disabled=true;
+  try{
+    const state={hide:{archived:true,moderation_status:'hidden'},restore:{archived:false,moderation_status:'clear'},trash:{archived:true,moderation_status:'trash'},recover:{archived:true,moderation_status:'hidden'}};
+    let q=item.action==='delete'?sb.from('works').delete():sb.from('works').update(state[item.action]);
+    q=q.eq('id',item.work.id).eq('title',item.work.title).eq('archived',item.work.archived).eq('moderation_status',item.work.moderation_status);
+    q=item.work.moderated_at?q.eq('moderated_at',item.work.moderated_at):q.is('moderated_at',null);
+    const {data,error}=await timed(q.select('id').maybeSingle(),20000);
+    if(user?.id!==item.actor||!isAdmin)return;
+    if(error)throw error;if(!data){$('moderationStatus').textContent=t('adminStale');adminPending=null;return}
+    relatedCache.clear();cache.delete(item.work.id);adminPending=null;$('moderationDialog').close();toast(t('adminDone'));if(mode==='admin')await loadAdmin();
+  }catch{if(user?.id===item.actor){$('moderationStatus').textContent=t('adminFail');adminPending=null}}
+  finally{adminBusy=false;$('moderationCancel').disabled=false;$('deleteConfirm').disabled=false;$('moderationSubmit').disabled=true}
+}
+
 function renderFAQ(){const entries=lang==='zh'?[
 ['我可以分享什麼？','AI 協助製作的遊戲、網頁、工具、圖片、影片、音樂、Prompt、文字及設計都歡迎。請上傳你有權分享的內容，註明 AI 工具及限制，不得冒充原作者。'],
 ['如何讓大家試玩？','已有網站或遊戲網址：分享時貼上連結。訪客不需登入 AIMade 就能開啟外部作品。若外部網站需要登入或有免費額度限制，請在使用條件中標示。'],
@@ -516,28 +590,29 @@ function route(){
   }
   if(mode==='upload'&&dirty&&!['upload','edit'].includes(key))saveDraft(false);
   cancelRelated();
-  ['browsePage','uploadPage','detailPage','guidePage'].forEach(k=>$(k).hidden=true);
+  ++requestSeq;++detailSeq;++adminSeq;
+  ['browsePage','uploadPage','detailPage','guidePage','adminPage'].forEach(k=>$(k).hidden=true);
   document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';
   if(key==='work'){++editSeq;mode='detail';$('detailPage').hidden=false;loadDetail(id)}
   else if(key==='upload'||key==='edit'){
     mode='upload';$('uploadPage').hidden=false;
     if(key==='edit')startEdit(id);
     else{++editSeq;if(editId)restoreDraft();$('editorTitle').textContent=t('uploadTitle');$('workForm').hidden=false;$('editorLoadStatus').textContent='';renderEditorContext()}
-  }else if(key==='guide'){++editSeq;mode='guide';$('guidePage').hidden=false}
+  }else if(key==='admin'){++editSeq;mode='admin';$('adminPage').hidden=false;loadAdmin()}else if(key==='guide'){++editSeq;mode='guide';$('guidePage').hidden=false}
   else{++editSeq;mode=['saved','mine'].includes(key)?key:'home';$('browsePage').hidden=false;updateBrowseHeading();loadWorks()}
   // Lets the stylesheet swap the phone tab bar for the pinned action on a work page.
   document.documentElement.setAttribute?.('data-mode',mode);
-  renderAccount();lastRouteHash=location.hash;
+  renderAccount();updateQualityHints();lastRouteHash=location.hash;
   document.querySelectorAll('nav a').forEach(a=>{if(a.getAttribute('href')==='#'+(mode==='detail'?'home':mode))a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   if(hash==='discover')$('discover').scrollIntoView({block:'start'});else window.scrollTo(0,0);
 }
 function resetFilters(){activeCat='all';search='';sort='new';onlyLink=false;$('search').value='';$('sort').value='new';$('hasLink').checked=false;renderFilters();loadWorks()}
-document.addEventListener('click',e=>{const close=e.target.closest('[data-close]');if(close)$(close.dataset.close).close();const chip=e.target.closest('[data-cat]');if(chip){activeCat=chip.dataset.cat;renderFilters();loadWorks();return}const btn=e.target.closest('[data-action]');if(!btn)return;const id=btn.dataset.id;switch(btn.dataset.action){case'retry':loadWorks();break;case'retry-detail':loadDetail(location.hash.split('/')[1]);break;case'reset':resetFilters();break;case'more-cats':moreCats=true;renderFilters();break;case'upload':location.hash='upload';break;case'home':location.hash='home';break;case'login':openLogin();break;case'archive':if(uuid(id))archiveWork(id);break;case'like':if(uuid(id))toggleLike(id);break;case'save':if(uuid(id))saveWork(id);break;case'copy-link':copy('https://aimade.world/?w='+id);break;case'copy-prompt':copy(detailWork?.details.prompt||'');break;case'report':if(!user){openLogin();return}reportId=id;$('reportForm').reset();$('reportStatus').textContent='';$('reportDialog').showModal();break;}});
-$('lang').addEventListener('click',()=>{lang=lang==='zh'?'en':'zh';storage.set('aimade_lang',lang);applyLang();if(['home','saved','mine'].includes(mode))loadWorks()});
+document.addEventListener('click',e=>{const close=e.target.closest('[data-close]');if(close)$(close.dataset.close).close();const chip=e.target.closest('[data-cat]');if(chip){activeCat=chip.dataset.cat;renderFilters();loadWorks();return}const btn=e.target.closest('[data-action]');if(!btn)return;const id=btn.dataset.id;switch(btn.dataset.action){case'admin-retry':loadAdmin();break;case'admin-action':if(uuid(id))openModeration(id,btn.dataset.kind);break;case'retry':loadWorks();break;case'retry-detail':loadDetail(location.hash.split('/')[1]);break;case'reset':resetFilters();break;case'more-cats':moreCats=true;renderFilters();break;case'upload':location.hash='upload';break;case'home':location.hash='home';break;case'login':openLogin();break;case'archive':if(uuid(id))archiveWork(id);break;case'like':if(uuid(id))toggleLike(id);break;case'save':if(uuid(id))saveWork(id);break;case'copy-link':copy('https://aimade.world/?w='+id);break;case'copy-prompt':copy(detailWork?.details.prompt||'');break;case'report':if(!user){openLogin();return}reportId=id;$('reportForm').reset();$('reportStatus').textContent='';$('reportDialog').showModal();break;}});
+$('lang').addEventListener('click',()=>{lang=lang==='zh'?'en':'zh';storage.set('aimade_lang',lang);applyLang();if(['home','saved','mine'].includes(mode))loadWorks();if(mode==='admin')loadAdmin()});
 $('authButton').addEventListener('click',async()=>{if(!user){openLogin();return}try{await signOutCurrent()}catch{toast(t('authFail'))}});
 $('search').addEventListener('input',()=>{search=$('search').value;clearTimeout(searchTimer);searchTimer=setTimeout(()=>loadWorks(),300)});
 $('sort').addEventListener('change',()=>{sort=$('sort').value;loadWorks()});$('hasLink').addEventListener('change',()=>{onlyLink=$('hasLink').checked;loadWorks()});$('loadMore').addEventListener('click',()=>{if(loading)return;$('loadMore').disabled=true;loadWorks(false)});
-$('workForm').addEventListener('submit',submitWork);$('workForm').addEventListener('input',()=>{dirty=true;clearTimeout(draftTimer);draftTimer=setTimeout(()=>saveDraft(),500)});$('category').addEventListener('change',updatePrompt);$('cover').addEventListener('change',chooseCover);$('saveDraft').addEventListener('click',()=>saveDraft());$('clearDraft').addEventListener('click',()=>{if(publishing||!confirm(t('draftClear')))return;clearTimeout(draftTimer);if(!discardCurrentDraft()){toast(t('draftFail'));return}const wasEdit=!!editId;dirty=false;if(wasEdit){editId=null;editOwner=null;clearPreview();startEdit(location.hash.split('/')[1])}else restoreDraft();$('draftStatus').textContent='';$('formStatus').textContent=''});
+$('workForm').addEventListener('submit',submitWork);$('workForm').addEventListener('input',()=>{updateQualityHints();dirty=true;clearTimeout(draftTimer);draftTimer=setTimeout(()=>saveDraft(),500)});$('category').addEventListener('change',updatePrompt);$('cover').addEventListener('change',chooseCover);$('saveDraft').addEventListener('click',()=>saveDraft());$('clearDraft').addEventListener('click',()=>{if(publishing||!confirm(t('draftClear')))return;clearTimeout(draftTimer);if(!discardCurrentDraft()){toast(t('draftFail'));return}const wasEdit=!!editId;dirty=false;if(wasEdit){editId=null;editOwner=null;clearPreview();startEdit(location.hash.split('/')[1])}else restoreDraft();$('draftStatus').textContent='';$('formStatus').textContent=''});
 $('removeCover').addEventListener('change',()=>{if($('removeCover').checked)clearPreview();else if(editingCover){$('coverPreview').src=editingCover;$('coverPreview').hidden=false}});
 $('resendLink').addEventListener('click',()=>{if(authMail)requestAuthMail(authMail.kind,authMail.email,true)});
 $('changeLoginEmail').addEventListener('click',()=>setAuthMode(authMail?.kind==='signup'?'signup':'forgot'));
@@ -552,6 +627,16 @@ $('loginDialog').addEventListener('close',()=>{
   if(recoveryActive){++recoveryRequest;recoveryActive=false;recoveryCallbackTab=false;recoveryVerified=false;recoveryUserId=null;authMode='signin';cleanAuthUrl(true)}
 });
 $('loginForm').addEventListener('submit',submitAuth);$('reportForm').addEventListener('submit',submitReport);window.addEventListener('hashchange',()=>{if(!location.hash.includes('access_token='))route()});window.addEventListener('beforeunload',e=>{if(dirty)saveDraft(false);if(unsavedScopes.size){e.preventDefault();e.returnValue=''}});
+
+$('adminSearch').addEventListener('input',()=>{adminSearch=$('adminSearch').value;clearTimeout(adminSearchTimer);adminSearchTimer=setTimeout(()=>{if(mode==='admin')loadAdmin()},300)});
+$('adminTabs').addEventListener('click',e=>{const button=e.target.closest('[data-admin-filter]');if(!button)return;adminFilter=button.dataset.adminFilter;renderAdminTabs();loadAdmin()});
+$('adminRefresh').addEventListener('click',()=>loadAdmin());
+$('adminMore').addEventListener('click',()=>{if(!adminLoading)loadAdmin(false)});
+$('moderationForm').addEventListener('submit',submitModeration);
+$('deleteConfirm').addEventListener('input',()=>{$('moderationSubmit').disabled=adminBusy||!adminPending||(adminPending.action==='delete'&&$('deleteConfirm').value!==adminPending.work.title)});
+$('moderationDialog').addEventListener('close',()=>{if(!adminBusy)adminPending=null;$('deleteConfirm').value=''});
+$('moderationDialog').addEventListener('cancel',e=>{if(adminBusy)e.preventDefault()});
+
 applyLang();restoreDraft();persistDrafts(drafts);
 async function init(){
   const params=new URLSearchParams(location.hash.slice(1)),authError=params.has('error')||params.has('error_description')||params.has('error_code');
