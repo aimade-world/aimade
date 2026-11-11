@@ -72,6 +72,9 @@ test('Delegated report click opens the report form instead of filtering',()=>{
 test('Empty page space does not act like the html data-cat filter',()=>{
   const h=harness();h.context.observed=[];h.run("loadWorks=()=>observed.push('load');activeCat='game'");h.click(clickNode('div',{},clickNode('html',{cat:'all'})));assert.equal(h.run('activeCat'),'game');assert.equal(h.context.observed.length,0);
 });
+test('Mobile browse shortcut only scrolls to the catalogue without changing filters or writing',()=>{
+  const h=harness();let target;h.el('discover').scrollIntoView=options=>{target=options.block};h.context.reloads=0;h.run("loadWorks=()=>{reloads++};activeCat='game'");h.click(actionTarget('browse-works'));assert.equal(target,'start');assert.equal(h.run('activeCat'),'game');assert.equal(h.context.reloads,0);
+});
 for(const tag of ['button','a'])test('Actual sidebar category '+tag+' still filters and routes home',()=>{
   const h=harness();h.run("mode='admin';activeCat='all'");h.location.hash='#admin';const root=clickNode('html',{cat:'all'}),header=clickNode('header',{},root),control=clickNode(tag,{cat:'game'},header);h.click(clickNode('svg',{},control));assert.equal(h.run('activeCat'),'game');assert.equal(h.location.hash,'#home');
 });

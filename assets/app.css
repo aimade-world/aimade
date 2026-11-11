@@ -107,3 +107,42 @@ dialog{border:0;border-radius:20px;background:var(--paper);color:var(--ink);max-
   nav a{min-width:0;text-align:center}
   nav a span{max-width:100%;overflow-wrap:anywhere}
 }
+
+/* Phone polish: retain the desktop design, give browsing and forms room to breathe. */
+.mobile-browse{display:none}
+@media(max-width:620px){
+  body{padding-bottom:calc(80px + env(safe-area-inset-bottom))}
+  html[data-mode=detail] body{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+  nav{box-shadow:0 -4px 18px #0f122208}
+  nav a[aria-current=page]{background:var(--soft);color:var(--accent)}
+  .hero h1{font-size:30px;line-height:1.25}
+  .mobile-browse{display:inline-flex;margin-top:12px;min-height:44px;font-size:14px}
+  #discover{scroll-margin-top:76px}
+  .search-row{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-bottom:12px}
+  .search-wrap{width:100%;min-width:0}
+  .search-row input,.search-row select{min-height:48px;font-size:16px}
+  .search-row select{width:100%;max-width:none;padding:0 14px;border-radius:14px}
+  .filters{gap:8px;scroll-padding-inline:16px}
+  .filters .chip{min-height:44px}
+  .filter-bottom{align-items:flex-start;gap:8px;flex-wrap:wrap}
+  .filter-bottom label{display:flex;align-items:center;gap:6px;min-height:44px}
+  .filter-bottom .status{align-self:center}
+  .shelves{grid-template-columns:minmax(0,1fr);gap:16px}
+  .featured{gap:16px}.story h2{font-size:24px}.shelf h2{font-size:20px}
+  .story-row{flex-wrap:wrap}.story-row>span{flex-basis:100%}
+  .story .pill{min-height:48px}
+  .owner-actions .btn{flex:1;min-width:0;min-height:48px;justify-content:center;padding-inline:12px}
+  #workForm .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+  #workForm .actions #publish{grid-column:1/-1;min-height:52px}
+  #workForm .actions button{min-width:0;min-height:48px;padding-inline:8px;white-space:normal}
+  .admin-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .admin-tabs .chip{min-width:0;min-height:48px;padding:6px 4px;white-space:normal;line-height:1.35;font-size:13px}
+  .admin-row .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .admin-row .btn{min-width:0;min-height:48px;justify-content:center}
+  dialog{max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain}
+}
+@media(max-width:360px){
+  .shelf-row{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;padding-block:12px}
+  .shelf-row .pill{justify-self:start;margin-left:60px}
+  .shelf-link{width:100%}
+}

@@ -22,12 +22,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <link rel="canonical" href="https://aimade.world/">
-<link rel="stylesheet" href="assets/app.css?v=20261111-admin-nav1">
+<link rel="stylesheet" href="assets/app.css?v=20261111-mobile1">
 <script defer src="assets/supabase-2.118.0.min.js"></script>
 <meta name="aimade-turnstile-sitekey" content="0x4AAAAAAFyvQs5mB-t3aKTN">
 <script defer src="assets/captcha.js?v=20261110-prelaunch1"></script>
 <script defer src="assets/featured.js?v=20261111-picks3"></script>
-<script defer src="assets/app.js?v=20261111-featured-refresh1"></script>
+<script defer src="assets/app.js?v=20261111-mobile1"></script>
 </head><body>
 <a class="skip" href="#main">跳至內容 / Skip to content</a>
 <header><div class="wrap nav">
@@ -38,7 +38,7 @@
 <main class="wrap" id="main">
 <aside id="accountStatus" class="account-status" hidden aria-label="目前帳戶 / Current account"><div><span data-i="accountLabel">目前登入帳戶</span> <strong id="accountEmail"></strong> <span id="accountRole" class="badge" role="status" aria-live="polite"></span></div><small data-i="accountPrivate">只在你的帳戶管理畫面顯示，電郵不會發布到作品頁。</small></aside>
 <section id="browsePage">
-<div class="hero" id="hero" hidden><p class="eyebrow" id="weekDate"></p><h1 data-i="weekTitle">本週精選</h1></div>
+<div class="hero" id="hero" hidden><p class="eyebrow" id="weekDate"></p><h1 data-i="weekTitle">本週精選</h1><button class="btn mobile-browse" type="button" data-action="browse-works" data-i="browseAll">瀏覽全部作品 ↓</button></div>
 <div id="featured" class="featured" hidden></div>
 <div id="discover" class="section-title"><h2 id="browseTitle">來找一件好玩的作品</h2><p id="browseSubtitle">免費瀏覽與分享。外部作品的使用條件依作者設定。</p></div>
 <div class="search-row"><div class="search-wrap"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="search" aria-label="搜尋作品" placeholder="想玩什麼？搜尋作品、用途或創作者…" maxlength="100"></div><select id="sort" aria-label="作品排序"><option value="new" data-i="new">最新發布</option><option value="hot" data-i="hot">近 30 天新作 · 最多讚</option><option value="pop" data-i="pop">最多讚</option></select></div>
