@@ -64,11 +64,11 @@ const initial=s=>[...String(s).trim()][0]||'A';
 function cover(w,cls='',alt=''){const src=safeCover(w.cover_url);return `<span class="cover t-${kind(w)}${cls&&' '+cls}">${icon(kind(w))}${src?`<img src="${esc(src)}" alt="${esc(alt)}" loading="lazy">`:''}</span>`}
 const mainCats=['all','game','tool','app','prompt','image','feedback'];
 // Weekly picks come from assets/featured.js, which the owner edits by hand. Texts there are [中文, English].
-const FEATURED_FIELDS='id,title,description,category,owner_name,cover_url,link,likes_count,details,created_at';
+const FEATURED_FIELDS='id,title,description,category,owner_name,cover_url,link,likes_count,details,created_at,archived,moderation_status';
 const picks=()=>{const f=window.AIMadeFeatured;return f&&typeof f==='object'?f:{}};
 const pair=x=>Array.isArray(x)?String(x[lang==='en'?1:0]||x[0]||''):'';
 const isFiltered=()=>!!search||activeCat!=='all'||onlyLink||sort!=='new';
-let featured=null,featuredSeq=0;
+let featured=null,featuredSeq=0,featuredRequest=null;
 let sb=null,user=null,isAdmin=false,adminRoleState='unknown',works=[],likes=new Set(),saved=new Set((Array.isArray(storage.get('aimade_saved'))?storage.get('aimade_saved'):[]).filter(uuid).slice(0,300)),mode='home',activeCat='all',search='',sort='new',onlyLink=false,offset=0,loading=false,hasMore=false,requestSeq=0,editId=null,pendingId=null,editingCover='',detailWork=null,reportId=null,dirty=false,previewUrl=null;
 const pageSize=24,cache=new Map();
 let adminRows=[],adminFilter='archived',adminSearch='',adminOffset=0,adminMore=false,adminLoading=false,adminSeq=0,adminPending=null,adminBusy=false,adminSearchTimer;let detailSeq=0,authSeq=0,editSeq=0,authReady=false,editOwner=null,lastRouteHash='',mailCooldownUntil=0,mailTimer=null,stagedCoverFile=null,stagedCoverUrl='',coverUpload=null;
@@ -89,7 +89,7 @@ function empty(title,body,action='reset',label='reset',error=false){return `<div
 function normalize(w){return {...w,details:w.details&&typeof w.details==='object'&&!Array.isArray(w.details)?w.details:{},likes_count:Number(w.likes_count)||0}}
 async function timed(query,ms=15000){const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),ms);try{return await query.abortSignal(ctrl.signal)}finally{clearTimeout(timer)}}
 async function loadWorks(reset=true){
-  const seq=++requestSeq;loading=true;if(reset){updateBrowseHeading();offset=0;works=[];$('grid').innerHTML='<div class="skeleton" aria-hidden="true"></div>'.repeat(3)}$('status').textContent=t('loading');$('loadMore').hidden=true;
+  const seq=++requestSeq;loading=true;if(reset){if(mode==='home')loadFeatured();else clearFeatured();updateBrowseHeading();offset=0;works=[];$('grid').innerHTML='<div class="skeleton" aria-hidden="true"></div>'.repeat(3)}$('status').textContent=t('loading');$('loadMore').hidden=true;
   try{
     if(!sb)throw Error('SDK unavailable');
     if(mode==='mine'&&!user){$('grid').innerHTML=empty('navMine','needLogin','login','signin');$('status').textContent='';return}
@@ -114,23 +114,36 @@ function fixImages(){document.querySelectorAll('.cover img').forEach(img=>img.ad
 // One action per work wherever it is listed: open its link, or go to its page when there is none.
 function pill(w){const url=safeUrl(w.link),title=esc(w.title||t('untitled'));return url?`<a class="pill" href="${esc(url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(launchLabel(w))} · ${title} · ${esc(t('external'))}">${esc(launchLabel(w))}</a>`:`<a class="pill" href="#work/${w.id}">${esc(t(w.category==='prompt'?'viewPrompt':'view'))}</a>`}
 // Weekly picks: one story card and themed shelves above the full list. Optional, so failures stay silent.
+const isPublicFeatured=w=>w?.archived===false&&w.moderation_status==='clear';
+function clearFeatured(){
+  ++featuredSeq;featuredRequest?.controller.abort();featuredRequest=null;featured=null;
+  $('hero').hidden=$('featured').hidden=true;$('featured').innerHTML='';
+}
 async function loadFeatured(){
-  if(featured||!sb){renderFeatured();return}
-  const seq=++featuredSeq;
+  // Never reuse an old public snapshot after a return, refresh or moderation change.
+  clearFeatured();if(!sb||mode!=='home'||isFiltered())return;
+  const seq=featuredSeq,scope=user?.id||'',request={controller:new AbortController()};featuredRequest=request;
+  const valid=()=>seq===featuredSeq&&featuredRequest===request&&!request.controller.signal.aborted&&mode==='home'&&!isFiltered()&&(user?.id||'')===scope;
+  const timer=setTimeout(()=>request.controller.abort(),15000);
   try{
-    const {data,error}=await timed(sb.from('work_catalog').select(FEATURED_FIELDS).eq('archived',false).order('created_at',{ascending:false}).order('id').range(0,39));
-    if(error)throw error;if(seq!==featuredSeq)return;
-    const rows=(data||[]).filter(w=>uuid(w.id)).map(normalize),want=picks().pick?.id;
+    const {data,error}=await sb.from('work_catalog').select(FEATURED_FIELDS).eq('archived',false).eq('moderation_status','clear').order('created_at',{ascending:false}).order('id').range(0,39).abortSignal(request.controller.signal);
+    if(error)throw error;if(!valid())return;
+    const rows=(data||[]).filter(w=>uuid(w.id)&&isPublicFeatured(w)).map(normalize),want=picks().pick?.id;
     let chosen=rows.find(w=>w.id===want)||null;
-    if(!chosen&&uuid(want)){const found=await timed(sb.from('work_catalog').select(FEATURED_FIELDS).eq('id',want).eq('archived',false).maybeSingle());if(seq!==featuredSeq)return;if(!found.error&&uuid(found.data?.id))chosen=normalize(found.data)}
+    if(!chosen&&uuid(want)){
+      const found=await sb.from('work_catalog').select(FEATURED_FIELDS).eq('id',want).eq('archived',false).eq('moderation_status','clear').maybeSingle().abortSignal(request.controller.signal);
+      if(!valid())return;if(!found.error&&uuid(found.data?.id)&&isPublicFeatured(found.data))chosen=normalize(found.data);
+    }
+    if(!valid())return;
     featured={pick:chosen||[...rows].sort((a,b)=>b.likes_count-a.likes_count||!!safeCover(b.cover_url)-!!safeCover(a.cover_url))[0]||null,chosen:!!chosen,rows};
-  }catch{/* The full list below still loads without the picks. */}
-  renderFeatured();
+    renderFeatured();
+  }catch{/* Fail closed: the full list still loads, but old recommendations stay cleared. */}
+  finally{clearTimeout(timer);if(featuredRequest===request)featuredRequest=null}
 }
 function renderFeatured(){
-  const w=featured?.pick,show=mode==='home'&&!isFiltered()&&!!w;$('hero').hidden=$('featured').hidden=!show;if(!show)return;
+  const w=featured?.pick,show=mode==='home'&&!isFiltered()&&isPublicFeatured(w);$('hero').hidden=$('featured').hidden=!show;if(!show){$('featured').innerHTML='';return}
   const cfg=picks(),own=featured.chosen&&cfg.pick||{},used=new Set([w.id]),by=x=>esc([x.owner_name||t('anonymous'),accessLabel(x)].filter(Boolean).join(' · '));
-  const shelves=(Array.isArray(cfg.lists)?cfg.lists:[]).map(l=>{const rows=featured.rows.filter(x=>!used.has(x.id)&&(!l.where?.category||x.category===l.where.category)&&(!l.where?.feedback||x.details.feedback===true)).slice(0,3);rows.forEach(x=>used.add(x.id));return rows.length?`<section class="shelf t-${cats[l.tone]?l.tone:'other'}"><span class="shelf-label">${esc(pair(l.label))}</span><h2>${esc(pair(l.title))}</h2>${rows.map(x=>`<div class="shelf-row"><a class="shelf-link" href="#work/${x.id}">${cover(x,'tile')}<span><strong>${esc(x.title||t('untitled'))}</strong><small>${by(x)}</small></span></a>${pill(x)}</div>`).join('')}</section>`:''}).join('');
+  const shelves=(Array.isArray(cfg.lists)?cfg.lists:[]).map(l=>{const rows=featured.rows.filter(x=>isPublicFeatured(x)&&!used.has(x.id)&&(!l.where?.category||x.category===l.where.category)&&(!l.where?.feedback||x.details.feedback===true)).slice(0,3);rows.forEach(x=>used.add(x.id));return rows.length?`<section class="shelf t-${cats[l.tone]?l.tone:'other'}"><span class="shelf-label">${esc(pair(l.label))}</span><h2>${esc(pair(l.title))}</h2>${rows.map(x=>`<div class="shelf-row"><a class="shelf-link" href="#work/${x.id}">${cover(x,'tile')}<span><strong>${esc(x.title||t('untitled'))}</strong><small>${by(x)}</small></span></a>${pill(x)}</div>`).join('')}</section>`:''}).join('');
   $('featured').innerHTML=`<article class="story t-${kind(w)}"><a class="story-media" href="#work/${w.id}" aria-label="${esc(w.title||t('untitled'))}">${cover(w)}</a><div class="story-body"><span class="story-label">${esc(pair(own.label)||t('weekPick'))}</span><h2><a href="#work/${w.id}">${esc(pair(own.headline)||w.title||t('untitled'))}</a></h2><div class="story-row"><span><strong>${esc(w.title||t('untitled'))}</strong><small>${by(w)}</small></span>${pill(w)}</div></div></article>${shelves&&`<div class="shelves">${shelves}</div>`}`;
   fixImages();
 }
@@ -370,7 +383,7 @@ async function refreshUser(session){
   const seq=++authSeq,previousId=user?.id,nextUser=session?.user||null,nextScope=scopeFor(nextUser?.id),switching=editorScope!==nextScope;
   let draftOk=true;
   if(switching){clearTimeout(draftTimer);if(dirty)draftOk=saveDraft(false);++editSeq;++editorEpoch;}
-  if(previousId!==nextUser?.id){cancelRelated();relatedCache.clear();detailRelated=[];}
+  if(previousId!==nextUser?.id){cancelRelated();relatedCache.clear();clearFeatured();detailRelated=[];}
   user=nextUser;const currentId=user?.id;authReady=true;
   if(switching){restoreDraft();if(!draftOk)toast(t('draftMemoryOnly'));else if(previousId||dirty)toast(t('draftAccountChanged'));}
   ++requestSeq;++detailSeq;++adminSeq;adminRows=[];adminPending=null;if($('moderationDialog').open)$('moderationDialog').close();$('adminList').innerHTML='';
@@ -527,7 +540,7 @@ async function submitWork(e){
     const payload={owner,owner_name:d.displayName.trim(),title:d.title.trim(),description:d.description.trim(),category:d.category,link:safeUrl(url)||null,cover_url:cover,details:{access:d.access,mobile:d.mobile,feedback:d.feedback,tools:d.tools.trim(),prompt:d.category==='prompt'?d.prompt.trim():''}};
     const result=submittedEditId?await timed(sb.from('works').update(payload).eq('id',submittedEditId).eq('owner',owner).select('id').single(),20000):await timed(sb.from('works').upsert({...payload,id:pendingId,price:0,accept_tips:false},{onConflict:'id'}).select('id').single(),20000);
     if(result.error)throw result.error;if(user?.id!==owner||editorEpoch!==submittedEpoch)return;const id=result.data.id;
-    relatedCache.clear();
+    relatedCache.clear();clearFeatured();
     storage.set('aimade_display_v4:'+owner,payload.owner_name);clearTimeout(draftTimer);discardCurrentDraft();dirty=false;toast(t(submittedEditId?'updated':'published'));
     $('workForm').reset();restoreDraft();$('draftStatus').textContent='';location.hash='work/'+id;
   }catch(error){
@@ -535,7 +548,7 @@ async function submitWork(e){
     if(user?.id===owner&&editorEpoch===submittedEpoch){$('formStatus').textContent=t(error?.message?.includes('aimade_title_quality')?'titleQuality':error?.message?.includes('aimade_description_quality')?'descriptionQuality':'saveFail');saveDraft(false);}
   }finally{publishing=false;$('editorFields').disabled=false;$('publish').disabled=false;$('publish').textContent=t(editId?'update':'publish')}
 }
-async function archiveWork(id){if(!user||!detailWork||detailWork.id!==id||detailWork.owner!==user.id||isAdmin||!['clear',undefined].includes(detailWork.moderation_status))return;const target=!detailWork.archived;if(target&&!confirm(t('archiveConfirm')))return;try{const {data,error}=await timed(sb.from('works').update({archived:target}).eq('id',id).eq('owner',user.id).select('id').single());if(error||!data)throw Error();relatedCache.clear();loadDetail(id)}catch{toast(t('saveFail'))}}
+async function archiveWork(id){if(!user||!detailWork||detailWork.id!==id||detailWork.owner!==user.id||isAdmin||!['clear',undefined].includes(detailWork.moderation_status))return;const target=!detailWork.archived;if(target&&!confirm(t('archiveConfirm')))return;try{const {data,error}=await timed(sb.from('works').update({archived:target}).eq('id',id).eq('owner',user.id).select('id').single());if(error||!data)throw Error();relatedCache.clear();clearFeatured();loadDetail(id)}catch{toast(t('saveFail'))}}
 async function submitReport(e){e.preventDefault();if(!user||!sb){openLogin();return}const b=e.target.querySelector('button[type=submit]');b.disabled=true;try{const {error}=await timed(sb.from('reports').insert({work_id:reportId,reporter:user.id,reason:$('reportReason').value.trim().slice(0,1000)}));if(error)throw error;$('reportDialog').close();toast(t('reported'))}catch{$('reportStatus').textContent=t('reportFail')}finally{b.disabled=false}}
 function textSize(value){return Array.from(String(value||'').replace(/[\s\u0085\u200b\ufeff]/gu,'')).length}
 function validTitle(value){return textSize(value)>=2&&/\p{L}/u.test(value)}
@@ -602,7 +615,7 @@ async function submitModeration(e){
     const {data,error}=await timed(q.select('id').maybeSingle(),20000);
     if(user?.id!==item.actor||!isAdmin)return;
     if(error)throw error;if(!data){$('moderationStatus').textContent=t('adminStale');adminPending=null;return}
-    relatedCache.clear();cache.delete(item.work.id);adminPending=null;$('moderationDialog').close();toast(t('adminDone'));if(mode==='admin')await loadAdmin();else if(mode==='detail'&&detailWork?.id===item.work.id)await loadDetail(item.work.id);
+    relatedCache.clear();clearFeatured();cache.delete(item.work.id);adminPending=null;$('moderationDialog').close();toast(t('adminDone'));if(mode==='admin')await loadAdmin();else if(mode==='detail'&&detailWork?.id===item.work.id)await loadDetail(item.work.id);
   }catch{if(user?.id===item.actor){$('moderationStatus').textContent=t('adminFail');adminPending=null}}
   finally{adminBusy=false;$('moderationCancel').disabled=false;$('deleteConfirm').disabled=false;$('moderationSubmit').disabled=true}
 }
@@ -635,7 +648,7 @@ function route(){
   }
   if(adminPending&&!adminBusy){adminPending=null;$('moderationDialog').close()}
   if(mode==='upload'&&dirty&&!['upload','edit'].includes(key))saveDraft(false);
-  cancelRelated();
+  cancelRelated();clearFeatured();
   ++requestSeq;++detailSeq;++adminSeq;
   ['browsePage','uploadPage','detailPage','guidePage','adminPage'].forEach(k=>$(k).hidden=true);
   document.title=lang==='zh'?'AIMade — 發現、試玩、分享 AI 作品':'AIMade — Discover, try and share AI creations';
@@ -645,7 +658,7 @@ function route(){
     if(key==='edit')startEdit(id);
     else{++editSeq;if(editId)restoreDraft();$('editorTitle').textContent=t('uploadTitle');$('workForm').hidden=false;$('editorLoadStatus').textContent='';renderEditorContext()}
   }else if(key==='admin'){++editSeq;mode='admin';$('adminPage').hidden=false;loadAdmin()}else if(key==='guide'){++editSeq;mode='guide';$('guidePage').hidden=false}
-  else{++editSeq;mode=['saved','mine'].includes(key)?key:'home';$('browsePage').hidden=false;updateBrowseHeading();loadWorks();if(mode==='home')loadFeatured()}
+  else{++editSeq;mode=['saved','mine'].includes(key)?key:'home';$('browsePage').hidden=false;updateBrowseHeading();loadWorks()}
   // Lets the stylesheet swap the phone tab bar for the pinned action on a work page.
   document.documentElement.setAttribute?.('data-mode',mode);
   renderAccount();updateQualityHints();lastRouteHash=location.hash;

@@ -131,6 +131,58 @@ function moderationApi(result={data:{id:WORK},error:null}){
   return {calls,client:{from(table){const call={table,filters:[]};calls.push(call);return {select(...p){call.select=p;return this},update(p){call.payload=p;return this},delete(){call.delete=true;return this},eq(...p){call.filters.push(['eq',...p]);return this},neq(...p){call.filters.push(['neq',...p]);return this},is(...p){call.filters.push(['is',...p]);return this},or(...p){call.filters.push(['or',...p]);return this},order(){return this},range(...p){call.range=p;return this},maybeSingle(){return this},abortSignal(signal){call.signal=signal;return typeof result==='function'?result(call):Promise.resolve(result)}}}}};
 }
 function moderator(h,client,w={}){ready(h,client);h.context.w={id:WORK,owner:'00000000-0000-4000-8000-000000000099',title:'另一位作者的作品',category:'prompt',archived:true,moderation_status:'hidden',moderated_at:null,...w};h.run("isAdmin=true;adminRoleState='admin';mode='admin';adminRows=[w]");h.location.hash='#admin'}
+const featuredWork={id:WORK,title:'公開作品',owner:OWNER,category:'prompt',details:{feedback:true},archived:false,moderation_status:'clear',likes_count:1};
+function featuredHarness(responses){const h=harness(),a=moderationApi(()=>{const next=responses.shift();return typeof next==='function'?next():Promise.resolve(next||{data:[]})});ready(h,a.client);h.context.fixture=featuredWork;h.run("mode='home';user=null");return {...h,calls:a.calls}}
+function seedFeatured(h){h.context.fixture=featuredWork;h.run('featured={pick:normalize(fixture),chosen:false,rows:[normalize(fixture)]};renderFeatured()')}
+test('Featured reload removes a work that was unpublished after the first visit',async()=>{
+  const h=featuredHarness([{data:[featuredWork]},{data:[]}]);await h.run('loadFeatured()');assert.equal(h.el('featured').hidden,false);await h.run('loadFeatured()');assert.equal(h.calls.length,2);assert.equal(h.el('featured').hidden,true);assert.equal(h.el('featured').innerHTML,'');
+});
+test('Featured reads publication flags, excludes moderation and keeps the forty-row bound',async()=>{
+  const h=featuredHarness([{data:[featuredWork]}]);await h.run('loadFeatured()');const c=h.calls[0];assert(c.select[0].includes('archived'));assert(c.select[0].includes('moderation_status'));assert(c.filters.some(x=>x[1]==='archived'&&x[2]===false));assert(c.filters.some(x=>x[1]==='moderation_status'&&x[2]==='clear'));assert.deepEqual(c.range,[0,39]);
+});
+for(const patch of [{archived:true},{moderation_status:'hidden'},{moderation_status:'trash'},{archived:undefined}])test('Featured defensively rejects non-public row '+JSON.stringify(patch),async()=>{
+  const h=featuredHarness([{data:[{...featuredWork,...patch}]}]);await h.run('loadFeatured()');assert.equal(h.el('featured').hidden,true);assert.equal(h.el('featured').innerHTML,'');
+});
+test('Configured archived pick is not displayed even if a moderator can read it',async()=>{
+  const h=featuredHarness([{data:[]},{data:{...featuredWork,archived:true,moderation_status:'hidden'}}]);h.context.window.AIMadeFeatured={pick:{id:WORK}};h.run('isAdmin=true');await h.run('loadFeatured()');assert.equal(h.calls.length,2);assert(h.calls[1].filters.some(x=>x[1]==='archived'&&x[2]===false));assert(h.calls[1].filters.some(x=>x[1]==='moderation_status'&&x[2]==='clear'));assert.equal(h.el('featured').hidden,true);
+});
+test('Refresh hides cached featured content before the network completes and on error',async()=>{
+  let resolve;const h=featuredHarness([()=>new Promise(r=>resolve=r)]);seedFeatured(h);const wait=h.run('loadFeatured()');assert.equal(h.el('featured').hidden,true);assert.equal(h.el('featured').innerHTML,'');resolve({error:{message:'offline'}});await wait;assert.equal(h.el('featured').hidden,true);
+});
+test('A late featured read cannot resurrect content after invalidation',async()=>{
+  let resolve;const h=featuredHarness([()=>new Promise(r=>resolve=r)]),wait=h.run('loadFeatured()');h.run('clearFeatured()');assert.equal(h.calls[0].signal.aborted,true);resolve({data:[featuredWork]});await wait;assert.equal(h.run('featured'),null);assert.equal(h.el('featured').hidden,true);
+});
+test('An older featured request cannot replace a newer response',async()=>{
+  let resolve;const h=featuredHarness([()=>new Promise(r=>resolve=r),{data:[]}]),old=h.run('loadFeatured()');await h.run('loadFeatured()');resolve({data:[featuredWork]});await old;assert.equal(h.calls[0].signal.aborted,true);assert.equal(h.el('featured').hidden,true);
+});
+test('A late featured result is discarded when the signed-in account changes',async()=>{
+  let resolve;const h=featuredHarness([()=>new Promise(r=>resolve=r)]),wait=h.run('loadFeatured()');h.run("user={id:'new-account'}");resolve({data:[featuredWork]});await wait;assert.equal(h.run('featured'),null);
+});
+test('Leaving home cancels pending recommendations and does not start a fallback',async()=>{
+  let resolve;const h=featuredHarness([()=>new Promise(r=>resolve=r)]);h.context.window.AIMadeFeatured={pick:{id:WORK}};const wait=h.run('loadFeatured()');h.location.hash='#guide';h.run('route()');resolve({data:[]});await wait;assert.equal(h.calls.length,1);assert.equal(h.el('featured').hidden,true);assert.equal(h.calls[0].signal.aborted,true);
+});
+test('Filtering does not query optional featured works; clearing filters does',async()=>{
+  const h=featuredHarness([{data:[featuredWork]}]);h.run("activeCat='game'");await h.run('loadFeatured()');assert.equal(h.calls.length,0);h.run("activeCat='all'");await h.run('loadFeatured()');assert.equal(h.calls.length,1);
+});
+test('Featured requests share one fifteen-second abort budget',async()=>{
+  let resolve;const h=featuredHarness([()=>new Promise(r=>resolve=r)]),wait=h.run('loadFeatured()');await h.fireDelay(15000);assert.equal(h.calls[0].signal.aborted,true);resolve({data:[featuredWork]});await wait;assert.equal(h.el('featured').hidden,true);
+});
+test('Home list refresh also revalidates featured works',async()=>{
+  const h=featuredHarness([{data:[],count:0}]);h.context.callsToFeatured=0;h.run('loadFeatured=async()=>{callsToFeatured++}');await h.run('loadWorks()');assert.equal(h.context.callsToFeatured,1);
+});
+test('Renderer never includes a moderated shelf row',()=>{
+  const h=featuredHarness([]);h.context.window.AIMadeFeatured={lists:[{title:['測試清單','Test list']}]};h.run(`featured={pick:normalize(fixture),chosen:false,rows:[normalize({...fixture,id:'00000000-0000-4000-8000-000000000099',title:'不可公開',archived:true,moderation_status:'hidden'})]};renderFeatured()`);assert(!h.el('featured').innerHTML.includes('不可公開'));
+});
+for(const action of ['hide','restore','trash','recover','delete'])test('Successful moderator '+action+' clears the featured snapshot',async()=>{
+  const h=harness(),a=moderationApi(call=>Promise.resolve(call.table==='works'?{data:{id:WORK}}:{data:[],count:0}));moderator(h,a.client,{archived:action!=='hide',moderation_status:['recover','delete'].includes(action)?'trash':action==='hide'?'clear':'hidden'});seedFeatured(h);h.run(`openModeration('${WORK}','${action}')`);if(action==='delete')h.el('deleteConfirm').value=h.context.w.title;await h.run('submitModeration({preventDefault(){}})');assert.equal(h.run('featured'),null);assert.equal(h.el('featured').innerHTML,'');
+});
+test('Ordinary author unpublish clears the featured snapshot',async()=>{
+  const h=harness(),a=api();ready(h,a.client);h.run(`mode='detail';detailWork={id:'${WORK}',owner:'${OWNER}',archived:false,moderation_status:'clear'};loadDetail=async()=>{}`);seedFeatured(h);await h.run(`archiveWork('${WORK}')`);assert.equal(h.run('featured'),null);
+});
+test('Publish or edit clears the featured snapshot',async()=>{
+  const h=harness(),a=api();ready(h,a.client);validForm(h);seedFeatured(h);await h.run('submitWork({preventDefault(){}})');assert.equal(h.run('featured'),null);
+});
+
 test('Admin My works still queries only the signed-in owner and excludes Trash',async()=>{
   const a=moderationApi({data:[{id:WORK,owner:OWNER},{id:'00000000-0000-4000-8000-000000000099',owner:'other'}],count:2}),h=harness();moderator(h,a.client);h.run("mode='mine'");await h.run('loadWorks()');assert(a.calls[0].filters.some(x=>x[1]==='owner'&&x[2]===OWNER));assert(a.calls[0].filters.some(x=>x[1]==='moderation_status'&&x[2]==='trash'));assert.equal(h.run('works.length'),1);
 });
