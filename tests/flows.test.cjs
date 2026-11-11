@@ -157,6 +157,62 @@ test('Late moderator list cannot render after leaving its route',async()=>{
   let finish;const h=harness(),a=moderationApi(()=>new Promise(r=>finish=r));moderator(h,a.client);const wait=h.run('loadAdmin()');h.run("location.hash='#guide';route()");finish({data:[h.context.w],count:1});await wait;assert.equal(h.el('adminList').innerHTML,'');
 });
 
+function detailActor(h,client,{admin=true,own=false,guest=false,archived=false,status='clear'}={}){
+  moderator(h,client,{owner:own?OWNER:'00000000-0000-4000-8000-000000000099',archived,moderation_status:status,details:{},created_at:'2026-11-11T00:00:00Z'});
+  h.run(`mode='detail';isAdmin=${admin};${guest?'user=null;':''}detailWork=normalize(w);renderDetail(detailWork)`);h.location.hash='#work/'+WORK;
+}
+for(const own of [false,true])test('Admin detail exposes one unpublish action on '+(own?'own':'another author’s')+' work',()=>{
+  const h=harness();detailActor(h,moderationApi().client,{own});const html=h.el('detail').innerHTML;
+  assert.equal((html.match(/data-kind="hide"/g)||[]).length,1);assert(!html.includes('data-action="archive"'));assert.equal(html.includes('#edit/'+WORK),own);
+});
+test('Ordinary author keeps the own-work unpublish control',()=>{
+  const h=harness();detailActor(h,moderationApi().client,{admin:false,own:true});const html=h.el('detail').innerHTML;assert(html.includes('data-action="archive"'));assert(html.includes('#edit/'+WORK));assert(!html.includes('data-action="admin-action"'));
+});
+for(const guest of [false,true])test((guest?'Guest':'Other author')+' gets no detail management controls',()=>{
+  const h=harness();detailActor(h,moderationApi().client,{admin:false,guest});const html=h.el('detail').innerHTML;assert(!html.includes('data-action="archive"'));assert(!html.includes('data-action="admin-action"'));assert(!html.includes('#edit/'+WORK));
+});
+for(const status of ['clear','hidden'])test('Admin can restore '+status+' archived work from detail',()=>{
+  const h=harness();detailActor(h,moderationApi().client,{archived:true,status});const html=h.el('detail').innerHTML;assert(html.includes('data-kind="restore"'));assert(!html.includes('data-kind="hide"'));h.click(actionTarget('admin-action',{kind:'restore'}));assert.equal(h.el('moderationDialog').open,true);
+});
+for(const status of ['hidden','trash'])test('Moderator-'+status+' detail gives its ordinary owner no republish control',async()=>{
+  const h=harness(),a=moderationApi();detailActor(h,a.client,{admin:false,own:true,archived:true,status});const html=h.el('detail').innerHTML;assert(!html.includes('data-action="archive"'));assert(!html.includes('data-action="admin-action"'));await h.run(`archiveWork('${WORK}')`);assert.equal(a.calls.length,0);
+});
+test('Admin trash detail keeps deletion and recovery in the management page',()=>{
+  const h=harness();detailActor(h,moderationApi().client,{archived:true,status:'trash'});const html=h.el('detail').innerHTML;assert(!html.includes('data-action="admin-action"'));assert(html.includes('href="#admin"'));
+});
+test('Actual detail unpublish click opens confirmation; cancellation writes nothing',async()=>{
+  const h=harness(),a=moderationApi();detailActor(h,a.client);h.click(actionTarget('admin-action',{kind:'hide'}));assert.equal(h.el('moderationDialog').open,true);assert.equal(h.el('moderationHeading').textContent,h.run("t('adminHide')"));assert.equal(h.el('moderationWorkTitle').textContent,h.context.w.title);assert.equal(a.calls.length,0);
+  h.click(clickNode('button',{close:'moderationDialog'}));await h.run('submitModeration({preventDefault(){}})');assert.equal(h.el('moderationDialog').open,false);assert.equal(h.run('adminPending'),null);assert.equal(a.calls.length,0);
+});
+for(const action of ['hide','restore'])test('Confirmed detail '+action+' only changes visibility and reloads the same detail',async()=>{
+  const h=harness(),a=moderationApi();detailActor(h,a.client,{archived:action==='restore',status:action==='restore'?'hidden':'clear'});h.context.reloaded=[];h.run('loadDetail=async id=>reloaded.push(id)');h.click(actionTarget('admin-action',{kind:action}));await h.run('submitModeration({preventDefault(){}})');assert.equal(a.calls.length,1);
+  const c=a.calls[0];assert.equal(c.table,'works');assert.deepEqual({...c.payload},{archived:action==='hide',moderation_status:action==='hide'?'hidden':'clear'});assert.deepEqual(c.filters.map(x=>x[1]),['id','title','archived','moderation_status','moderated_at']);assert.deepEqual([...h.context.reloaded],[WORK]);assert.equal(h.el('moderationDialog').open,false);
+});
+test('Detail confirmation rejects a different work ID and non-detail routes',()=>{
+  const h=harness(),a=moderationApi();detailActor(h,a.client);h.run("openModeration('00000000-0000-4000-8000-000000000099','hide')");assert.equal(h.run('adminPending'),null);h.run(`mode='mine';openModeration('${WORK}','hide')`);assert.equal(h.run('adminPending'),null);assert.equal(a.calls.length,0);
+});
+for(const action of ['trash','recover','delete'])test('Detail cannot invoke management-only '+action,()=>{
+  const h=harness();detailActor(h,moderationApi().client,{archived:true,status:action==='trash'?'hidden':'trash'});h.run(`openModeration('${WORK}','${action}')`);assert.equal(h.run('adminPending'),null);
+});
+for(const change of ["mode='admin'","detailWork={...detailWork,id:'00000000-0000-4000-8000-000000000099'}","++detailSeq","isAdmin=false","user={id:'different'}"])test('Detail confirmation refuses stale context: '+change,async()=>{
+  const h=harness(),a=moderationApi();detailActor(h,a.client);h.click(actionTarget('admin-action',{kind:'hide'}));assert.equal(h.el('moderationDialog').open,true);h.run(change);await h.run('submitModeration({preventDefault(){}})');assert.equal(a.calls.length,0);
+});
+test('Detail moderation remains blocked on a preview origin',async()=>{
+  const h=harness(),a=moderationApi();detailActor(h,a.client);h.location.origin='http://localhost:4183';h.click(actionTarget('admin-action',{kind:'hide'}));await h.run('submitModeration({preventDefault(){}})');assert.equal(a.calls.length,0);
+});
+test('Detail moderation error never retries or refreshes as success',async()=>{
+  const h=harness(),a=moderationApi({data:null,error:{message:'denied'}});detailActor(h,a.client);h.context.reloaded=[];h.run('loadDetail=async id=>reloaded.push(id)');h.click(actionTarget('admin-action',{kind:'hide'}));await h.run('submitModeration({preventDefault(){}})');assert.equal(h.el('moderationStatus').textContent,h.run("t('adminFail')"));assert.equal(h.run('adminPending'),null);await h.run('submitModeration({preventDefault(){}})');assert.equal(a.calls.length,1);assert.equal(h.context.reloaded.length,0);
+});
+test('Navigating away dismisses an unsubmitted detail moderation dialog',async()=>{
+  const h=harness(),a=moderationApi();detailActor(h,a.client);h.click(actionTarget('admin-action',{kind:'hide'}));h.location.hash='#guide';h.run('route()');assert.equal(h.el('moderationDialog').open,false);assert.equal(h.run('adminPending'),null);await h.run('submitModeration({preventDefault(){}})');assert.equal(a.calls.length,0);
+});
+test('Ordinary owner archive and restore retain owner-scoped writes',async()=>{
+  for(const archived of [false,true]){const h=harness(),a=api();detailActor(h,a.client,{admin:false,own:true,archived});h.context.reloaded=[];h.run('loadDetail=async id=>reloaded.push(id)');await h.run(`archiveWork('${WORK}')`);assert.deepEqual({...a.stats.writes[0]},{archived:!archived});assert.deepEqual([...h.context.reloaded],[WORK]);}
+});
+test('Ordinary author cancelling unpublish does not write',async()=>{
+  const h=harness(),a=api();detailActor(h,a.client,{admin:false,own:true});h.context.confirm=()=>false;await h.run(`archiveWork('${WORK}')`);assert.equal(a.stats.writes.length,0);
+});
+
 test('Legacy edit draft is preserved separately, not restored as a new creation',()=>{
   const h=harness({aimade_draft_v2:{editId:WORK,title:'尚未提交的修改',description:'保留此內容'}});
   h.run('restoreDraft();persistDrafts(drafts)');

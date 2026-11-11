@@ -172,6 +172,13 @@ function relatedList(){return detailRelated.length?`<h2>${esc(t('related'))}</h2
 async function loadDetail(id){cancelRelated();const seq=++detailSeq;detailWork=null;detailRelated=[];$('detail').innerHTML=`<p role="status">${esc(t('loading'))}</p>`;if(!uuid(id)){$('detail').innerHTML=empty('notFound','notFoundBody','home','explore');return}try{if(!sb)throw Error();const {data,error}=await timed(sb.from('work_catalog').select('*').eq('id',id).maybeSingle());if(error)throw error;if(seq!==detailSeq)return;if(!data){$('detail').innerHTML=empty('notFound','notFoundBody','home','explore');return}if(mode!=='detail'||seq!==detailSeq)return;detailWork=normalize(data);cache.set(id,detailWork);renderDetail(detailWork);loadRelated(detailWork,seq)}catch{if(seq!==detailSeq)return;$('detail').innerHTML=empty('loadError','loadErrorBody','retry-detail','retry',true)}}
 function renderDetail(w){
   const url=safeUrl(w.link),canEdit=user&&user.id===w.owner,name=w.owner_name||t('anonymous'),liked=likes.has(w.id),savedOn=saved.has(w.id);
+  let ownerActions=canEdit?`<a class="btn" href="#edit/${w.id}">${esc(t('edit'))}</a>`:'';
+  if(user&&isAdmin){
+    const action=w.archived?'restore':'hide';
+    if(allowedAdminAction(w,action))ownerActions+=`<button class="btn" data-action="admin-action" data-kind="${action}" data-id="${w.id}">${esc(t(w.archived?'adminRestore':'adminHide'))}</button>`;
+  }else if(canEdit&&(!w.moderation_status||w.moderation_status==='clear')){
+    ownerActions+=`<button class="btn" data-action="archive" data-id="${w.id}">${esc(t(w.archived?'restoreWork':'archiveWork'))}</button>`;
+  }
   const prompt=w.category==='prompt'&&typeof w.details.prompt==='string'?w.details.prompt:'',tools=typeof w.details.tools==='string'?w.details.tools:'';
   // The main action sits beside the title; phones repeat it in a bar pinned to the bottom.
   const main=url?`<a class="btn primary big" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(launchLabel(w))}</a>`:prompt?`<button class="btn primary big" data-action="copy-prompt">${icon('copy')}${esc(t('copyPrompt'))}</button>`:'';
@@ -179,7 +186,7 @@ function renderDetail(w){
   // The owner's note on the weekly pick shows only on that work.
   const pick=picks().pick,why=pick&&pick.id===w.id?pair(pick.reason):'';
   document.title=`${w.title} · AIMade`;
-  $('detail').innerHTML=`<a class="back" href="#home">${esc(t('back'))}</a><div class="detail-top"><span class="cover icon t-${kind(w)}" aria-hidden="true">${icon(kind(w))}</span><div class="detail-info"><div class="tags"><span class="tag t-${kind(w)}">${esc(cat(w.category))}</span>${w.details.feedback===true?`<span class="tag warm">${esc(t('feedback'))}</span>`:''}${w.archived?`<span class="tag">${esc(t('archived'))}</span>`:''}</div><h1>${esc(w.title)}</h1><div class="byline"><span class="avatar" aria-hidden="true">${esc(initial(name))}</span><strong>${esc(name)}</strong></div></div><div class="detail-cta">${main}${url?`<p class="cta-note">${esc(t('newTab'))}</p>`:''}<div class="detail-actions"><button class="btn ${liked?'liked':''}" data-action="like" data-id="${w.id}" aria-label="${esc(t('like'))}" aria-pressed="${liked}">${icon('heart')}${w.likes_count||esc(t('like'))}</button><button class="btn ${savedOn?'saved':''}" data-action="save" data-id="${w.id}" aria-pressed="${savedOn}">${icon('bookmark')}${esc(t(savedOn?'saved':'save'))}</button><button class="btn" data-action="copy-link" data-id="${w.id}" aria-label="${esc(t('copyLink'))}">${icon('link')}${esc(t('shareLink'))}</button></div>${canEdit?`<div class="owner-actions"><a class="btn" href="#edit/${w.id}">${esc(t('edit'))}</a>${!isAdmin&&(!w.moderation_status||w.moderation_status==='clear')?`<button class="btn" data-action="archive" data-id="${w.id}">${esc(t(w.archived?'restoreWork':'archiveWork'))}</button>`:''}</div>`:''}</div></div><dl class="facts">${facts.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>${safeCover(w.cover_url)?cover(w,'big',w.title):''}<div class="detail-body"><div class="detail-main"><h2>${esc(t('view'))}</h2><div class="description">${esc(w.description)}</div>${why?`<section class="why t-${kind(w)}"><span>${esc(t('whyPick'))}</span><p>${esc(why)}</p></section>`:''}${prompt?`<h2>Prompt</h2><pre>${esc(prompt)}</pre><button class="btn" data-action="copy-prompt">${icon('copy')}${esc(t('copyPrompt'))}</button>`:''}</div><aside class="detail-side"><section class="related" id="related"${detailRelated.length?'':' hidden'}>${relatedList()}</section><p class="fine">${esc(t('authorLabels'))}</p><button class="text-link" data-action="report" data-id="${w.id}">${esc(t('report'))}</button>${isAdmin?`<p><a class="btn" href="#admin">${esc(t('adminTitle'))}</a></p>`:''}${w.moderation_status==='hidden'||w.moderation_status==='trash'?`<p class="notice">${esc(t('moderatedNotice'))}</p>`:''}</aside></div>${main?`<div class="detail-bar">${main}</div>`:''}`;
+  $('detail').innerHTML=`<a class="back" href="#home">${esc(t('back'))}</a><div class="detail-top"><span class="cover icon t-${kind(w)}" aria-hidden="true">${icon(kind(w))}</span><div class="detail-info"><div class="tags"><span class="tag t-${kind(w)}">${esc(cat(w.category))}</span>${w.details.feedback===true?`<span class="tag warm">${esc(t('feedback'))}</span>`:''}${w.archived?`<span class="tag">${esc(t('archived'))}</span>`:''}</div><h1>${esc(w.title)}</h1><div class="byline"><span class="avatar" aria-hidden="true">${esc(initial(name))}</span><strong>${esc(name)}</strong></div></div><div class="detail-cta">${main}${url?`<p class="cta-note">${esc(t('newTab'))}</p>`:''}<div class="detail-actions"><button class="btn ${liked?'liked':''}" data-action="like" data-id="${w.id}" aria-label="${esc(t('like'))}" aria-pressed="${liked}">${icon('heart')}${w.likes_count||esc(t('like'))}</button><button class="btn ${savedOn?'saved':''}" data-action="save" data-id="${w.id}" aria-pressed="${savedOn}">${icon('bookmark')}${esc(t(savedOn?'saved':'save'))}</button><button class="btn" data-action="copy-link" data-id="${w.id}" aria-label="${esc(t('copyLink'))}">${icon('link')}${esc(t('shareLink'))}</button></div>${ownerActions?`<div class="owner-actions">${ownerActions}</div>`:''}</div></div><dl class="facts">${facts.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>${safeCover(w.cover_url)?cover(w,'big',w.title):''}<div class="detail-body"><div class="detail-main"><h2>${esc(t('view'))}</h2><div class="description">${esc(w.description)}</div>${why?`<section class="why t-${kind(w)}"><span>${esc(t('whyPick'))}</span><p>${esc(why)}</p></section>`:''}${prompt?`<h2>Prompt</h2><pre>${esc(prompt)}</pre><button class="btn" data-action="copy-prompt">${icon('copy')}${esc(t('copyPrompt'))}</button>`:''}</div><aside class="detail-side"><section class="related" id="related"${detailRelated.length?'':' hidden'}>${relatedList()}</section><p class="fine">${esc(t('authorLabels'))}</p><button class="text-link" data-action="report" data-id="${w.id}">${esc(t('report'))}</button>${isAdmin?`<p><a class="btn" href="#admin">${esc(t('adminTitle'))}</a></p>`:''}${w.moderation_status==='hidden'||w.moderation_status==='trash'?`<p class="notice">${esc(t('moderatedNotice'))}</p>`:''}</aside></div>${main?`<div class="detail-bar">${main}</div>`:''}`;
   fixImages();
 }
 async function copy(text){try{await navigator.clipboard.writeText(text);toast(t('copied'))}catch{toast(t('copyFail'))}}
@@ -570,14 +577,20 @@ async function loadAdmin(reset=true){
   finally{if(seq===adminSeq){adminLoading=false;$('adminMore').disabled=false}}
 }
 function openModeration(id,action){
-  if(!user||!isAdmin||mode!=='admin'||adminBusy)return;const w=adminRows.find(row=>row.id===id);if(!w||!allowedAdminAction(w,action))return;
-  adminPending={work:{...w},action,actor:user.id};$('moderationHeading').textContent=t({hide:'adminHide',restore:'adminRestore',trash:'adminMoveTrash',recover:'adminRecover',delete:'adminDelete'}[action]);
+  if(!user||!isAdmin||adminBusy)return;
+  // Detail pages expose visibility only; trash/deletion stay in the moderator queue.
+  const w=mode==='admin'?adminRows.find(row=>row.id===id):mode==='detail'&&detailWork?.id===id&&['hide','restore'].includes(action)?detailWork:null;
+  if(!w||!allowedAdminAction(w,action))return;
+  adminPending={work:{...w},action,actor:user.id,source:mode,detailSeq};$('moderationHeading').textContent=t({hide:'adminHide',restore:'adminRestore',trash:'adminMoveTrash',recover:'adminRecover',delete:'adminDelete'}[action]);
   $('moderationWorkTitle').textContent=w.title;$('moderationHelp').textContent=t({hide:'adminHideHelp',restore:'adminRestoreHelp',trash:'adminTrashHelp',recover:'adminRecoverHelp',delete:'adminDeleteHelp'}[action]);
   $('deleteConfirm').value='';$('deleteConfirmField').hidden=action!=='delete';$('deleteConfirm').required=action==='delete';$('deleteConfirm').disabled=action!=='delete';$('moderationStatus').textContent='';$('moderationSubmit').disabled=action==='delete';$('moderationCancel').disabled=false;$('moderationDialog').showModal();
 }
+function moderationContextMatches(item){
+  return item.source==='admin'?mode==='admin':item.source==='detail'&&mode==='detail'&&detailWork?.id===item.work.id&&detailSeq===item.detailSeq;
+}
 async function submitModeration(e){
   e.preventDefault();const item=adminPending;
-  if(adminBusy||!item||!sb||!user||!isAdmin||mode!=='admin'||user.id!==item.actor||!allowedAdminAction(item.work,item.action))return;
+  if(adminBusy||!item||!sb||!user||!isAdmin||!moderationContextMatches(item)||user.id!==item.actor||!allowedAdminAction(item.work,item.action))return;
   if(location.origin!=='https://aimade.world'){$('moderationStatus').textContent=t('adminOnly');return}
   if(item.action==='delete'&&$('deleteConfirm').value!==item.work.title)return;
   adminBusy=true;$('moderationSubmit').disabled=true;$('moderationCancel').disabled=true;$('deleteConfirm').disabled=true;
@@ -589,7 +602,7 @@ async function submitModeration(e){
     const {data,error}=await timed(q.select('id').maybeSingle(),20000);
     if(user?.id!==item.actor||!isAdmin)return;
     if(error)throw error;if(!data){$('moderationStatus').textContent=t('adminStale');adminPending=null;return}
-    relatedCache.clear();cache.delete(item.work.id);adminPending=null;$('moderationDialog').close();toast(t('adminDone'));if(mode==='admin')await loadAdmin();
+    relatedCache.clear();cache.delete(item.work.id);adminPending=null;$('moderationDialog').close();toast(t('adminDone'));if(mode==='admin')await loadAdmin();else if(mode==='detail'&&detailWork?.id===item.work.id)await loadDetail(item.work.id);
   }catch{if(user?.id===item.actor){$('moderationStatus').textContent=t('adminFail');adminPending=null}}
   finally{adminBusy=false;$('moderationCancel').disabled=false;$('deleteConfirm').disabled=false;$('moderationSubmit').disabled=true}
 }
@@ -620,6 +633,7 @@ function route(){
     if(publishing)toast(t('busy'));
     history.replaceState(null,'',location.pathname+location.search+(lastRouteHash||'#home'));return;
   }
+  if(adminPending&&!adminBusy){adminPending=null;$('moderationDialog').close()}
   if(mode==='upload'&&dirty&&!['upload','edit'].includes(key))saveDraft(false);
   cancelRelated();
   ++requestSeq;++detailSeq;++adminSeq;
