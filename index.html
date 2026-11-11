@@ -22,20 +22,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <link rel="canonical" href="https://aimade.world/">
-<link rel="stylesheet" href="assets/app.css?v=20261111-picks3">
+<link rel="stylesheet" href="assets/app.css?v=20261111-admin-nav1">
 <script defer src="assets/supabase-2.118.0.min.js"></script>
 <meta name="aimade-turnstile-sitekey" content="0x4AAAAAAFyvQs5mB-t3aKTN">
 <script defer src="assets/captcha.js?v=20261110-prelaunch1"></script>
 <script defer src="assets/featured.js?v=20261111-picks3"></script>
-<script defer src="assets/app.js?v=20261111-detail-actions1"></script>
+<script defer src="assets/app.js?v=20261111-admin-nav1"></script>
 </head><body>
 <a class="skip" href="#main">跳至內容 / Skip to content</a>
 <header><div class="wrap nav">
 <a class="brand" href="#home" aria-label="AIMade 首頁"><span class="mark">A</span>AIMade</a>
-<nav id="nav" aria-label="主要導覽"><a href="#home" data-cat="all"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span data-i="navHome">探索作品</span></a><div id="sideCats" class="side-cats" role="group" aria-label="作品分類"></div><a href="#saved"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16l-6-4-6 4z"/></svg><span data-i="navSaved">我的收藏</span></a><a class="mobile-share" href="#upload"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span data-i="navShare">分享</span></a><a href="#guide"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><span data-i="navGuide">分享指南</span></a><a id="navMine" href="#mine" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span data-i="navMine">我的作品</span></a></nav>
+<nav id="nav" aria-label="主要導覽"><a href="#home" data-cat="all"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span data-i="navHome">探索作品</span></a><div id="sideCats" class="side-cats" role="group" aria-label="作品分類"></div><a href="#saved"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16l-6-4-6 4z"/></svg><span data-i="navSaved">我的收藏</span></a><a class="mobile-share" href="#upload"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span data-i="navShare">分享</span></a><a href="#guide"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><span data-i="navGuide">分享指南</span></a><a id="navMine" href="#mine" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span data-i="navMine">我的作品</span></a><a id="adminShortcut" href="#admin" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4v5c0 5-8 9-8 9s-8-4-8-9V7z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><span data-i="navAdmin">管理作品</span></a></nav>
 <div class="nav-right"><button class="btn small" id="lang" aria-label="Switch language">EN</button><button class="btn small" id="authButton" data-i="signin">登入</button><a class="btn primary nav-upload" href="#upload" data-i="share">分享作品 ↗</a></div>
 </div></header>
-<div class="wrap admin-shortcut" id="adminShortcut" hidden><a class="btn" href="#admin" data-i="adminTitle">管理作品</a></div>
 <main class="wrap" id="main">
 <aside id="accountStatus" class="account-status" hidden aria-label="目前帳戶 / Current account"><div><span data-i="accountLabel">目前登入帳戶</span> <strong id="accountEmail"></strong> <span id="accountRole" class="badge" role="status" aria-live="polite"></span></div><small data-i="accountPrivate">只在你的帳戶管理畫面顯示，電郵不會發布到作品頁。</small></aside>
 <section id="browsePage">

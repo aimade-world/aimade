@@ -107,6 +107,12 @@ function api({work,writeError=null,roles}={}) {
 }
 
 function ready(h,client){h.context.client=client;h.run(`sb=client;user={id:'${OWNER}'};authReady=true;mode='upload';restoreDraft()`);h.location.hash='#upload'}
+for(const [label,signedIn,admin,visible] of [['guest',false,false,false],['member',true,false,false],['admin',true,true,true],['signed-out stale role',false,true,false]])test('Admin navigation visibility: '+label,()=>{
+  const h=harness();h.run(`user=${signedIn?`{id:'${OWNER}'}`:'null'};isAdmin=${admin};renderAuth()`);assert.equal(h.el('adminShortcut').hidden,!visible);
+});
+test('Switching from admin to ordinary account hides the management navigation item',()=>{
+  const h=harness();h.run(`user={id:'${OWNER}'};isAdmin=true;renderAuth()`);assert.equal(h.el('adminShortcut').hidden,false);h.run("user={id:'other'};isAdmin=false;renderAuth()");assert.equal(h.el('adminShortcut').hidden,true);
+});
 function validForm(h){h.run("fillEditor({category:'prompt',title:'作品介紹助手',description:'將真實作品資料整理成介紹，先填寫作品用途及使用方法，再核對所有輸出內容是否符合事實。',prompt:'請只使用我提供的資料，不要捏造功能。',displayName:'AIMade Team',tools:'ChatGPT'})");h.el('rights').checked=true}
 
 for(const title of ['a','中','12','１２','١٢','!!!',' 中 ','\u200b中\u200b'])test('Publication rejects weak title '+JSON.stringify(title),async()=>{
