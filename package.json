@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "AIMade static discovery website",
   "scripts": {
-    "test": "node tests/frontend.test.cjs && node --test tests/flows.test.cjs tests/captcha.test.cjs tests/related.test.cjs"
+    "test": "node tests/frontend.test.cjs && node --test tests/flows.test.cjs tests/captcha.test.cjs tests/related.test.cjs tests/platforms.test.cjs tests/apk.test.cjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.118.0"

@@ -1,0 +1,36 @@
+do $$begin if current_database()<>'aimade_apk_qa' then raise exception 'Local QA only';end if;end$$;
+begin;
+create function public.qa_check(ok boolean,label text) returns void language plpgsql as $$begin if ok is not true then raise exception 'FAILED: %',label;end if;raise notice 'PASS: %',label;end$$;
+create function public.qa_rejected(command text) returns boolean language plpgsql as $$begin execute command;return false;exception when others then return true;end$$;
+grant usage on schema public to service_role;
+grant execute on function public.qa_check(boolean,text),public.qa_rejected(text) to authenticated,service_role;
+set local role authenticated;
+select set_config('request.jwt.claim.sub','00000000-0000-4000-8000-000000000002',true);
+select id as retry_id from reserve_apk_upload('00000000-0000-4000-8000-000000000020',128,'retry.apk',repeat('a',64)) \gset
+select qa_check((select id=:'retry_id'::uuid from reserve_apk_upload('00000000-0000-4000-8000-000000000020',128,'retry.apk',repeat('a',64))),'retry reuses the reserved ID');
+select qa_check((select count(*)=1 from apk_uploads),'retry does not consume more capacity');
+select qa_check(qa_rejected(format('select * from claim_apk_download(%L)',:'retry_id')),'members cannot invoke the service gateway RPC');
+reset role;
+insert into apk_uploads(work_id,owner,object_path,filename,size_bytes,sha256,status)
+select '00000000-0000-4000-8000-000000000020','00000000-0000-4000-8000-000000000003','synthetic/'||g||'.apk','capacity.apk',4,repeat('b',64),'withdrawn' from generate_series(1,7) g;
+set local role authenticated;
+select qa_check(qa_rejected($x$select reserve_apk_upload('00000000-0000-4000-8000-000000000020',4,'understated.apk',repeat('c',64))$x$),'eight slots block a falsified tiny size too');
+reset role;
+update apk_uploads set status='approved' where id=:'retry_id';
+set local role service_role;
+select qa_check((select count(*)=1 from claim_apk_download(:'retry_id')),'service can claim approved public download');
+reset role;
+select qa_check((select bytes=128 from aimade_internal.apk_download_budget where period='d:'||to_char(now() at time zone 'UTC','YYYY-MM-DD')),'download bytes charged before serving');
+update aimade_internal.apk_download_budget set bytes=104857600 where period like 'd:%';
+set local role service_role;
+select qa_check(qa_rejected(format('select * from claim_apk_download(%L)',:'retry_id')),'daily transfer cap enforced');
+reset role;
+update aimade_internal.apk_download_budget set bytes=0 where period like 'd:%';
+update aimade_internal.apk_download_budget set bytes=1073741824 where period like 'm:%';
+set local role service_role;
+select qa_check(qa_rejected(format('select * from claim_apk_download(%L)',:'retry_id')),'monthly transfer cap enforced');
+reset role;
+update works set archived=true where id='00000000-0000-4000-8000-000000000020';
+set local role service_role;
+select qa_check((select count(*)=0 from claim_apk_download(:'retry_id')),'gateway cannot claim an unpublished work');
+rollback;
