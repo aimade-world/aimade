@@ -9,7 +9,7 @@
 <meta name="description" content="AIMade 是全球 AI 創作者的分享社群 — 分享你用 AI 做的網頁、App、圖片、影片、Prompt 和工具。The global community for sharing AI-made work.">
 <meta name="google-site-verification" content="8KO4JWX03ZPKBwNMcuhK5aeWr94zE7cMwT2iV0EyG8A">
 <meta property="og:title" content="AIMade — 發現、試玩、分享 AI 作品">
-<meta property="og:description" content="發現創作者做的小遊戲、實用工具和互動作品。免費瀏覽與分享，找到喜歡的就打開試試。">
+<meta property="og:description" content="發現創作者做的遊戲、實用工具和互動作品。免費瀏覽與分享，找到喜歡的就打開試試。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://aimade.world/">
 <meta property="og:image" content="https://aimade.world/og.png">
@@ -22,24 +22,26 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <link rel="canonical" href="https://aimade.world/">
-<link rel="stylesheet" href="assets/app.css?v=20261111-moderation1">
+<link rel="stylesheet" href="assets/app.css?v=20261111-picks3">
 <script defer src="assets/supabase-2.118.0.min.js"></script>
 <meta name="aimade-turnstile-sitekey" content="0x4AAAAAAFyvQs5mB-t3aKTN">
 <script defer src="assets/captcha.js?v=20261110-prelaunch1"></script>
-<script defer src="assets/app.js?v=20261111-moderation1"></script>
+<script defer src="assets/featured.js?v=20261111-picks3"></script>
+<script defer src="assets/app.js?v=20261111-picks3"></script>
 </head><body>
 <a class="skip" href="#main">跳至內容 / Skip to content</a>
 <header><div class="wrap nav">
 <a class="brand" href="#home" aria-label="AIMade 首頁"><span class="mark">A</span>AIMade</a>
-<nav id="nav" aria-label="主要導覽"><a href="#home"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span data-i="navHome">探索作品</span></a><a href="#saved"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16l-6-4-6 4z"/></svg><span data-i="navSaved">我的收藏</span></a><a class="mobile-share" href="#upload"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span data-i="navShare">分享</span></a><a href="#guide"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><span data-i="navGuide">分享指南</span></a><a id="navMine" href="#mine" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span data-i="navMine">我的作品</span></a></nav>
+<nav id="nav" aria-label="主要導覽"><a href="#home" data-cat="all"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg><span data-i="navHome">探索作品</span></a><div id="sideCats" class="side-cats" role="group" aria-label="作品分類"></div><a href="#saved"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16l-6-4-6 4z"/></svg><span data-i="navSaved">我的收藏</span></a><a class="mobile-share" href="#upload"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span data-i="navShare">分享</span></a><a href="#guide"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg><span data-i="navGuide">分享指南</span></a><a id="navMine" href="#mine" hidden><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span data-i="navMine">我的作品</span></a></nav>
 <div class="nav-right"><button class="btn small" id="lang" aria-label="Switch language">EN</button><button class="btn small" id="authButton" data-i="signin">登入</button><a class="btn primary nav-upload" href="#upload" data-i="share">分享作品 ↗</a></div>
 </div></header>
 <div class="wrap admin-shortcut" id="adminShortcut" hidden><a class="btn" href="#admin" data-i="adminTitle">管理作品</a></div>
 <main class="wrap" id="main">
 <aside id="accountStatus" class="account-status" hidden aria-label="目前帳戶 / Current account"><div><span data-i="accountLabel">目前登入帳戶</span> <strong id="accountEmail"></strong> <span id="accountRole" class="badge" role="status" aria-live="polite"></span></div><small data-i="accountPrivate">只在你的帳戶管理畫面顯示，電郵不會發布到作品頁。</small></aside>
 <section id="browsePage">
-<div class="hero" id="hero"><h1 data-i="hero">別只看 AI 能做什麼，<br>直接玩看看。</h1><p data-i="heroSub">發現創作者做的小遊戲、實用工具和互動作品。找到喜歡的，就打開試試；做了新作品，也歡迎分享。</p></div>
-<div id="discover" class="section-title" hidden><h2 id="browseTitle">來找一件好玩的作品</h2><p id="browseSubtitle">免費瀏覽與分享。外部作品的使用條件依作者設定。</p></div>
+<div class="hero" id="hero" hidden><p class="eyebrow" id="weekDate"></p><h1 data-i="weekTitle">本週精選</h1></div>
+<div id="featured" class="featured" hidden></div>
+<div id="discover" class="section-title"><h2 id="browseTitle">來找一件好玩的作品</h2><p id="browseSubtitle">免費瀏覽與分享。外部作品的使用條件依作者設定。</p></div>
 <div class="search-row"><div class="search-wrap"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="search" aria-label="搜尋作品" placeholder="想玩什麼？搜尋作品、用途或創作者…" maxlength="100"></div><select id="sort" aria-label="作品排序"><option value="new" data-i="new">最新發布</option><option value="hot" data-i="hot">近 30 天新作 · 最多讚</option><option value="pop" data-i="pop">最多讚</option></select></div>
 <div id="filters" class="filters" role="group" aria-label="作品分類"></div><div class="filter-bottom"><label><input id="hasLink" type="checkbox"> <span data-i="hasLink">只看附有使用連結的作品</span></label><div class="status" id="status" role="status" aria-live="polite"></div></div>
 <div class="grid" id="grid"><div class="empty"><h3>正在載入作品…</h3><p>如長時間未顯示，請重新整理頁面。</p></div></div><div class="more"><button class="btn" id="loadMore" data-i="more" hidden>載入更多作品</button></div>
