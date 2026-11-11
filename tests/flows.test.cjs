@@ -14,7 +14,7 @@ const initDefinition = fullSource.slice(fullSource.indexOf('async function init(
 
 function harness(seed = {}) {
   const store = new Map(Object.entries(seed).map(([k,v]) => [k,JSON.stringify(v)]));
-  const elements = new Map(), timers = new Map();
+  const elements = new Map(), timers = new Map(), documentEvents = new Map();
   let now = 1793678000000, timerId = 0, failWrites = false;
   function el(id) {
     if (elements.has(id)) return elements.get(id);
@@ -37,14 +37,47 @@ function harness(seed = {}) {
   const context = vm.createContext({console:{warn(){},log(){},error(){}},URL:TestURL,URLSearchParams,AbortController,Set,Map,Date:TestDate,crypto,
     setTimeout(fn,ms){const id=++timerId;timers.set(id,{fn,ms});return id},clearTimeout(id){timers.delete(id)},
     localStorage:{getItem:k=>store.get(k)??null,setItem(k,v){if(failWrites)throw Error('Quota');store.set(k,v)},removeItem(k){store.delete(k)}},
-    document:{getElementById:el,querySelector:()=>el('query'),querySelectorAll:()=>[],addEventListener(){},documentElement:{},title:''},
+    document:{getElementById:el,querySelector:()=>el('query'),querySelectorAll:()=>[],addEventListener(type,fn){const handlers=documentEvents.get(type)||[];handlers.push(fn);documentEvents.set(type,handlers)},documentElement:{},title:''},
     window:{addEventListener(){},scrollTo(){},AIMadeCaptcha:{ready:()=>true,takeToken:()=> 'mock-captcha-token',sync(){},clear(){}}},location,navigator:{},
     history:{replaceState(_,__,url){const u=new URL(url,location.origin);location.pathname=u.pathname;location.search=u.search;location.hash=u.hash}},confirm:()=>true
   });
   el('loginDone').hidden=true;
   vm.runInContext(source,context);
-  return {context,el,store,location,run:s=>vm.runInContext(s,context),advance:ms=>now+=ms,fireDelay(ms){const results=[];for(const [id,timer]of [...timers])if(timer.ms===ms){timers.delete(id);results.push(timer.fn())}return Promise.all(results)},failWrites(){failWrites=true}};
+  return {context,el,store,location,click(target){for(const handler of documentEvents.get('click')||[])handler({target})},run:s=>vm.runInContext(s,context),advance:ms=>now+=ms,fireDelay(ms){const results=[];for(const [id,timer]of [...timers])if(timer.ms===ms){timers.delete(id);results.push(timer.fn())}return Promise.all(results)},failWrites(){failWrites=true}};
 }
+
+// A tiny ancestor-selector fixture exercises the real document click handler.
+// In the sidebar redesign HTML carries data-cat for CSS, but is not a control.
+function clickNode(tag,dataset={},parent=null){return {tagName:tag.toUpperCase(),dataset,parentElement:parent,closest(selector){
+  for(let node=this;node;node=node.parentElement){
+    for(const part of selector.split(',').map(s=>s.trim())){
+      if(part==='header'&&node.tagName==='HEADER')return node;
+      const match=/^(button|a)?\[data-([a-z-]+)\]$/.exec(part);
+      if(match&&(!match[1]||node.tagName===match[1].toUpperCase())&&Object.hasOwn(node.dataset,match[2].replace(/-([a-z])/g,(_,c)=>c.toUpperCase())))return node;
+    }
+  }return null;
+}}}
+function actionTarget(action,extra={}){const root=clickNode('html',{cat:'all'}),button=clickNode('button',{action,id:WORK,...extra},root);return clickNode('span',{},button)}
+
+for(const action of ['restore','trash'])test('Real delegated '+action+' click opens confirmation despite html data-cat',()=>{
+  const h=harness(),a=moderationApi();moderator(h,a.client);h.run("activeCat='game'");h.click(actionTarget('admin-action',{kind:action}));
+  assert.equal(h.el('moderationDialog').open,true);assert.equal(h.run('adminPending.action'),action);assert.equal(h.run('activeCat'),'game');assert.equal(a.calls.length,0);
+});
+for(const [action,expected] of [['like','like'],['save','save'],['copy-link','copy'],['copy-prompt','copy'],['retry','load'],['reset','reset'],['admin-retry','admin']])test('Delegated '+action+' does not become a root category click',()=>{
+  const h=harness();h.context.observed=[];h.run("toggleLike=id=>observed.push('like');saveWork=id=>observed.push('save');copy=value=>observed.push('copy');loadWorks=()=>observed.push('load');resetFilters=()=>observed.push('reset');loadAdmin=()=>observed.push('admin');activeCat='game'");h.click(actionTarget(action));assert.deepEqual([...h.context.observed],[expected]);assert.equal(h.run('activeCat'),'game');
+});
+test('Delegated report click opens the report form instead of filtering',()=>{
+  const h=harness();h.run(`user={id:'${OWNER}'}`);h.click(actionTarget('report'));assert.equal(h.el('reportDialog').open,true);assert.equal(h.run('reportId'),WORK);
+});
+test('Empty page space does not act like the html data-cat filter',()=>{
+  const h=harness();h.context.observed=[];h.run("loadWorks=()=>observed.push('load');activeCat='game'");h.click(clickNode('div',{},clickNode('html',{cat:'all'})));assert.equal(h.run('activeCat'),'game');assert.equal(h.context.observed.length,0);
+});
+for(const tag of ['button','a'])test('Actual sidebar category '+tag+' still filters and routes home',()=>{
+  const h=harness();h.run("mode='admin';activeCat='all'");h.location.hash='#admin';const root=clickNode('html',{cat:'all'}),header=clickNode('header',{},root),control=clickNode(tag,{cat:'game'},header);h.click(clickNode('svg',{},control));assert.equal(h.run('activeCat'),'game');assert.equal(h.location.hash,'#home');
+});
+test('Inline category buttons still load the selected category',()=>{
+  const h=harness();h.context.observed=[];h.run("mode='home';loadWorks=()=>observed.push('load')");h.click(clickNode('button',{cat:'prompt'},clickNode('html',{cat:'all'})));assert.equal(h.run('activeCat'),'prompt');assert.deepEqual([...h.context.observed],['load']);
+});
 
 function api({work,writeError=null,roles}={}) {
   const stats = {uploads:0,writes:[],mail:0,logins:[],signups:[],resets:[],resends:[],updates:[],oauth:[]};
